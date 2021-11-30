@@ -34,8 +34,11 @@
       break;
     }
   };
-  const num = Math.floor(n / cur) + 1; // 第cur的第num个数
-  const idx = n % cur; // 第num个数的  第idx位
-  const result = Math.floor(num / Math.pow(10,cur - 1 - idx)) % 10;
+  const num = Math.floor((n - 1) / cur); // 第cur位数的第num个数
+  const idx = (n - 1) % cur; // 第num个数的  第idx位 从0开始
+  const digit = num + Math.pow(10, cur - 1); // 所在的数字
+  const result = Math.floor(digit / Math.pow(10, cur - 1 - idx)) % 10; // 结果
   return result;
 };
+console.log(findNthDigit(200));
+findNthDigit(200);
