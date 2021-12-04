@@ -40,5 +40,5 @@
   const result = Math.floor(digit / Math.pow(10, cur - 1 - idx)) % 10; // 结果
   return result;
 };
-console.log(findNthDigit(200));
+console.log(findNthDigit(200)); // 0
 findNthDigit(200);
