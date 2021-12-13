@@ -4,6 +4,7 @@
   font-size: 13px;
   margin: 0 auto;
   border: 1px solid rgb(211, 211, 211);
+  box-sizing: border-box;
 }
 .range {
   margin: 0 auto;
@@ -16,11 +17,10 @@
 .double-wing-layout > div {
   box-sizing: border-box;
   height: 300px;
-  background-color: rgb(163, 142, 123);
   border: 1px solid white;
   text-align: center;
   line-height: 1.5em;
-  padding: 12px 8px;
+  /* padding: 12px 8px; */
   color: white;
   /* 三栏全部浮动 */
   float: left;
@@ -28,6 +28,8 @@
 .left,
 .right {
   width: 149px;
+  background-color: rgb(163, 142, 123);
+  padding: 12px 22px;
 }
 .center {
   width: 100%;
@@ -35,8 +37,11 @@
   hyphens: auto;
 }
 .inner-center {
+  box-sizing: border-box;
   height: 100%;
   margin: 0 159px;
+  background-color: rgb(163, 142, 123);
+  padding: 12px 22px;
   /* padding: 29px 12px; */
 }
 .left {
