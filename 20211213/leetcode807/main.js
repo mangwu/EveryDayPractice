@@ -31,35 +31,40 @@ var maxIncreaseKeepingSkyline = function (grid) {
    * 1. 题目关键在于找出两个限制数组最大值的一维数组，x轴最大值和y轴最大值
    * 2. 二者相交处取小的那一个即可
    */
-  let rowMax = [];
-  let columnMax = [];
+  let rowMaxs = [];
+  let columnMaxs = [];
   for (let i = 0; i < grid[0].length; i++) {
     // 获得列数组
-    let max = 0;
+    let rowMax = 0;
+    let columnMax = 0;
     for (let j = 0; j < grid.length; j++) {
-      if (grid[j][i] > max) {
-        max = grid[j][i];
+      if (grid[j][i] > rowMax) {
+        rowMax = grid[j][i];
+      }
+      if (grid[i][j] > columnMax) {
+        columnMax = grid[i][j];
       }
     }
-    rowMax.push(max);
+    rowMaxs.push(rowMax);
+    columnMaxs.push(columnMax);
   }
-  for (let i = 0; i < grid.length; i++) {
-    let max = 0;
-    for (let j = 0; j < grid.length; j++) {
-      if (grid[i][j] > max) {
-        max = grid[i][j];
-      }
-    }
-    columnMax.push(max);
-  }
+  // for (let i = 0; i < grid.length; i++) {
+  //   let max = 0;
+  //   for (let j = 0; j < grid.length; j++) {
+  //     if (grid[i][j] > max) {
+  //       max = grid[i][j];
+  //     }
+  //   }
+  //   columnMax.push(max);
+  // }
   // 最大值
   let ans = 0;
-  for (let i = 0; i < columnMax.length; i++) {
-    for (let j = 0; j < rowMax.length; j++) {
-      if (rowMax[j] < columnMax[i]) {
-        ans = ans + rowMax[j] - grid[i][j];
+  for (let i = 0; i < columnMaxs.length; i++) {
+    for (let j = 0; j < rowMaxs.length; j++) {
+      if (rowMaxs[j] < columnMaxs[i]) {
+        ans = ans + rowMaxs[j] - grid[i][j];
       } else {
-        ans = ans + columnMax[i] - grid[i][j];
+        ans = ans + columnMaxs[i] - grid[i][j];
       }
     }
   }
