@@ -22,6 +22,7 @@
   line-height: 1.5em;
   padding: 12px 8px;
   color: white;
+  /* 三栏全部浮动 */
   float: left;
 }
 .left,
