@@ -22,12 +22,10 @@ let num = randomNumber();
 let i = 0;
 // 声明递归方法
 var randomArr = function (arr, num) {
-  if (arr.indexOf(num) === -1) {
-    // 不存在此随机数就添加到数组中且增加i的记录
-    i++;
+  if (arr.indexOf(num) < 0) {
     arr[i] = num;
+    i++;
   } else {
-    // 否则再次生成
     num = randomNumber();
   }
   if (i >= arr.length) {
@@ -35,7 +33,7 @@ var randomArr = function (arr, num) {
     return;
   } else {
     // 否则继续生成
-    randomArr(arr, randnum);
+    randomArr(arr, num);
   }
 };
 
@@ -60,9 +58,9 @@ var randomArr = function (arr, num) {
 function randomNumber() {
   return Math.floor(Math.random() * 31 + 2);
 }
+let arr = new Array(5);
 var randomFiveArray = function () {
   // 声明数组
-  let arr = new Array(5);
   // 声明生成2-32的随机数方法
   randomArr(arr, num);
   return arr;
