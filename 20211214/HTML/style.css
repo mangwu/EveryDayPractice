@@ -95,3 +95,11 @@ hgroup + p::first-letter {
   padding-right: 8px;
   padding-top: 4px;
 }
+table {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+td,
+th {
+  border: 1px solid black;
+}
