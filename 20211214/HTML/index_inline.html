@@ -5,6 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>行内元素</title>
+    <style>
+      img {
+        display: block;
+        /* margin: 0 auto; */
+        width: 260px;
+        height: 232px;
+      }
+    </style>
   </head>
   <body>
     <header><h2>行内元素</h2></header>
@@ -36,12 +44,14 @@
                 <blockquote>
                   <code>console.log('Hello, World!')</code>
                 </blockquote>
-                <figcaptipn>常用的程序输出，源于
+                <figcaptipn
+                  >常用的程序输出，源于
                   <cite>The C Programming Language</cite>
-                </figcaption>
+                </figcaptipn>
               </figure>
             </li>
-            <li>dfn, em
+            <li>
+              dfn, em
               <dl>
                 <!-- Define "World-Wide Web" and reference definition for "the Internet" -->
                 <dt>
@@ -49,10 +59,93 @@
                     <abbr title="World-Wide Web">WWW</abbr>
                   </dfn>
                 </dt>
-                <dd>The World-Wide Web (WWW) is <em>a system of interlinked hypertext documents</em> accessed on <a href="#def-internet">the Internet</a>.</dd>
+                <dd>
+                  The World-Wide Web (WWW) is
+                  <em>a system of interlinked hypertext documents</em> accessed
+                  on <a href="#def-internet">the Internet</a>.
+                </dd>
               </dl>
             </li>
+            <li>
+              dkb
+              <p>type <kbd>Ctrl</kbd></p>
+            </li>
 
+            <li>
+              strong
+              <p>I'm <strong>strong</strong></p>
+            </li>
+            <li>
+              samp
+              <p>this app's output is <samp>Hello, World!</samp></p>
+            </li>
+            <li>
+              var
+              <pre>
+                <code>let <var>variable</var> = new Array(5)</code>
+              </pre>
+            </li>
+            <li>
+              a, abd
+              <p>
+                <a
+                  href="https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/bdo#%E7%A4%BA%E4%BE%8B"
+                  target="_blank"
+                >
+                  This text will go left to right.</a
+                >
+              </p>
+              <p><bdo dir="rtl">This text will go right to left.</bdo></p>
+            </li>
+            <li>
+              img, map
+              <map name="infographic">
+                <area
+                  shape="poly"
+                  coords="130,147,200,107,254,219,130,228"
+                  href="https://developer.mozilla.org/docs/Web/HTML"
+                  target="_blank"
+                  alt="HTML"
+                />
+                <area
+                  shape="poly"
+                  coords="130,147,130,228,6,219,59,107"
+                  href="https://developer.mozilla.org/docs/Web/CSS"
+                  target="_blank"
+                  alt="CSS"
+                />
+                <area
+                  shape="poly"
+                  coords="130,147,200,107,130,4,59,107"
+                  href="https://developer.mozilla.org/docs/Web/JavaScript"
+                  target="_blank"
+                  alt="JavaScript"
+                />
+                <img usemap="#infographic" src="mdn-info2.png" alt="信息图像" />
+              </map>
+            </li>
+            <li>
+              object
+              <div>
+                <a
+                  shape="rect"
+                  coords="0,0,400,300"
+                  href="./042002100211-39197509.pdf"
+                  target="_blank"
+                  alt="发票"
+                  ><object
+                    data="./042002100211-39197509.pdf"
+                    type="application/pdf"
+                    height="300"
+                    width="400"
+                  ></object
+                ></a>
+              </div>
+            </li>
+            <li>
+              q, sub, sup
+              <p><q>H<sub>2</sub>O is the chemical formula of water</q></p>
+            </li>
           </ul>
         </article>
       </section>
