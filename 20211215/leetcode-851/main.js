@@ -76,3 +76,66 @@ console.log(
   )
 );
 // console.log(loudAndRich([], [3, 2, 5, 4, 6, 1, 7, 0]));
+
+/**
+ * @param {number[][]} richer
+ * @param {number[]} quiet
+ * @return {number[]}
+ */
+var loudAndRich2 = function (richer, quiet) {
+  // 1. quiet为每个人的安静程度
+  // 2. 需要返回的ans数组表示为：比第i个人富有的人中最安静的人
+  // 3. 遍历quiet， i值为当前作为比较的人
+  // 4. 遍历richer，得出比i更富有的人 使用深度优先遍历的方式
+  // 5. 因为richer可以组成一个无循环的有向图，通过深度优先遍历可以从任意结点出发获取到比x富有的人
+  // 6. 比i更富有的人中，最安静的人保存下来，如果没有比i更富有的人，那么i就是最本次最安静的人
+  // 生成邻接表
+  const g = new Array(quiet.length).fill(0);
+  for (let i = 0; i < quiet.length; i++) {
+    g[i] = [];
+  }
+  for (const r of richer) {
+    // 比r[1]有钱的人即r[1] -> r[0]
+    g[r[1]].push(r[0]);
+  }
+  const ans = new Array(quiet.length).fill(-1);
+  for (let i = 0; i < quiet.length; i++) {
+    dfs(i, g, ans, quiet);
+  }
+  return ans;
+};
+
+/**
+ *
+ * @param {Number} x 结点，表示第x个人
+ * @param {Number[]} g 邻接表
+ * @param {Number[]} ans 最安静的人的结果
+ * @param {Number[]} quiet 安静值列表
+ */
+var dfs = (x, g, ans, quiet) => {
+  // 避免重复运算，ans[x]值可以直接返回
+  if (ans[x] !== -1) {
+    return;
+  }
+  // 默认最安静的值是自己
+  ans[x] = x;
+  // 查找比自己更富有的人，邻接结点
+  for (const y of g[x]) {
+    // 因为是有向无环图，所以无需判断是否已经访问，
+    dfs(y, g, ans, quiet);
+    // 判断是否比自己安静
+    if (quiet[ans[y]] < quiet[ans[x]]) {
+      ans[x] = ans[y];
+    }
+  }
+};
+
+console.log(
+  loudAndRich2(
+    [
+      [0, 1],
+      [1, 2],
+    ],
+    [0, 1, 2]
+  )
+);
