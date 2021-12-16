@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS</title>
+    <style>
+      @import url(./style.css);
+    </style>
+  </head>
+  <body>
+    <h2>隐藏元素的方式</h2>
+    <p>
+      相关链接
+      <a
+        href="https://www.notion.so/mangwu/2021-12-15-154ad0a3390c4ab5b35715312f6e9322"
+        target="_blank"
+        rel="noopener noreferrer"
+        >notion.so</a
+      >
+    </p>
+    <div>
+      <main>
+        <article>
+          <h3>占位隐藏</h3>
+          <ol>
+            <li>
+              visibility
+              <p>
+                接下来的文字被隐藏了，但仍然占位置<span class="hidden-span"
+                  >我是被隐藏的内容</span
+                >&lt;=不可见但占位
+              </p>
+            </li>
+            <li>
+              使用margin移动到页面外部
+              <p>
+                接下来的文字被隐藏了，但处于文档流中且影响后续的文字<span class="margin-span"
+                  >我是被隐藏的内容</span
+                >
+                <span class="normal-spam">&lt;=被移动到了文档不可见的左边，且我也右移了100%才回到原来位置</span>
+              </p>
+            </li>
+            <li>opacity
+              <p>
+                接下来的文字被隐藏了，但仍然占位置<span class="opacity-span"
+                  >我是被隐藏的内容</span
+                >&lt;=不可见但占位
+              </p>
+            </li>
+            <li>缩放scale
+              <p><p>
+                接下来的文字被隐藏了，但仍然占位置<span class="scale-span"
+                  >我是被隐藏的内容</span
+                >&lt;=不可见但占位,使用inline-block才缩放成功
+              </p></p>
+            </li>
+          </ol>
+        </article>
+        <article>
+          <h4>不占位隐藏</h4>
+          <ol>
+            <li>display
+              <p>
+                  接下来的文字被隐藏了,<span class="display-span"
+                    >我是被隐藏的内容</span
+                  >&lt;=不可见且不占位
+              </p>
+            </li>
+            <li>
+              设置高宽为0，溢出设置为隐藏
+              <p>
+                接下来的文字被隐藏了,<span class="overflow-span"
+                  >我是被隐藏的内容</span
+                >&lt;=不可见且不占位
+              </p>
+            </li>
+          </ol>
+        </article>
+        <article>
+          <h4>仅对文本有效的隐藏</h4>
+          <ol>
+            <li>font-size
+              <p>
+                接下来的文字被隐藏了,<span class="font-span"
+                  >我是被隐藏的内容</span
+                >&lt;=不可见且不占位
+              </p>
+            </li>
+            <li>
+              text-intent
+              <p>
+                接下来的文字被隐藏了,<span class="intent-span"
+                  >我是被隐藏的内容</span
+                >&lt;=不可见且不占位,使用了inline-block
+              </p>
+            </li>
+          </ol>
+        </article>
+      </main>
+      
+    </div>
+  </body>
+</html>

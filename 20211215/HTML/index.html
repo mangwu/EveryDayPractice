@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>关于全局属性</title>
+  </head>
+  <body>
+    <h2>全局属性</h2>
+    <p>
+      元素的全局属性:
+      <a
+        href="https://developer.mozilla.org/zh-CN/docs/Web/HTML/Global_attributes"
+        target="_blank"
+        >mdn-global-attribute</a
+      >
+      <a
+        href="https://www.notion.so/mangwu/2021-12-15-154ad0a3390c4ab5b35715312f6e9322"
+        target="_blank"
+        rel="noopener noreferrer"
+        >notion.so</a
+      >
+    </p>
+    <main>
+      <article>
+        <h4>data-*的使用</h4>
+        <p
+          id="data-p"
+          data-customdata="自定义数据:在data中自定义的数据通过dataset获取"
+        >
+          data-*上的数据是:
+        </p>
+        <script>
+          const p = document.querySelector("#data-p");
+          console.log(p.dataset);
+          const phtml = p.innerHTML;
+          let k = 5;
+          const interval = setInterval(() => {
+            p.innerHTML = phtml + k + "s后获取";
+            k--;
+            if (k === -1) {
+              p.innerHTML = phtml + "<q>" + p.dataset.customdata + "</q>";
+              clearInterval(interval);
+            }
+          }, 1000);
+        </script>
+      </article>
+      <article>
+        <h4>hidden的使用</h4>
+        <p hidden id="hidden-p">掩藏的内容👁</p>
+        <button>点击显示隐藏内容</button>
+        <script>
+          const btn = document.querySelector("button");
+          const hiddenp = document.querySelector("#hidden-p");
+          btn.addEventListener("click", () => {
+            if (btn.textContent === "点击显示隐藏内容") {
+              hiddenp.removeAttribute("hidden");
+              btn.textContent = "点击隐藏内容";
+            } else {
+              hiddenp.setAttribute("hidden", null)
+              btn.textContent = "点击显示隐藏内容";
+            }
+          });
+        </script>
+      </article>
+    </main>
+  </body>
+</html>
