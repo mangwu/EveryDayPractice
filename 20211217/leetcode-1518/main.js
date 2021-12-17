@@ -43,3 +43,27 @@ console.log(numWaterBottles(15, 8));
 console.log(numWaterBottles(15, 9));
 console.log(numWaterBottles(14, 15));
 
+/**
+ * @param {number} numBottles
+ * @param {number} numExchange
+ * @return {number}
+ */
+var numWaterBottles2 = function (numBottles, numExchange) {
+  // 上面的方法使用除法和取余，比较耗费性能
+  // 考虑到每次只替换一个酒瓶，然后增加，通过比较空瓶数和可替换数判断是否仍然可替换
+  // 喝掉全部酒瓶计入喝掉的结果中
+  let ans = numBottles;
+  // 空瓶数
+  let empty = numBottles;
+  // 当空瓶数大于可交换瓶数时，做一次交互
+  while (empty >= numExchange) {
+    // 做一次交互
+    empty -= numExchange;
+
+    // 喝掉交互的一瓶酒
+    ans++;
+    // 获得一个空瓶
+    empty++;
+  }
+  return ans;
+};
