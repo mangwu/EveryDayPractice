@@ -67,7 +67,6 @@ var numFriendRequests2 = function (ages) {
   let ans = 0;
   // 排序
   ages = ages.sort((a, b) => a - b);
-  console.log(ages);
   // ages[y]的边界
   let left = 0;
   let right = 0;
