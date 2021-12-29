@@ -48,26 +48,24 @@ var countQuadruplets2 = function (nums) {
 
   for (let i = 3; i < n; i++) {
     let j = i - 1;
+    // 记录本次结果
     for (let k = 1; k < j; k++) {
       for (let l = 0; l < k; l++) {
         let sum = nums[j] + nums[k] + nums[l];
-        // 如果有重复值就 m是合值的个数
-        let m = map.get(sum.toString());
-        console.log(sum, m, nums[i]);
-        // 如果不存在就加设置出来
-        if (!m) {
-          map.set(sum.toString(), 0);
-          // 如果存在合值
-        } else if (m === sum)
-          ans++;
-          map.set(sum.toString(), m ? m + 1 : 1);
-        }
-
-        if (sum === nums[i]) {
-          ans++;
-          map.set(sum.toString(), m ? m + 1 : 1);
+        // 记录每次的合值
+        let m1 = map.get(sum);
+        // 不存在就添加,存在就添加
+        if (m1 === undefined) {
+          map.set(sum, 1);
+        } else {
+          map.set(sum, m1 + 1);
         }
       }
+    }
+    // 查看存在记录
+    let m2 = map.get(nums[i]);
+    if (m2) {
+      ans += m2;
     }
   }
   return ans;
