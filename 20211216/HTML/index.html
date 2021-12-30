@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" manifest="test.appcache">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="a.css" />
+    <script src="./network.js"></script>
+    <title>查看是否支持离线缓存</title>
+    <script>
+      if (window.applicationCache) {
+        console.log("支持离线缓存");
+      } else {
+        console.log("不支持离线缓存");
+      }
+    </script>
+  </head>
+  <body>
+    <h2>是否支持离线缓存</h2>
+    <h3>manifest属性已被弃用</h3>
+  </body>
+</html>

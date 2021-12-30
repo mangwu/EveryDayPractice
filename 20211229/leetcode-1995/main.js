@@ -70,4 +70,40 @@ var countQuadruplets2 = function (nums) {
   }
   return ans;
 };
-console.log(countQuadruplets2([1, 1, 1, 2, 3, 4, 5, 6, 6]));
+console.log(countQuadruplets2([1, 1, 1, 2, 3, 4, 5, 9, 6]));
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var countQuadruplets3 = function (nums) {
+  // hash法 用于记录每个三元组的值
+  const hash = [];
+  let ans = 0;
+  const n = nums.length;
+
+  for (let i = 3; i < n; i++) {
+    let j = i - 1;
+    // 记录本次结果
+    for (let k = 1; k < j; k++) {
+      for (let l = 0; l < k; l++) {
+        let sum = nums[j] + nums[k] + nums[l];
+        // 记录每次的合值
+        let m1 = hash[sum];
+        // 不存在就添加1,存在就增加1
+        if (m1 === undefined) {
+          hash[sum] = 1;
+        } else {
+          hash[sum] = hash[sum] + 1;
+        }
+      }
+    }
+    // 查看存在记录
+    let m2 = hash[nums[i]];
+    if (m2) {
+      ans += m2;
+    }
+  }
+  return ans;
+};
+
+console.log(countQuadruplets3([1, 1, 1, 2, 3, 4, 5, 9, 6]));
