@@ -84,6 +84,6 @@ var lastRemaining2 = function(n) {
   	flag = !flag;
   }
   console.log(i);
-  return i;
+  return len == 0 ? 1 : i;
 };
 lastRemaining2(4);
