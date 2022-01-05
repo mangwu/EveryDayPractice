@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-01-05 16:41:47                                                  *
- * @LastModifiedDate: 2022-01-05 18:59:09                                      *
+ * @LastModifiedDate: 2022-01-05 19:28:30                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 inspur                                                   *
@@ -79,10 +79,8 @@ var modifyString2 = function (s) {
       let preI = ans[i - 1] ? ans[i - 1] : 0;
       // 后一个使用s，获取到的可能是undefined或者？
       let afterI = s[i + 1] !== undefined && s[i + 1] !== "?" ? s[i + 1] : 0;
-      console.log(preI, afterI);
       for (let j of arr) {
-        if (j != preI && j != afterI) {
-          console.log(j);
+        if (j != preI && j != afterI) {;
           ans += j;
           break;
         }
