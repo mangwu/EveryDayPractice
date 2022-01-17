@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-01-15 16:38:28                                                  *
- * @LastModifiedDate: 2022-01-17 10:21:16                                      *
+ * @LastModifiedDate: 2022-01-17 10:22:44                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 inspur                                                   *
@@ -139,5 +139,5 @@ var nthUglyNumber2 = function (n) {
   return ans[n];
 };
 
-console.log(nthUglyNumber2(1690));
+console.log(nthUglyNumber2(10));
 

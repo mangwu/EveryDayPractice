@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-01-14 09:41:02                                                  *
- * @LastModifiedDate: 2022-01-14 18:51:12                                      *
+ * @LastModifiedDate: 2022-01-17 17:13:59                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022                                                          *
@@ -188,8 +188,93 @@ var kSmallestPairs2 = function (nums1, nums2, k) {
   console.log(ans);
   return ans;
 };
-kSmallestPairs2(
-  [1, 7, 11],
-  [2,4,6],
-  9
-);
+// kSmallestPairs2([1, 7, 11], [2, 4, 6], 9);
+
+/**
+ * @param {number[]} nums1
+ * @param {number[]} nums2
+ * @param {number} k
+ * @return {number[][]}
+ */
+var kSmallestPairs3 = function (nums1, nums2, k) {
+  // 优先队列
+  // 保存[idx1, 0]的索引
+  // 声明ans
+  const ans = [];
+  // 声明优先队列
+  const pq = new PriorityQueue(
+    (a, b) => nums1[a[0]] + nums2[a[1]] - (nums1[b[0]] + nums2[b[1]]) < 0
+  );
+  for (let i = 0; i < Math.min(k, nums1.length); i++) {
+    pq.offer([i, 0]);
+  }
+  console.log(pq.data);
+  // 遍历pq出队
+  while (pq.size > 0 && k-- > 0) {
+    const newIdx = pq.poll();
+    // 最小值进入答案
+    ans.push([nums1[newIdx[0]], nums2[newIdx[1]]]);
+    if (++newIdx[1] < nums2.length) {
+      pq.offer(newIdx);
+    }
+  }
+  return ans;
+};
+
+/**
+ * @class PriorityQueue
+ */
+class PriorityQueue {
+  /**
+   * @constructor 构造函数
+   * @param {Function} compare 比较函数
+   */
+  constructor(compare = (a, b) => a - b < 0) {
+    this.data = [];
+    this.size = 0;
+    this.compare = compare;
+  }
+  // 队尾元素
+  tail() {
+    return this.size > 0 ? this.data[this.size - 1] : null;
+  }
+  // 队首元素
+  head() {
+    return this.size > 0 ? this.data[0] : null;
+  }
+  // 元素出队
+  poll() {
+    if (this.size > 0) {
+      this.size--;
+      return this.data.shift();
+    } else {
+      return null;
+    }
+  }
+  // 入队
+  offer(val) {
+    this.binaryInsert(this.size++, val);
+  }
+  // 二分插入
+  binaryInsert(idx, val) {
+    // 搜索区域 [0, length)
+    let left = 0;
+    let right = idx;
+    let mid;
+    // 遍历查找
+    while (left < right) {
+      // 中位数
+      mid = Math.floor((left + right) / 2);
+      if (this.compare(this.data[mid], val)) {
+        // val比mid对应索引值小，选左边区域[mid+1, right)
+        left = mid + 1;
+      } else {
+        // val比 mid对应索引的值大 ，选右边区域 [left, mid)
+        right = mid;
+      }
+    }
+    // 插入
+    this.data.splice(left, 0, val);
+  }
+}
+console.log(kSmallestPairs3([1, 7, 11], [2, 4, 6], 9));
