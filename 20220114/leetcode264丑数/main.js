@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-01-15 16:38:28                                                  *
- * @LastModifiedDate: 2022-01-15 18:04:12                                      *
+ * @LastModifiedDate: 2022-01-17 10:21:16                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 inspur                                                   *
@@ -88,7 +88,6 @@ var nthUglyNumber = function (n) {
   primes.add(1);
   // 当出队n次后结束
   while (pq.size > 0) {
-
     const ugnum = pq.pop();
     n--;
     if (n === 0) {
@@ -107,3 +106,38 @@ var nthUglyNumber = function (n) {
 };
 
 console.log(nthUglyNumber(1690));
+
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var nthUglyNumber2 = function (n) {
+  // 多路归并
+  // 声明丑数序列
+  let ans = [];
+  // 0作为哨兵，1为丑数起始
+  ans[1] = 1;
+  // 声明当前三个质因数的arr索引
+  let idx1 = 1,
+    idx2 = 1,
+    idx3 = 1;
+  // 遍历n次，得到长度为n的丑数序列
+  for (let idx = 2; idx <=n; idx++) {
+    // 生成三个序列当前的各自索引对应的丑数
+    const num1 = ans[idx1] * 2;
+    const num2 = ans[idx2] * 3;
+    const num3 = ans[idx3] * 5;
+    // 每次取最小的丑数进入不重复丑数序列
+    const min = Math.min(num1, Math.min(num2, num3));
+    ans.push(min); 
+    // 如果当前的最小丑数和各自索引对应的丑数相等，那么就需要获取该序列的下一个丑数了
+    // 不使用else if，这样可以排除掉三个序列中的相同丑数
+    if (num1 === min) idx1++;
+    if (num2 === min) idx2++;
+    if (num3 === min) idx3++;
+  }
+  return ans[n];
+};
+
+console.log(nthUglyNumber2(1690));
+
