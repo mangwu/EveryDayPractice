@@ -144,48 +144,130 @@ var minJumps = function (arr) {
     // console.log(q);
   }
 };
-console.log(minJumps([1, 1, 1, 2,5,2,2,5]));
-
+console.log(minJumps([1, 1, 1, 2, 5, 2, 2, 5]));
 
 /**
  * @param {number[]} arr
  * @return {number}
  */
- var minJumps2 = function(arr) {
-  const idxMap = new Map(), explored = new Set()
-  for(let i=0;i<arr.length;i++){
-      if(idxMap.has(arr[i]))
-          idxMap.get(arr[i]).push(i)
-      else
-          idxMap.set(arr[i], [i])
+var minJumps2 = function (arr) {
+  const idxMap = new Map(),
+    explored = new Set();
+  for (let i = 0; i < arr.length; i++) {
+    if (idxMap.has(arr[i])) idxMap.get(arr[i]).push(i);
+    else idxMap.set(arr[i], [i]);
   }
-  let nodes = [0], step = 0
-  explored.add(0)
-  while(nodes.length > 0){
-      const nxt = new Array()
-      for(const cur of nodes){
-          if(cur == arr.length - 1)
-              return step
-          if(idxMap.has(arr[cur])){
-              for(const other of idxMap.get(arr[cur])){
-                  if(!explored.has(other)){
-                      explored.add(other)
-                      nxt.push(other)
-                  }
-              }
-              idxMap.delete(arr[cur])
+  let nodes = [0],
+    step = 0;
+  explored.add(0);
+  while (nodes.length > 0) {
+    const nxt = new Array();
+    for (const cur of nodes) {
+      if (cur == arr.length - 1) return step;
+      if (idxMap.has(arr[cur])) {
+        for (const other of idxMap.get(arr[cur])) {
+          if (!explored.has(other)) {
+            explored.add(other);
+            nxt.push(other);
           }
-          if(!explored.has(cur + 1)){
-              explored.add(cur + 1)
-              nxt.push(cur + 1)               
-          }
-          if(cur > 0 && !explored.has(cur - 1)){
-              explored.add(cur - 1)
-              nxt.push(cur - 1)
-          }
+        }
+        idxMap.delete(arr[cur]);
       }
-      nodes = nxt
-      step++
+      if (!explored.has(cur + 1)) {
+        explored.add(cur + 1);
+        nxt.push(cur + 1);
+      }
+      if (cur > 0 && !explored.has(cur - 1)) {
+        explored.add(cur - 1);
+        nxt.push(cur - 1);
+      }
+    }
+    nodes = nxt;
+    step++;
   }
-  return arr.length - 1
+  return arr.length - 1;
+};
+
+/**
+ * @param {number[]} arr
+ * @return {number}
+ */
+var minJumps3 = function (arr) {
+  // 生成邻接表 + bfs + 剪枝
+
+  // 获取arr长度
+  const len = arr.length;
+  // 长度小于3可以直接得出结果
+  if (len < 3) {
+    return len - 1;
+  }
+
+  // 声明记录邻接情况的hash表，其中key为arr中的元素，值为相同元素的索引数组
+  const hash = new Map();
+  // 无需记录相邻元素的节点情况，因为在bfs时无需查询hash表就能判断入队i+1或者i-1
+  for (let i = 0; i < len; i++) {
+    // 已经存在
+    if (hash.has(arr[i])) {
+      hash.get(arr[i]).push(i);
+    } else {
+      // 不存在就新建
+      hash.set(arr[i], [i]);
+    }
+  }
+
+  // 声明BFS使用的队列
+  let queue = [];
+  // 声明已经访问过数组
+  // const visited = [];
+  // 使用set记录
+  const visited = new Set();
+
+  // 初始值入队，设置为已被访问
+  queue.push(0);
+  // visited[0] = true;
+  visited.add(0);
+
+  // 声明到达终点的次数(答案)
+  let ans = 0;
+
+  // BFS搜索
+  while (queue.length > 0) {
+    // 由于需要记录层数，所以需要在记录每层遍历的个数
+    const nxt = new Array();
+    // 和树的层序遍历很像，遍历完一层后进入下一层
+    for (const idx of queue) {
+      // 如果idx等于最后一个，可以直接返回结果
+      if (idx === len - 1) {
+        return ans;
+      }
+      //  相同值索引
+      if (hash.has(arr[idx])) {
+        // 遍历相同值索引
+        for (let i of hash.get(arr[idx])) {
+          if (!visited.has(i)) {
+            // 入队，设置为已访问
+            visited[i] = true;
+            nxt.push(i);
+          }
+        }
+        // 剪枝，不会再用到该arr
+        hash.delete(arr[idx]);
+      }
+
+      // 入队后面邻接的
+      if (!visited.has(idx + 1)) {
+        visited.add(idx + 1);
+        nxt.push(idx + 1);
+      }
+      // 入队前面的邻接的
+      if (idx - 1 >= 0 && !visited.has(idx - 1)) {
+        visited.add(idx - 1);
+        nxt.push(idx - 1);
+      }
+    }
+    // 变更队列
+    queue = nxt;
+    // 每层的遍历结束，层数加1
+    ans++;
+  }
 };
