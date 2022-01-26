@@ -26,7 +26,7 @@
 
 var DetectSquares = function () {
   // 记录
-  this.repeatPoints = new Set();
+  // this.repeatPoints = new Set();
   // (x, y)
   this.points = new Map();
   // (y, x)
@@ -39,7 +39,7 @@ var DetectSquares = function () {
  */
 DetectSquares.prototype.add = function (point) {
   // 保存(x, y)不管重复值
-  this.repeatPoints.add(point.toString());
+  // this.repeatPoints.add(point.toString());
   // 保存(x, y)值
   if (this.points.has(point[0])) {
     const newArr = this.points.get(point[0]);
@@ -85,7 +85,7 @@ DetectSquares.prototype.count = function (point) {
   // y坐标和x坐标个数
   const lenx = x.length;
   const leny = y.length;
-  console.log(x, y);
+  // console.log(x, y);
   // 正方形个数
   let ans = 0;
   // x，y同时有值才行
@@ -97,13 +97,14 @@ DetectSquares.prototype.count = function (point) {
       // 遍历lenx(x值相同的y坐标集合)
       for (let j = 0; j < lenx; j++) {
         const sidey = x[j] - point[1];
-        console.log([y[i], x[j]]);
+        // console.log([y[i], x[j]]);
         // 是正方形
         if (sidex === sidey || sidex + sidey === 0) {
           // 查看是否具有第四个点
-          if (this.repeatPoints.has([y[i], x[j]].toString())) {
-            ans++;
-          }
+          // 个数
+          let newArr = this.points.get(y[i]);
+          newArr = newArr.filter(v => v == x[j]);
+          ans = ans + newArr.length;
         }
       }
     }
@@ -117,24 +118,105 @@ DetectSquares.prototype.count = function (point) {
  * obj.add(point)
  * var param_2 = obj.count(point)
  */
-//  ["DetectSquares","add","add","add","count","add","add","add","count","add","add","add","count","add","add","add","count"]
-//  [[],[[5,10]],[[10,5]],[[10,10]],[[5,5]],[[3,0]],[[8,0]],[[8,5]],[[3,5]],[[9,0]],[[9,8]],[[1,8]],[[1,0]],[[0,0]],[[8,0]],[[8,8]],[[0,8]]]
-const ds = new DetectSquares();
-ds.add([5, 10]);
-ds.add([10, 5]);
-ds.add([10, 10]);
-ds.add([8, 0]);
-ds.add([8, 5]);
-ds.add([9, 0]);
-ds.add([9, 8]);
-ds.add([1, 8]);
-ds.add([0, 0]);
-ds.add([8, 0]);
-ds.add([8, 8]);
-console.log(ds.points, ds.reversePoints, ds.repeatPoints);
-// (11, 2) (3, 10)
-console.log(ds.count([0, 8]));
-// console.log(ds.count([14, 8]));
-// ds.add([11, 2]);
-// console.log(ds.points, ds.reversePoints,ds.repeatPoints);
-// console.log(ds.count([11, 10]));
+
+ var DetectSquares2 = function () {
+  // 记录
+  // this.repeatPoints = new Set();
+  // (x, y)
+  this.points = new Map();
+  // (y, x)
+  this.reversePoints = new Map();
+};
+
+/**
+ * @param {number[]} point
+ * @return {void}
+ */
+DetectSquares.prototype.add = function (point) {
+  // 保存(x, y)不管重复值
+  // this.repeatPoints.add(point.toString());
+  // 保存(x, y)值
+  if (this.points.has(point[0])) {
+    const newArr = this.points.get(point[0]);
+    newArr.push(point[1]);
+    this.points.set(point[0], newArr);
+  } else {
+    this.points.set(point[0], [point[1]]);
+  }
+  // 保存(y, x)值
+  if (this.reversePoints.has(point[1])) {
+    const newArr = this.reversePoints.get(point[1]);
+    newArr.push(point[0]);
+    this.reversePoints.set(point[1], newArr);
+  } else {
+    this.reversePoints.set(point[1], [point[0]]);
+  }
+};
+
+/**
+ * @param {number[]} point
+ * @return {number}
+ */
+DetectSquares.prototype.count = function (point) {
+  // 遍历查找可能的轴对齐正方形
+  // 和point同轴的x和y
+  let x = [],
+  // 遍历hash
+  // x值相同的y坐标集合
+  for (let [key, value] of this.points) {
+    if (key === point[0]) {
+      y = value.filter((v) => v !== point[1]);
+      break;
+    }
+  }
+  // y值相同的x坐标集合
+  for (let [key, value] of this.reversePoints) {
+    if (key === point[1]) {
+      x = value.filter((v) => v !== point[0]);
+      break;
+    }
+  }
+  // y坐标和x坐标个数
+  const lenx = x.length;
+  const leny = y.length;
+  // console.log(x, y);
+  // 正方形个数
+  let ans = 0;
+  // x，y同时有值才行
+  if (lenx > 0 && leny > 0) {
+    // 遍历leny (与Ponint y值相同的x坐标集合)
+    for (let i = 0; i < lenx; i++) {
+      // 矩阵边长
+      const side = x[i] - point[0];
+      let y1 = side + point[1];
+      let y2 = point[1] - side;
+      const y1Arr = this.reversePoints.get(y1);
+      const y2Arr = this.reversePoints.get(y2);
+      let a = 0;
+      let b = 0;
+      // 获取其他[point[0], side +- point[1]] [x[i], side +- point[1]];
+      if (y1Arr !== null) {
+        const newy1Arr = y1Arr.filter(v => v === point[0])
+        a = newy1Arr.length;
+      }
+      if (y2Arr !== null) {
+        const newy2Arr = y1Arr.filter(v => v === x[i])
+        b = newy2Arr.length;
+      }
+      if (a && b) {
+        ans+= a * b;
+      } else {
+        ans = ans + a + b;
+      }
+
+    }
+  }
+  return ans;
+};
+
+/**
+ * Your DetectSquares object will be instantiated and called as such:
+ * var obj = new DetectSquares()
+ * obj.add(point)
+ * var param_2 = obj.count(point)
+ */
