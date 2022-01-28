@@ -130,23 +130,70 @@ class PlalindromeString {
 const ps = new PlalindromeString();
 console.log(ps.findLongestPlalindromeString("abbc"));
 
-
 /**
  * @param {string} s
  * @return {number}
  */
- var removePalindromeSub2 = function (s) {
+var removePalindromeSub2 = function (s) {
   // 如果删除的是子字符串,就没有1或者2两种选择了
-	// 删除子字符串后，剩余的字符串如果长度不为0，继续删除，知道长度为0
-	const ps = new PlalindromeString();
-	let ans = 0;
-	while(s.length !== 0) {
-		const maxPS = ps.findLongestPlalindromeString(s);
-		console.log(maxPS);
-		s = s.slice(0, maxPS[1]) + s.slice(maxPS[2] + 1);
-		console.log(s);
-		ans++;
-	}
-	return ans;
+  // 删除子字符串后，剩余的字符串如果长度不为0，继续删除，知道长度为0
+  const ps = new PlalindromeString();
+  let ans = 0;
+  while (s.length !== 0) {
+    const maxPS = ps.findLongestPlalindromeString(s);
+    console.log(maxPS);
+    s = s.slice(0, maxPS[1]) + s.slice(maxPS[2] + 1);
+    console.log(s);
+    ans++;
+  }
+  return ans;
 };
 // removePalindromeSub2("aabbbbbbb")
+
+// 最大回文
+String.prototype.findLongestPlalindromeString = function () {
+  // 声明预处理字符串
+  let str = "#";
+  // 预处理字符 转化为形如 #a#b#a#的形式
+  for (let i = 0; i < this.length; i++) {
+    str += this[i] + "#";
+  }
+  // 声明当前最长回文子串的中心和右边界
+  let mid = 0,
+    right = 0;
+  // 声明最长回文子串的中心索引和长度
+  let maxLen = 0,
+    maxLenMid = 0;
+  // 声明保存每个字符为中心的回文字符长度的数组
+  const child = [];
+
+  // 遍历处理过的字符串,以每个字符为中心进行扩展
+  for (let i = 0; i < str.length; i++) {
+    /*
+     * 第 i 个字符是否还在右边界内
+     *   Math.min(child[2*mid-i],right-i) 解释:这里为什么选两者中小的那个呢？
+     *     1、当child[2*mid-i]较小时，说明以 i 点处字符为中心的回文*完全*在(mid,right)区间内，直接附值即可。
+     *     2、当child[2*mid-i]较大时，说明以 i 点处字符为中心的回文*至少*在(mid,right)区间内，可能有
+     *     超出的能够匹配的字符，所以先附值 right-i,然后再对超出 right 边界的字符一一做对称匹配。
+     * 第 i 个字符不在有边界内，赋值1，然后正常扩展
+     * 算出 child[i] 的值了，下面的 while 循环就是对接下来的字符做匹配操作的
+     */
+    child[i] = i < right ? Math.min(child[2 * mid - i], right - i) : 1;
+    // 进行扩展 对于完全在右边界内的中心字符索引，此扩展一次都不会执行，而对于
+    while (str.charAt(i + child[i]) == str.charAt(i - child[i])) {
+      child[i]++;
+    }
+    // 是否更新右边界, 根据最新得到边界进行比较
+    if (right < child[i] + i) {
+      mid = i;
+      right = child[i] + 1;
+    }
+    // 是否更新最长回文子串
+    if (maxLen < child[i]) {
+      maxLen = child[i];
+      maxLenMid = i;
+    }
+  }
+  // 根据两个遍历maxLen和maxLenMid得到最长回文子串
+  return this.substring((maxLenMid + 1 - maxLen) / 2, maxLen - 1);
+};
