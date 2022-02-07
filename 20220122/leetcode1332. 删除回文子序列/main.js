@@ -179,7 +179,7 @@ String.prototype.findLongestPlalindromeString = function () {
      * 算出 child[i] 的值了，下面的 while 循环就是对接下来的字符做匹配操作的
      */
     child[i] = i < right ? Math.min(child[2 * mid - i], right - i) : 1;
-    // 进行扩展 对于完全在右边界内的中心字符索引，此扩展一次都不会执行，而对于
+    // 进行扩展 对于完全在右边界内的中心字符索引，此扩展一次都不会执行，而对于不在右边界或者范围超出右边界的字符会进行扩展
     while (str.charAt(i + child[i]) == str.charAt(i - child[i])) {
       child[i]++;
     }
