@@ -203,3 +203,44 @@ getMaximumGold3([
   [0, 3, 0],
   [9, 0, 20],
 ]);
+
+/**
+ * @param {number[][]} grid
+ * @return {number}
+ */
+var getMaximumGold4 = function (grid) {
+  const m = grid.length;
+  const n = grid[0].length;
+  let ans = 0;
+  const visited = [];
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      ans = Math.max(ans, dfs(grid, i, j, visited));
+    }
+  }
+  return ans;
+};
+const dfs = (grid, x, y, visited) => {
+  const m = grid.length;
+  const n = grid[0].length;
+  // 判断是否结束
+  if (visited[n * x + y] || grid[x][y] == 0) {
+    return 0;
+  }
+  // 设置为已访问
+  visited[n * x + y] = 1;
+  // 声明以[x, y]为起点的路径最大值
+  let mx = 0;
+  // 开始遍历扩散
+  for (const dir of DIRS) {
+    const i = x + dir[0];
+    const j = y + dir[1];
+    if (i >= 0 && j >= 0 && i < m && j < n) {
+      mx = Math.max(mx, dfs(grid, i, j, visited));
+    }
+  }
+  // 回溯状态
+  visited[n * x + y] = 0;
+  // 返回
+  return mx + grid[x][y];
+};
