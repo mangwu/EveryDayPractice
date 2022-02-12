@@ -33,7 +33,44 @@
  * @returns 人类可读的格式（英文）
  */
 function formatDuration(seconds) {
-  // 首先需要计算年，
+  if (seconds === 0) {
+    return 'now';
+  }
+  // 首先需要计算年，日，小时，分钟
+  const second = seconds % 60;
+  const minutes = Math.floor(seconds / 60);
+  const minute = minutes % 60;
+  const hours = Math.floor(minutes / 60);
+  const hour = hours % 24;
+  const days = Math.floor(hours / 24);
+  const day = days % 365;
+  const year = Math.floor(days / 365);
+  let ans = '';
+  // 开始合成
+  const arr = [['year', year], ['day', day], ['hour', hour], ['minute', minute], ['second', second]];
+  for (const date of arr) {
+    if (date[1] > 0) {
+      if(date[1] > 1) {
+        ans+=date[1] + ' ' + date[0] + 's, ';
+      } else {
+        ans+=date[1] + ' ' + date[0] + ', ';
+      }
+    }
+  }
+  // console.log(ans);
+  // 减去最后的两个
+  ans = ans.substring(0, ans.length - 2);
+  // 找到最后一个逗号
+  const idx = ans.lastIndexOf(',');
+  if (idx !== -1) {
+    ans = ans.substring(0, idx) + ' and' + ans.substring(idx + 1);  
+  }
+  // console.log(ans);
   // Complete this function
-  return seconds;
+  return ans;
 }
+formatDuration(0);
+formatDuration(62);
+formatDuration(130);
+formatDuration(3662);
+formatDuration(31578008);
