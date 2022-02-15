@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-02-15 09:49:37                                                  *
- * @LastModifiedDate: 2022-02-15 10:09:00                                      *
+ * @LastModifiedDate: 2022-02-15 10:21:52                                      *
  * @ModifiedBy:                                                                *
  * -----------------------                                                     *
  * Copyright (c) 2022 inspur                                                   *
@@ -65,9 +65,38 @@ function primeFactors(n) {
       }
     }
   }
-  // console.log(n);
+  // console.log(ans);
   // 最后如果n不等于1，说明n是质数，需要加到最终结果中
   return n !== 1 ? ans + `(${n})` : ans;
 }
 
 primeFactors(7775460);
+
+/**
+ * @description 返回一个数的所有质数
+ * @param {Number} n 正整数 >2
+ * @returns {String} 以(prime**num)的形式返回
+ */
+function primeFactors2(n) {
+  // 质数的上限
+  const max = Math.sqrt(n);
+  let ans = "";
+  // 可以不用hash表保存hash，使用普通变量记录每个质数个数就好
+  let num = 0;
+  // 遍历[2, max]之间的所有整数
+  for (let i = 2; i <= max; i++) {
+    // 重置
+    num = 0;
+    // 如果能够整除i就添加到hash中
+    while (n % i === 0) {
+      num++;
+      n = n / i;
+    }
+    // 获取当前的质数和个数并保存再ans中
+    ans = ans + (num ? (num > 1 ? `(${i}**${num})` : `(${i})`) : "");
+  }
+  // 最后如果n不等于1，说明n是质数，需要加到最终结果中
+  return n !== 1 ? ans + `(${n})` : ans;
+}
+
+primeFactors2(7775460);
