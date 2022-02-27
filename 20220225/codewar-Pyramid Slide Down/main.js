@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-02-25 15:43:35                                                  *
- * @LastModifiedDate: 2022-02-27 23:17:22                                      *
+ * @LastModifiedDate: 2022-02-27 23:26:32                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -215,3 +215,17 @@ console.log(
     [4, 62, 98, 27, 23, 9, 70, 98, 73, 93, 38, 53, 60, 4, 23],
   ])
 );
+
+// 使用动态规划
+/**
+ * @description 从金字塔上滑下来
+ * @param {Array} pyramid 金字塔
+ * @returns max 最大路径值
+ */
+function longestSlideDown3(pyramid) {
+  // 使用reduceRight高阶函数
+  // 从最后一层开始遍历
+  return pyramid.reduceRight((last, current) => {
+    return current.map((v, i) => v + Math.max(last[i], last[i + 1]));
+  })[0];
+}
