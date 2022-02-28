@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-02-25 11:23:27                                                  *
- * @LastModifiedDate: 2022-02-25 15:32:03                                      *
+ * @LastModifiedDate: 2022-02-28 13:35:50                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -83,7 +83,6 @@ removeZeros2([1, "0", 2, 0, 52, "0", 7, 0, "3", 1]);
  * @returns array 把0移到后面的数组
  */
 function removeZeros3(array) {
-  // 每遇到一个0就将其和最近的非0元素替换位置
   let len = array.length;
   let num = 0;
   for (let i = 0; i < len; i++) {
