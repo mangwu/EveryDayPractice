@@ -64,9 +64,9 @@ var removeNthFromEnd2 = function (head, n) {
       fast = fast.next;
       n--;
     } else {
-      head = head.next;
+      fast = fast.next;
       pre = slow;
-      slow = slow.fast;
+      slow = slow.next;
     }
   }
   // 如果pre为空，说明slow指向头指针，删除第一个节点，直接返回head.next即可
