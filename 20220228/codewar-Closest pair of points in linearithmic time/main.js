@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-02-28 17:24:24                                                  *
- * @LastModifiedDate: 2022-03-03 19:16:14                                      *
+ * @LastModifiedDate: 2022-03-04 10:05:27                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -106,6 +106,7 @@ closestPair2([
   [2, 2], // A
   [2, 8], // B
   [5, 5], // C
+  [5, 5],
   [4, 3], // D
   [5, 2], // E
   [6, 7], // F
@@ -126,7 +127,7 @@ closestPair2([
  */
 function closestPair3(points) {
   const [midD, a, b] = divide_algorithm(points);
-  console.log(midD, a, b);
+  // console.log(midD, a, b);
   return [a, b];
 }
 // 计算距离
@@ -134,6 +135,7 @@ const distance = (x, y) => {
   return Math.sqrt(Math.pow(x[0] - y[0], 2) + Math.pow(x[1] - y[1], 2));
 };
 const divide_algorithm = (points) => {
+  // console.log(points);
   const len = points.length;
   // 判断平面是否只有两个点
   if (len < 2) {
@@ -151,6 +153,7 @@ const divide_algorithm = (points) => {
   // 递归
   const [d1, a1, b1] = divide_algorithm(points.slice(0, half));
   const [d2, a2, b2] = divide_algorithm(points.slice(half));
+
   // 获得小值
   if (d1 > d2) {
     minD = d2;
@@ -164,24 +167,21 @@ const divide_algorithm = (points) => {
   // 获得中位线的x值
   let calibration = points[half][0];
   // 根据中间位置将点分为两个部分
-  const left = [],
-    right = [];
+  const midArr = [];
   // 将在x轴范围距离小于d的中位数附近的值入数组
   for (const p of points) {
-    if (calibration - minD < p[0] && calibration > p[0]) {
-      left.push(p);
-    } else if (calibration <= p[0] && p[0] < calibration + minD) {
-      right.push(p);
+    if (calibration - minD < p[0] && p[0] < calibration + minD) {
+      midArr.push(p);
     }
   }
-  // 遍历left和right寻找最近点
-  for (const l of left) {
-    for (const r of right) {
-      const dmid = distance(l, r);
+  // 遍历midArr
+  for (let i = 0; i < midArr.length; i++) {
+    for (let j = i + 1; j < midArr.length; j++) {
+      const dmid = distance(midArr[i], midArr[j]);
       if (dmid < minD) {
         minD = dmid;
-        a = l;
-        b = r;
+        a = midArr[i];
+        b = midArr[j];
       }
     }
   }
