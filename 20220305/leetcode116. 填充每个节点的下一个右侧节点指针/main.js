@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-03-05 23:33:18                                                  *
- * @LastModifiedDate: 2022-03-05 23:52:11                                      *
+ * @LastModifiedDate: 2022-03-06 02:03:21                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -50,3 +50,6 @@ var connect = function (root) {
   return root;
   // bfs
 };
+
+// 第二种做法dfs
+// 
