@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-03-04 10:26:11                                                  *
- * @LastModifiedDate: 2022-03-04 11:25:23                                      *
+ * @LastModifiedDate: 2022-03-10 19:45:18                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -80,3 +80,65 @@ var subArrayRanges2 = function (nums) {
 };
 
 subArrayRanges2([4, -2, -3, 4, 1]);
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var subArrayRanges2 = function (nums) {
+  // 单调栈
+  const len = nums.length;
+  let s = [];
+  const lsmall = [];
+  const rsmall = [];
+  const llarge = [];
+  const rlarge = [];
+
+  for (let i = 0; i < len; i++) {
+    while (s.length > 0 && nums[s[s.length - 1]] >= nums[i]) {
+      // 大于当前值就不是最近小于当前元素的节点（同时排除相等值）
+      s.pop();
+    }
+    // 左侧范围是自己就记录-1即可
+    lsmall[i] = s.length ? s[s.length - 1] : -1;
+    s.push(i);
+  }
+  s = [];
+  for (let i = len - 1; i >= 0; i--) {
+    while (s.length > 0 && nums[s[s.length - 1]] > nums[i]) {
+      // 大于当前值就不是最近小于当前元素的节点（同时排除相等值）
+      s.pop();
+    }
+    // 右侧范围是自己就记录-1即可
+    rsmall[i] = s.length ? s[s.length - 1] : len;
+    s.push(i);
+  }
+  s = [];
+  for (let i = 0; i < len; i++) {
+    while (s.length > 0 && nums[s[s.length - 1]] <= nums[i]) {
+      // 小于当前值就不是最近的大于当前元素的节点（同时排除相同值）
+      s.pop();
+    }
+    // 左侧范围是自己就记录-1
+    llarge[i] = s.length ? s[s.length - 1] : -1;
+    s.push(i);
+  }
+  s = [];
+  for (let i = len - 1; i >= 0; i--) {
+    while (s.length > 0 && nums[s[s.length - 1]] < nums[i]) {
+      // 小于当前值就不是最近的大于当前元素的节点（同时排除相同值）
+      s.pop();
+    }
+    // 右侧范围是自己就记录-1
+    rlarge[i] = s.length ? s[s.length - 1] : len;
+    s.push(i);
+  }
+  let ans = 0;
+  for (let i = 0; i < len; i++) {
+    // 加最大值之和
+    ans += nums[i] * (i - llarge[i]) * (rlarge[i] - i);
+    // 减去最小值之和
+    ans -= nums[i] * (i - lsmall[i]) * (rsmall[i] - i);
+  }
+  return ans;
+};
