@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-03-04 13:52:54                                                  *
- * @LastModifiedDate: 2022-03-04 17:28:55                                      *
+ * @LastModifiedDate: 2022-03-10 15:42:44                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -76,4 +76,28 @@ var nextGreaterElement = function (nums1, nums2) {
     ans[i] = j < len2 ? nums2[j] : -1;
   }
   return ans;
+};
+
+/**
+ * @param {number[]} nums1
+ * @param {number[]} nums2
+ * @return {number[]}
+ */
+var nextGreaterElement = function (nums1, nums2) {
+  // 保存Next Greater Number的结果
+  const hash = new Map();
+  // 单调栈
+  const stack = [];
+  const len = nums2.length;
+  for (let i = len - 1; i >= 0; i--) {
+    // 遍历stack，有栈元素比当前num小就弹出
+    while (stack.length > 0 && nums2[stack[stack.length - 1]] <= nums2[i]) {
+      stack.pop();
+    }
+    // 设置为栈顶元素（小的都被抛弃了）
+    hash.set(nums2[i], stack.length ? nums2[stack[stack.length - 1]] : -1);
+    // 入栈，为下一个元素做准备
+    stack.push(i);
+  }
+  return nums1.map((v) => hash.get(v));
 };
