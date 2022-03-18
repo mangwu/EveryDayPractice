@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-03-18 19:58:45                                                  *
- * @LastModifiedDate: 2022-03-18 20:27:13                                      *
+ * @LastModifiedDate: 2022-03-18 20:28:46                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -58,6 +58,7 @@ var reverseKGroup = function (head, k) {
         nodes[i - 1].next = nodes[i - 2];
         i--;
       }
+      // 把第一个元素
       nodes[0].next = node;
       if (first == head) {
         first = nodes[k-1];
