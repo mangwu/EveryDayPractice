@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-03-18 19:58:45                                                  *
- * @LastModifiedDate: 2022-03-18 20:28:46                                      *
+ * @LastModifiedDate: 2022-03-18 22:43:24                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -36,19 +36,21 @@
  * @return {ListNode}
  */
 var reverseKGroup = function (head, k) {
+  if (k == 1) {
+    return head;
+  }
   // 节点的数量大于等于k才能翻转
   // 用于记录第一个节点
   let first = head;
   let node = head;
   let nodes = [];
+  let pre;
   while (node) {
     let i = 0;
     // 开始入栈
     while (i < k && node) {
       nodes.push(node);
-      let next = node.next;
-      node.next = null;
-      node = next;
+      node = node.next;
       i++;
     }
     console.log(i);
@@ -59,12 +61,24 @@ var reverseKGroup = function (head, k) {
         i--;
       }
       // 把第一个元素
-      nodes[0].next = node;
+      // nodes[0].next = node;
       if (first == head) {
-        first = nodes[k-1];
+        first = nodes[k - 1];
+        pre = nodes[0];
+      } else {
+        // 把上一个nodes[0]指向本次node最后一个元素
+        pre.next = nodes[k - 1];
+        pre = nodes[0];
       }
+    } else {
+      // 上一次的pre指向第一个节点
+      pre.next = nodes[0];
+      pre = null;
     }
     nodes = [];
+  }
+  if (pre) {
+    pre.next = null;
   }
   return first;
 };
