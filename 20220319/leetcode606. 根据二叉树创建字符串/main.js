@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-03-19 00:52:12                                                  *
- * @LastModifiedDate: 2022-03-19 01:50:10                                      *
+ * @LastModifiedDate: 2022-03-19 20:43:45                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -56,26 +56,32 @@ var tree2str = function (root) {
   if (root == null) {
     return "";
   }
-  let ans;
-  if (root.left && root.right) {
-    ans =
-      root.val +
-      "(" +
-      tree2str(root.left) +
-      ")" +
-      "(" +
-      tree2str(root.right) +
-      ")";
-  }
   if (root.left == null && root.right) {
-    ans = root.val + "()";
-    "(" + tree2str(root.right) + ")";
+    return root.val + "()" + "(" + tree2str(root.right) + ")";
   }
   if (root.left && root.right == null) {
-    ans = root.val + "(" + tree2str(root.left) + ")";
+    return root.val + "(" + tree2str(root.left) + ")";
   }
   if (root.left == null && root.right == null) {
-    ans = root.val;
+    return root.val;
   }
-  return ans;
+  return (
+    root.val +
+    "(" +
+    tree2str(root.left) +
+    ")" +
+    "(" +
+    tree2str(root.right) +
+    ")"
+  );
+};
+
+/**
+ * @param {TreeNode} root
+ * @return {string}
+ */
+var tree2str = function (root) {
+  if (root == null) {
+    return "";
+  }
 };
