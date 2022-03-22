@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-03-22 15:09:58                                                  *
- * @LastModifiedDate: 2022-03-22 17:45:34                                      *
+ * @LastModifiedDate: 2022-03-22 21:28:43                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -56,7 +56,7 @@ var hasPathSum = function (root, targetSum) {
   return false;
 };
 
-// 上述解答错误,因为每次节点无论有没有右节点都会弹出来,此时的
+// 上述解答错误,因为每次都会
 /**
  * @param {TreeNode} root
  * @param {number} targetSum
@@ -118,16 +118,48 @@ var hasPathSum = function (root, targetSum) {
   let queue = [root];
   const sumSet = [sum];
   while (queue.length > 0) {
-    const temp = sumSet[sumSet.length - 1];
-    const top = queue.pop();
+    const temp = sumSet.shift();
+    const top = queue.shift();
+    // 判断是否时叶子节点
     if (!top.left && !top.right) {
       if (temp == targetSum) {
         return true;
       }
+      // 可以不用push新节点
+      continue;
     }
+    // 因为入队的节点和和值都是同一时间入队的，所以在数组中的索引是一一对应的
     if (top.left) {
       queue.push(top.left);
       sumSet.push(temp + top.left.val);
     }
+    if (top.right) {
+      queue.push(top.right);
+      sumSet.push(temp + top.right.val);
+    }
   }
+  return false;
+};
+
+// 递归
+// 要求路径和，可以先求出当前节点的子节点到叶子节点的距离，路径和满足sum - val
+// 如果当前节点值等于sum(减过之前路径的节点值的)且为叶子节点，就存在这条路径
+/**
+ * @param {TreeNode} root
+ * @param {number} targetSum
+ * @return {boolean}
+ */
+var hasPathSum = function (root, targetSum) {
+  if (!root) {
+    return false;
+  }
+  // 是否是叶子节点
+  if (!root.left && !root.right) {
+    //  比较值和当前值
+    return root.val == targetSum;
+  }
+  return (
+    hasPathSum(root.left, targetSum - root.val) ||
+    hasPathSum(root.right, targetSum - root.val)
+  );
 };
