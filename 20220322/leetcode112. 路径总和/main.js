@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-03-22 15:09:58                                                  *
- * @LastModifiedDate: 2022-03-22 16:27:09                                      *
+ * @LastModifiedDate: 2022-03-22 17:45:34                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -100,4 +100,34 @@ var hasPathSum = function (root, targetSum) {
     }
   }
   return false;
+};
+
+// 使用层序遍历
+
+/**
+ * @param {TreeNode} root
+ * @param {number} targetSum
+ * @return {boolean}
+ */
+var hasPathSum = function (root, targetSum) {
+  // 层序遍历需要保存没个元素到根节点的路径和
+  if (!root) {
+    return false;
+  }
+  let sum = root.val;
+  let queue = [root];
+  const sumSet = [sum];
+  while (queue.length > 0) {
+    const temp = sumSet[sumSet.length - 1];
+    const top = queue.pop();
+    if (!top.left && !top.right) {
+      if (temp == targetSum) {
+        return true;
+      }
+    }
+    if (top.left) {
+      queue.push(top.left);
+      sumSet.push(temp + top.left.val);
+    }
+  }
 };
