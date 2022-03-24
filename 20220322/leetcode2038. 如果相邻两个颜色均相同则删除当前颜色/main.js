@@ -61,7 +61,7 @@ winnerOfGame("AABABAAAABBB");
  * @return {boolean}
  */
 var winnerOfGame = function (colors) {
-  // 遍历一遍colors找出连续的3A和3B
+  // 遍历一遍colors找出连续的3A和3BP
   const len = colors.length;
   if (len <= 2) {
     return false;
