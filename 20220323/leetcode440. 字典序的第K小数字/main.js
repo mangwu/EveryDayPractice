@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-03-23 09:16:04                                                  *
- * @LastModifiedDate: 2022-03-23 22:20:30                                      *
+ * @LastModifiedDate: 2022-03-24 21:52:28                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -44,7 +44,7 @@ var findKthNumber = function (n, k) {
   }
   // 根据n的大小得出开头是1的个数
   // 如 n < 10 时，1开头的只有1个即1
-  // 10 <= n < 20 是，1 开头的有n - 8个 如 15 有 1 10 11 12 13 14 15 共 15 - 8 = 7个
+  // 10 <= n < 20 是，1 开头的有1 + n - 9个 如 15 有 1 10 11 12 13 14 15 共 15 - 8 = 7个
   // 20 <= n < 100 时， 1 开头的始终有11 个 1 10 11 12 13 14 15 16 17 18 19
   // 100 <= n < 200 时， 1开头的有 11 + n - 99 个
   // 200 <= n < 1000 时，1开头的固定有 111 个1 + 10 + 100
@@ -56,9 +56,20 @@ var findKthNumber = function (n, k) {
     const max = Math.pow(10, digits);
     const mid = Math.pow(10, digits - 1) * (i + 1);
     const min = Math.pow(10, digits - 1);
-    let num = 0;
+    let num = Number(i.toString().repeat(digits));
     if (n >= mid) {
       // 有固定的个数
+      num = Number(i.toString().repeat(digits));
+      if (k > num) {
+        // 不在其中
+        k = k - num;
+      } else {
+        // 
+      }
+    } else {
+      num = 1 + n - min + 1;
+      // k也小于mid，必定在其中
+      // 递归求出结果 
     }
   }
 };

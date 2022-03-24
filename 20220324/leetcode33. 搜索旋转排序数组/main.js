@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-03-24 16:46:36                                                  *
- * @LastModifiedDate: 2022-03-24 17:10:39                                      *
+ * @LastModifiedDate: 2022-03-24 22:39:40                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -72,3 +72,50 @@ var search = function (nums, target) {
 };
 
 // [4,5,6,7,1,2, 4, 5, 6, 7, 1 , 2]
+// 上面是错误解答
+// 如果要使用二分查找，对一般的数组进行查找即可，因为一定有一半的数组是有序的
+// 如果target的大小在有序数组额范围中，可以直接进行查找得出结果
+// 如果不在有序数组的范围中，可以将另一个不是有序数组的的数组再次进行二分，继续查找即可
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number}
+ */
+var search = function (nums, target) {
+  let len = nums.length;
+  if (len == 0) {
+    return -1;
+  }
+  if (len == 1) {
+    return target == nums[0] ? 0 : -1;
+  }
+  // [0, len-1]
+  let left = 0;
+  let right = len - 1;
+  while (left <= right) {
+    let mid = Math.floor((left + right) / 2);
+    if (nums[mid] == target) {
+      return mid;
+    }
+    if (nums[0] <= nums[mid]) {
+      // 左半部分是否有序
+      if (nums[0] <= target && target < nums[mid]) {
+        // 有序且在该范围内 [left, mid - 1]
+        right = mid - 1;
+      } else {
+        // 不在范围内 [mid+1, right]
+        left = mid + 1;
+      }
+    } else {
+      // 右半部分为有序的
+      if (nums[mid] < target && target <= nums[len - 1]) {
+        // 在范围内 [mid+1, right]
+        left = mid + 1;
+      } else {
+        // 不在范围内 [left, mid - 1]
+        right = mid - 1;
+      }
+    }
+  }
+  return -1;
+};
