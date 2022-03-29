@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-03-29 17:33:56                                                  *
- * @LastModifiedDate: 2022-03-29 17:36:18                                      *
+ * @LastModifiedDate: 2022-03-29 20:46:11                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -22,13 +22,24 @@
 var isPalindrome = function (s) {
   // 先转化为小写字符
   s = s.toLocaleLowerCase();
-  s = s.split(/\s+/).join('')
-  console.log(s);
-  const len = s.length;
+  let arr = [];
+  for (let i = 0; i < s.length; i++) {
+    const code = s[i].charCodeAt();
+    if (
+      (code >= "a".charCodeAt() && code <= "z".charCodeAt()) ||
+      (code >= "0".charCodeAt() && code <= "9".charCodeAt())
+    ) {
+      arr.push(s[i]);
+    }
+  }
+  console.log(arr);
+  const len = arr.length;
   for (let i = 0; i < len / 2; i++) {
-    if (s[i] !== s[len - i - 1]) {
+    console.log(arr[i]);
+    if (arr[i] !== arr[len - i - 1]) {
       return false;
     }
   }
   return true;
 };
+console.log(isPalindrome("A man, a plan, a canal: Panama"));
