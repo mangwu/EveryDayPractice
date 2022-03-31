@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-03-31 09:49:10                                                  *
- * @LastModifiedDate: 2022-03-31 11:20:50                                      *
+ * @LastModifiedDate: 2022-03-31 17:44:14                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -93,3 +93,11 @@ solve([
   ["X", "O", "X", "X", "X", "O"],
   ["X", "X", "X", "O", "O", "X"],
 ]);
+
+/**
+ * @param {character[][]} board
+ * @return {void} Do not return anything, modify board in-place instead.
+ */
+var solve = function (board) {
+  //
+};
