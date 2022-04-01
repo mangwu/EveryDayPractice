@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-04-01 16:35:57                                                  *
- * @LastModifiedDate: 2022-04-01 17:18:03                                      *
+ * @LastModifiedDate: 2022-04-01 17:34:41                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -22,22 +22,16 @@
  */
 var subsets = function (nums) {
   // 暴力解法
-  const len = nums.length;
-  const ans = [[]];
-  let preset = new Set();
-  preset.add(new Set());
-  // 可以根据前面的选择不一样的
-  for (let i = 1; i <= len; i++) {
-    let subset = [];
-    const curSet = new Set();
-    for (const item of preset) {
-      // 选择i个的子集
-      for (let j = 0; j < len; j++) {
-        if (!item.has(nums[j])) {
-          // 没有就添加
-          subset.push([nums[j], ...item]);
-        }
-      }
+  // 迭代
+  // 子集中的每个元素有都两种状态，即被选中合未被选中 0 1
+  // 使用二级制进行迭代如 1010 表示第2个元素和第4个元素被选中，而其它为未选中
+  const len  = nums.length;
+  let ans = [];
+  for(let i = 0; i < Math.pow(2, len); i++) {
+    const sub = [];
+    let j = i;
+    while(j > 0) {
+      
     }
   }
 };
