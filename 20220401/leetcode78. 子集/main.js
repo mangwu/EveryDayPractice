@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-04-01 16:35:57                                                  *
- * @LastModifiedDate: 2022-04-01 17:34:41                                      *
+ * @LastModifiedDate: 2022-04-01 22:14:33                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -25,15 +25,19 @@ var subsets = function (nums) {
   // 迭代
   // 子集中的每个元素有都两种状态，即被选中合未被选中 0 1
   // 使用二级制进行迭代如 1010 表示第2个元素和第4个元素被选中，而其它为未选中
-  const len  = nums.length;
+  const len = nums.length;
   let ans = [];
-  for(let i = 0; i < Math.pow(2, len); i++) {
+  for (let i = 0; i < Math.pow(2, len); i++) {
     const sub = [];
-    let j = i;
-    while(j > 0) {
-      
+    for (let j = 0; j < len; j++) {
+      // 判断第J位是否被选中
+      if ((i & 1 << j) !== 0) {
+        sub.push(nums[j]);
+      }
     }
+    ans.push(sub);
   }
+  return ans;
 };
 
 /**
