@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-04-01 23:28:55                                                  *
- * @LastModifiedDate: 2022-04-02 00:28:12                                      *
+ * @LastModifiedDate: 2022-04-02 14:07:58                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -78,19 +78,20 @@ var isIsomorphic = function (s, t) {
     return false;
   }
   // 记录映射关系
-  const hash = new Map();
+  const hash1 = new Map();
+  const hash2 = new Map();
   for (let i = 0; i < lens; i++) {
-    if (hash.has(s[i])) {
-      if (t[i] !== hash.get(s[i])) {
+    if (hash1.has(s[i])) {
+      // 是否有映射字符
+      if (t[i] !== hash1.get(s[i])) {
         return false;
       }
-    } else if (hash.has(t[i])) {
-      if (hash.get(t[i]) !== s[i]) {
-        return false;
-      }
+    } else if (hash2.has(t[i])) {
+      // t[i]字符已经被映射过了
+      return false;
     }
-    hash.set(s[i], t[i]);
-    hash.set(t[i], s[i]);
+    hash1.set(s[i], t[i]);
+    hash2.set(t[i], s[i]);
   }
   return true;
 };
