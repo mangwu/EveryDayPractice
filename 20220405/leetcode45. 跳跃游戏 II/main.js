@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-04-05 23:49:11                                                  *
- * @LastModifiedDate: 2022-04-06 00:29:47                                      *
+ * @LastModifiedDate: 2022-04-06 00:34:29                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -33,21 +33,19 @@ var jump = function (nums) {
     return 1;
   }
   // 最大能跳跃位置
-  let max = 1;
+  let max = 0;
   // 跳跃次数
-  let min = 1;
   let minArr = [0, 1];
   for (let i = 0; i < len; i++) {
     if (i + nums[i] > max) {
       premax = max;
       max = i + nums[i];
-      for (let j = premax; j <= Math.min(len - 1, max); j++) {
+      for (let j = premax + 1; j <= Math.min(len - 1, max); j++) {
         minArr[j] = minArr[i] + 1;
       }
       if (max >= len - 1) {
         return minArr[len - 1];
       }
     }
-    // 后面的最小值都可以由当前的元素跳到
   }
 };
