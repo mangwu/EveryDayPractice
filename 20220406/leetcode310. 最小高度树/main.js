@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-04-06 10:49:49                                                  *
- * @LastModifiedDate: 2022-04-06 11:30:13                                      *
+ * @LastModifiedDate: 2022-04-06 22:44:35                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -30,7 +30,10 @@
  * @param {number[][]} edges
  * @return {number[]}
  */
- var findMinHeightTrees = function (n, edges) {
+var findMinHeightTrees = function (n, edges) {
+  if (n == 1) {
+    return [0];
+  }
   // 多源dfs
   const adjlist = new Array(n).fill(0);
   for (const edge of edges) {
@@ -71,6 +74,79 @@
     } else if (pathLen == minPath) {
       ans.push(i);
     }
+  }
+  return ans;
+};
+
+/**
+ * @param {number} n
+ * @param {number[][]} edges
+ * @return {number[]}
+ */
+var findMinHeightTrees = function (n, edges) {
+  // 找到最长路径
+  // 最长路径的一半向上取整就是最短路径，
+  // 最长路径的中间节点就是以其为根节点时组成的最小高度数
+  // 如果最长路径上的节点个数为奇数个，那么这个路径上的最小高度数根节点只有一个
+  // 如果最长路径上的节点个数为偶数个，那么这个路径上的最小高度数根节点就是两个
+  // 可以有多个最长路径，但是最终的结果最多只有两个节点
+  // 因为多个最长路径一定是有公共节点的（树的特性），而交点一定是中间节点（如果不是就能组成更长的路径）
+  if (n == 1) {
+    return [0];
+  }
+  let ans = [];
+  const adjlist = new Array(n).fill(0);
+  for (const edge of edges) {
+    if (adjlist[edge[0]]) {
+      adjlist[edge[0]].push(edge[1]);
+    } else {
+      adjlist[edge[0]] = [edge[1]];
+    }
+    if (adjlist[edge[1]]) {
+      adjlist[edge[1]].push(edge[0]);
+    } else {
+      adjlist[edge[1]] = [edge[0]];
+    }
+  }
+  // 用于在bfs的时候记录父节点路径
+  const parent = new Array(n).fill(-1);
+  const b = findLongestNode(0, adjlist, parent);
+  let a = findLongestNode(b, adjlist, parent);
+  // 求出a，b节点间的中间节点
+  const path = [];
+  // 设置根节点为-1
+  parent[b] = -1;
+  while (a !== -1) {
+    path.push(a);
+    a = parent[a];
+  }
+  const m = path.length;
+  if (m % 2 === 0) {
+    // 路径长度为偶数
+    ans.push(path[Math.floor(m / 2) - 1]);
+  }
+  ans.push(path[Math.floor(m / 2)]);
+  return ans;
+};
+const findLongestNode = (start, adjlist, parent) => {
+  const visited = [];
+  visited[start] = true;
+  let queue = [start];
+  let ans = -1;
+  while (queue.length > 0) {
+    let nxt = [];
+    for (const q of queue) {
+      ans = q;
+      for (const i of adjlist[q]) {
+        if (!visited[i]) {
+          nxt.push(i);
+          visited[i] = true;
+          // 记录当前节点的父节点是q(每次都更新)
+          parent[i] = q;
+        }
+      }
+    }
+    queue = nxt;
   }
   return ans;
 };
