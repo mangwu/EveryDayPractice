@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-04-11 16:39:48                                                  *
- * @LastModifiedDate: 2022-04-11 17:29:13                                      *
+ * @LastModifiedDate: 2022-04-11 21:46:02                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -70,4 +70,28 @@ var countNumbersWithUniqueDigits = function (n) {
     dp[i] = dp[i - 1] + mutil;
   }
   return dp[n];
+};
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var countNumbersWithUniqueDigits = function (n) {
+  // 排列组合
+  // 对于0 1 这两种情况，返回10^n即可
+  // 当n >= 2 时，使用排列组合得到不包含相同数字的结果
+  // n = 2时，一位数 9个 二位数9 * A(1,9)
+  //  => 9表示第一位的选择（不能为0），A(1,9)表示从剩下9个中选择一个不相同的数字的排列
+  // n = d 时，前面的d-1 d-2 .. 1位数之和加上，9 * A(d-1, 9) 从剩下的9个中选择d-1个不同的数字的排列
+  if (n <= 1) {
+    return Math.pow(10, n);
+  }
+  let res = 10; // 存储上一轮的结果（n=1的结果为10）
+  let cur = 9; // 初始为9
+  for (let i = 0; i < n - 1; i++) {
+    // 计算当前位数的个数
+    cur *= 9 - i;
+    // 加上当前位数的个数就是本轮个数
+    res += cur;
+  }
+  return res;
 };
