@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-04-13 13:43:35                                                  *
- * @LastModifiedDate: 2022-04-13 14:32:07                                      *
+ * @LastModifiedDate: 2022-04-13 23:28:55                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -76,4 +76,63 @@ var maxSubArray = function (nums) {
     pre = curMax;
   }
   return max;
+};
+
+// 分治算法
+/**
+ * @description 定义每一个分治区间的状态
+ * @param {Number} l 以左边为起始的最大子连续子数组和
+ * @param {Number} r 以右边为结束的最大子连续子数组和
+ * @param {Number} m 最大连续子数组和
+ * @param {Number} i 区间总和
+ */
+function Status(l, r, m, i) {
+  this.lSum = l;
+  this.rSum = r;
+  this.mSum = m;
+  this.iSum = i;
+}
+
+/**
+ * @description 获取左右区间合并后的状态
+ * @param {Status} l 左区间的状态
+ * @param {Status} r 右区间的状态
+ * @returns {Status} 获取左右区间合并的区间的状态
+ */
+const pushUp = (l, r) => {
+  // 总和
+  const iSum = l.iSum + r.iSum;
+  // 以左边为起始的最大连续子数组 =>
+  // 两种情况经过或者没有经过中间点 => 左区间的lSum和左区间的iSum+右区间的lSum
+  const lSum = Math.max(l.lSum, l.iSum + r.lSum);
+  const rSum = Math.max(r.rSum, r.iSum + l.rSum);
+  const mSum = Math.max(l.mSum, r.mSum, l.rSum + r.lSum);
+  return new Status(lSum, rSum, mSum, iSum);
+};
+/**
+ * @description 求得区间的状态(Status)
+ * @param {Array} a 区间数组
+ * @param {Number} l 区间起始索引
+ * @param {Number} r 区间终止索引
+ */
+const getInfo = (a, l, r) => {
+  // [i,i]区间时
+  if (l === r) {
+    return new Status(a[l], a[l], a[l], a[l]);
+  }
+  // 中间索引
+  const m = (l + r) >> 1;
+  // 获取左边的状态
+  const lSub = getInfo(a, l, m);
+  // 获取右边的状态
+  const rSub = getInfo(a, m + 1, r);
+  // 计算出左右区间整合一起时的状态
+  return pushUp(lSub, rSub);
+};
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var maxSubArray = function (nums) {
+  return getInfo(nums, 0, nums.length - 1).mSum;
 };
