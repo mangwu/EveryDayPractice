@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-04-18 15:34:07                                                  *
- * @LastModifiedDate: 2022-04-18 15:40:36                                      *
+ * @LastModifiedDate: 2022-04-18 19:47:55                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -29,5 +29,34 @@
  * @return {boolean}
  */
 var isValidSudoku = function (board) {
-  
+  const set = new Set(["1", "2", "3", "4", "5", "6", "7", "8", "9"]);
+  // 检查横向和竖向
+  for (let i = 0; i < 9; i++) {
+    const setrow = new Set(set);
+    const setcolumn = new Set(set);
+    // 3 × 3
+    const newSet = new Set(set);
+
+    for (let j = 0; j < 9; j++) {
+      if (board[i][j] !== "." && !setrow.has(board[i][j])) {
+        return false;
+      } else {
+        setrow.delete(board[i][j]);
+      }
+      if (board[j][i] !== "." && !setcolumn.has(board[j][i])) {
+        return false;
+      } else {
+        setcolumn.delete(board[j][i]);
+      }
+      // 3 × 3 的x和y计算
+      const x = Math.floor(i / 3) * 3 + Math.floor(j / 3);
+      const y = (i % 3) * 3 + (j % 3);
+      if (board[x][y] !== "." && !newSet.has(board[x][y])) {
+        return false;
+      } else {
+        newSet.delete(board[x][y]);
+      }
+    }
+  }
+  return true;
 };
