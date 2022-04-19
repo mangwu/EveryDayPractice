@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-04-19 16:23:52                                                  *
- * @LastModifiedDate: 2022-04-19 16:54:03                                      *
+ * @LastModifiedDate: 2022-04-19 22:44:26                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -81,3 +81,42 @@ var search = function (nums, target) {
 
 // [4,5,6,7,8,0,1,2] => 区域左边是递增区间
 // [6,7,8,0,1,2,4,5] => 区域右边是递增区间
+
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number}
+ */
+var search = function (nums, target) {
+  const len = nums.length;
+  // [0, len-1]
+  let left = 0;
+  let right = len - 1;
+  let mid;
+  while (left <= right) {
+    mid = (left + right) >> 1;
+    if (nums[mid] == target) {
+      return mid;
+    }
+    if (nums[mid] > nums[0]) {
+      // 左区间为递增区间，判断target是否在左区间
+      if (target < nums[mid] && target >= nums[0]) {
+        // 在左区间[left, mid-1]
+        right = mid - 1;
+      } else {
+        // 在右区间
+        left = mid + 1;
+      }
+    } else {
+      // 右区间为递增区间，判断target是否在右区间
+      if (target > nums[mid] && target <= nums[len - 1]) {
+        // 在右区间
+        left = mid + 1;
+      } else {
+        right = mid - 1;
+      }
+    }
+  }
+  return -1;
+};
+
