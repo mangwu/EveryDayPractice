@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-04-21 16:36:21                                                  *
- * @LastModifiedDate: 2022-04-21 16:55:04                                      *
+ * @LastModifiedDate: 2022-04-21 22:18:29                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -29,11 +29,11 @@ var findAnagrams = function (s, p) {
     return [];
   }
   const ans = [];
-  const primitiveAlpha = new Array(26).fill(0)
+  const primitiveAlpha = new Array(26).fill(0);
   for (const ch of p) {
     primitiveAlpha[ch.charCodeAt() - "a".charCodeAt()]++;
   }
-  const win = new Array(26).fill(0)
+  const win = new Array(26).fill(0);
   for (let i = 0; i < lenp; i++) {
     win[s[i].charCodeAt() - "a".charCodeAt()]++;
   }
@@ -44,6 +44,54 @@ var findAnagrams = function (s, p) {
     win[s[i].charCodeAt() - "a".charCodeAt()]++;
     win[s[i - lenp].charCodeAt() - "a".charCodeAt()]--;
     if (win.toString() == primitiveAlpha.toString()) {
+      ans.push(i - lenp + 1);
+    }
+  }
+  return ans;
+};
+
+/**
+ * @param {string} s
+ * @param {string} p
+ * @return {number[]}
+ */
+var findAnagrams = function (s, p) {
+  const lens = s.length;
+  const lenp = p.length;
+  if (lenp > lens) {
+    return [];
+  }
+  const alpha = new Array(26).fill(0);
+  for (let i = 0; i < lenp; i++) {
+    alpha[p[i].charCodeAt() - "a".charCodeAt()]++;
+    alpha[s[i].charCodeAt() - "a".charCodeAt()]--;
+  }
+  let diff = 0;
+  for (const num of alpha) {
+    if (num !== 0) {
+      diff++;
+    }
+  }
+  if (diff == 0) {
+    ans.push(0);
+  }
+  const ans = [];
+  for (let i = lenp; i < lens; i++) {
+    let push = s[i].charCodeAt() - "a".charCodeAt();
+    let pop = s[i - lenp].charCodeAt() - "a".charCodeAt();
+    if (alpha[pop] == -1) {
+      diff--;
+    } else if (alpha[pop] == 0) {
+      diff++;
+    }
+    alpha[pop]++;
+    if (alpha[push] == 1) {
+      diff--;
+    } else if (alpha[push] == 0) {
+      diff++;
+    }
+    alpha[push]--;
+    if (diff == 0) {
       ans.push(i - lenp + 1);
     }
   }
