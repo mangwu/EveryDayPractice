@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-04-20 15:40:20                                                  *
- * @LastModifiedDate: 2022-04-20 16:29:17                                      *
+ * @LastModifiedDate: 2022-04-21 11:25:14                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -52,9 +52,46 @@ var threeSum = function (nums) {
       }
       let sub = 0 - nums[j] - nums[i];
       const arr = map.get(sub);
-      if (arr && sub >= nums[i] && sub <= nums[j] && arr[0] < j && arr[arr.length - 1] > i) {
+      if (
+        arr &&
+        sub >= nums[i] &&
+        sub <= nums[j] &&
+        arr[0] < j &&
+        arr[arr.length - 1] > i
+      ) {
         ans.push([nums[i], sub, nums[j]]);
         pre = arr[arr.length - 1];
+      }
+    }
+  }
+  return ans;
+};
+
+/**
+ * @param {number[]} nums
+ * @return {number[][]}
+ */
+var threeSum = function (nums) {
+  nums.sort((a, b) => a - b);
+  const len = nums.length;
+  if (nums[0] > 0 || nums[len - 1] < 0) {
+    return [];
+  }
+  const ans = [];
+  for (let i = 0; i < len; i++) {
+    if (i > 0 && nums[i] == nums[i - 1]) {
+      continue;
+    }
+    let third = len - 1;
+    for (let j = i + 1; j < len && j <= third; j++) {
+      if (j > i + 1 && nums[j] == nums[j - 1]) {
+        continue;
+      }
+      while (nums[i] + nums[j] + nums[third] > 0 && j < third) {
+        third--;
+      }
+      if (nums[i] + nums[j] + nums[third] == 0 && j < third) {
+        ans.push([nums[i], nums[j] + nums[third]]);
       }
     }
   }
