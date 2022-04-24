@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-04-22 09:01:35                                                  *
- * @LastModifiedDate: 2022-04-24 14:44:36                                      *
+ * @LastModifiedDate: 2022-04-24 16:49:22                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -89,6 +89,49 @@ var numSubarrayProductLessThanK = function (nums, k) {
     }
     // 此时left是最大索引j旁边的索引
     ans += left - i - 1;
+  }
+  return ans;
+};
+
+// [10,3,3,7,2,9,7,4,7,2,8,6,5,1,5]   15长度
+// 30
+// 0 2 1
+// 1 4 2
+// 2 5 2
+// 3 6 2
+// 4 7 2
+// 5 7 1
+// 6 9 2
+// 7 10 2
+// 8 11 2
+// 9 12 2
+// 10 12 1
+// 11 15 3 => 1
+// 12 16 3
+// 13 16 2
+// 14 16 1
+// 15 16 0
+
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number}
+ */
+var numSubarrayProductLessThanK = function (nums, k) {
+  if (k <= 1) {
+    return 0;
+  }
+  const len = nums.length;
+  let left = 0;
+  let prod = 1;
+  let ans = 0;
+  for (let i = 0; i < len; i++) {
+    prod = prod * nums[i];
+    while (prod >= k) {
+      prod = prod / nums[left];
+      left++;
+    }
+    ans += i - left + 1;
   }
   return ans;
 };
