@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-04-26 17:20:31                                                  *
- * @LastModifiedDate: 2022-04-26 23:18:34                                      *
+ * @LastModifiedDate: 2022-04-27 09:21:18                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -89,31 +89,62 @@ var divide = function (dividend, divisor) {
     divisor = -divisor;
     isNegative = !isNegative;
   }
+  dividend = BigInt(dividend);
+  divisor = BigInt(divisor);
   // 找出除数的大致范围
-  let idx = -1;
+  let idx = BigInt(-1);
   let d = divisor;
   while (d > 0) {
-    d = d >> 1;
+    d = d >> BigInt(1);
     idx++;
   }
-  if (1 << idx == divisor) {
-    let ans = Math.abs(dividend >> idx);
+  if (BigInt(1) << idx == divisor) {
+    let ans = dividend >> idx;
     return isNegative ? -ans : ans;
   }
   // dvisor的最高位为idx 右移可能
-  let left = (dividend >> (idx + 1)) + 1;
+  let left = (dividend >> (idx + BigInt(1))) + BigInt(1);
   let right = dividend >> idx;
   // (left, right)
   while (left <= right) {
-    let mid = (left + right) >> 1;
+    let mid = (left + right) >> BigInt(1);
     if (mid * divisor == dividend) {
       return isNegative ? -mid : mid;
     } else if (mid * divisor > dividend) {
       // 在区域左边 [ mid - 1]
-      right = mid - 1;
+      right = mid - BigInt(1);
     } else {
-      left = mid + 1;
+      left = mid + BigInt(1);
     }
   }
-  return isNegative ? -(left - 1) : left - 1;
+  return isNegative ? -(left - BigInt(1)) : left - BigInt(1);
+};
+
+/**
+ * @param {number} dividend
+ * @param {number} divisor
+ * @return {number}
+ */
+var divide = function (dividend, divisor) {
+  if (divisor == 1) {
+    return dividend;
+  }
+  if (divisor == -1) {
+    return dividend == MIN ? MAX : -dividend;
+  }
+  let isNegative = false;
+  // 先判断符号
+  if (dividend < 0) {
+    dividend = -dividend;
+    isNegative = !isNegative;
+  } else if (dividend == 0) {
+    return 0;
+  }
+  if (divisor < 0) {
+    divisor = -divisor;
+    isNegative = !isNegative;
+  }
+  dividend = BigInt(dividend);
+  divisor = BigInt(divisor);
+
 };
