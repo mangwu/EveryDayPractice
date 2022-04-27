@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-04-27 18:35:34                                                  *
- * @LastModifiedDate: 2022-04-27 19:05:00                                      *
+ * @LastModifiedDate: 2022-04-28 00:42:38                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -28,7 +28,7 @@ var insert = function (intervals, newInterval) {
     return intervals;
   }
   let left = 0;
-  let right = len - 1;
+  let right = len;
   // [left, right)
   while (left < right) {
     let mid = (left + right) >> 1;
@@ -39,16 +39,32 @@ var insert = function (intervals, newInterval) {
       left = mid + 1;
     }
   }
-  // 需要考虑三种情况 => 1.只于nums[left]部分重合 2.不与任何元素重合3.
-  if (intervals[left][1] >= newInterval[1]) {
-    return intervals;
-  } else {
-    intervals[left][1] = newInterval[1];
-    // 判断后面一个的情况
-    if (left < len - 1 && newInterval[1] >= intervals[left + 1][0]) {
-      intervals[left][1] = intervals[left + 1][1];
-      intervals.splice(left + 1, 1);
+  let l = 0;
+  let r = len;
+  // [left, right)
+  while (l < r) {
+    let mid = (l + r) >> 1;
+    // 找到第一个比目标值大的索引
+    if (intervals[mid][0] >= newInterval[1]) {
+      // 左区间
+      r = mid;
+    } else {
+      l = mid + 1;
     }
   }
-  return intervals;
+  if (left == len) {
+    // 只与最后一个有关
+    if (newInterval[0] > intervals[left - 1][1]) {
+      intervals.push(newInterval);
+      return intervals;
+    } else {
+      intervals[left - 1][1] = Math.max(intervals[left - 1][1], newInterval[1]);
+      return intervals;
+    }
+  }
+  if(left == 0) {
+    // 最小值数组中的区间都小
+    
+  }
+
 };
