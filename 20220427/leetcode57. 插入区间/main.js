@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-04-27 18:35:34                                                  *
- * @LastModifiedDate: 2022-04-28 00:42:38                                      *
+ * @LastModifiedDate: 2022-04-28 15:09:11                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -62,9 +62,70 @@ var insert = function (intervals, newInterval) {
       return intervals;
     }
   }
-  if(left == 0) {
+  if (left == 0) {
     // 最小值数组中的区间都小
-    
+    if (l == 0) {
+      if (newInterval[1] < intervals[0][0]) {
+        intervals.unshift(newInterval);
+        return intervals;
+      } else {
+        intervals[0][0] = newInterval[0];
+        return intervals;
+      }
+    }
+    if (l == len) {
+      newInterval[1] = Math.max(newInterval[1], intervals[len - 1][1]);
+      return [newInterval];
+    }
+    intervals[0][0] = newInterval[0];
+    if (newInterval[1] == intervals[l][0]) {
+      intervals[0][1] = intervals[l][1];
+      intervals.splice(left + 1, l - left);
+      return intervals;
+    } else {
+      intervals[0][1] = Math.max(intervals[l - 1][1], newInterval[1]);
+      intervals.splice(left + 1, l - left - 1);
+      return intervals;
+    }
   }
-
+  if (newInterval[0] <= intervals[left - 1][1]) {
+    if (l == len) {
+      intervals[left - 1][1] = Math.max(newInterval[1], intervals[len - 1][1]);
+      intervals.splice(left, len - left);
+      return intervals;
+    }
+    if (intervals[l][0] == newInterval[1]) {
+      intervals[left - 1][1] = intervals[l][1];
+      intervals.splice(left, l - left + 1);
+      return intervals;
+    }
+    intervals[left - 1][1] = Math.max(newInterval[1], intervals[l - 1][1]);
+    intervals.splice(left, l - left);
+    return intervals;
+  } else if (l == left) {
+    if (intervals[l][0] == newInterval[1]) {
+      intervals[l][0] = newInterval[0];
+      return intervals;
+    } else {
+      intervals.splice(l, 0, newInterval);
+      return intervals;
+    }
+  } else {
+    if (l == len) {
+      intervals[left][0] = newInterval[0];
+      intervals[left][1] = Math.max(newInterval[1], intervals[len - 1][1]);
+      intervals.splice(left + 1, len - left - 1);
+      return intervals;
+    }
+    if (intervals[l][0] == newInterval[1]) {
+      intervals[left][0] = newInterval[0];
+      intervals[left][1] = intervals[l][1];
+      intervals.splice(left + 1, l - left);
+      return intervals;
+    }
+    intervals[left][0] = newInterval[0];
+    intervals[left][1] = Math.max(newInterval[1], intervals[l - 1][1]);
+    intervals.splice(left + 1, l - left - 1);
+    return intervals;
+  }
 };
