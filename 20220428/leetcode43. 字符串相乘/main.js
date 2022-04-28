@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-04-28 16:53:20                                                  *
- * @LastModifiedDate: 2022-04-28 17:31:24                                      *
+ * @LastModifiedDate: 2022-04-28 19:20:06                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -23,6 +23,9 @@
  * @return {string}
  */
 var multiply = function (num1, num2) {
+  if (num1 == "0" || num2 == "0") {
+    return "0";
+  }
   const n1 = num1.length;
   const n2 = num2.length;
   if (n2 > n1) {
@@ -44,13 +47,14 @@ var multiply = function (num1, num2) {
   }
   console.log(everyNums);
   const ans = everyNums.reduce((pre, cur) => {
-    let len = cur.length;
+    let lenp = pre.length;
+    let lenc = cur.length;
     let carry = 0;
     let res = "";
-    for (let i = len - 1; i >= 0; i--) {
+    for (let i = lenp - 1, j = lenc - 1; i >= 0 || j >= 0; i--, j--) {
       const x = pre[i] !== undefined ? Number(pre[i]) : 0;
-      const y = cur[i] !== undefined ? Number(cur[i]) : 0;
-      let addition = x + y;
+      const y = cur[j] !== undefined ? Number(cur[j]) : 0;
+      let addition = x + y + carry;
       carry = Math.floor(addition / 10);
       res = (addition % 10) + res;
     }
