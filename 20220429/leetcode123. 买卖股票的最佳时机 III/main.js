@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-04-29 15:56:26                                                  *
- * @LastModifiedDate: 2022-04-29 17:29:37                                      *
+ * @LastModifiedDate: 2022-04-29 17:32:47                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -116,7 +116,7 @@ var maxProfit = function (prices) {
     right_max = Math.max(right_max, papo[i][1]);
     right_max_ans = Math.max(right_max_ans, right_max - papo[i][0]);
     left[i - 1] += right_max_ans;
-    ans = Math.max(ans, left[i]);
+    ans = Math.max(ans, left[i - 1]);
   }
   return ans;
 };
