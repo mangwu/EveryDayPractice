@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-04-28 20:42:15                                                  *
- * @LastModifiedDate: 2022-04-28 20:54:36                                      *
+ * @LastModifiedDate: 2022-04-29 10:34:55                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -50,7 +50,6 @@ var sortColors = function (nums) {
 var sortColors = function (nums) {
   let cnt0 = 0;
   let cnt1 = 0;
-  let cnt2 = 0;
   for (const num of nums) {
     switch (num) {
       case 0:
