@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-05-06 17:01:06                                                  *
- * @LastModifiedDate: 2022-05-06 17:38:01                                      *
+ * @LastModifiedDate: 2022-05-06 20:46:11                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -38,7 +38,18 @@ var evalRPN = function (tokens) {
       case "/":
         a = stack.pop();
         b = stack.pop();
-        stack.push(Math.floor(b / a));
+        let isNegtive = false;
+        if (a < 0) {
+          isNegtive = !isNegtive;
+          a = -a;
+        }
+        if (b < 0) {
+          isNegtive = !isNegtive;
+          b = -b;
+        }
+        let divider = Math.floor(b / a);
+        // 向上取整
+        stack.push(isNegtive ? -divider : divider);
         continue;
       case "-":
         a = stack.pop();
