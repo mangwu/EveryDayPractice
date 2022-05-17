@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-05-16 17:18:04                                                  *
- * @LastModifiedDate: 2022-05-16 17:31:36                                      *
+ * @LastModifiedDate: 2022-05-17 09:19:40                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -60,12 +60,23 @@ var increasingBST = function (root) {
 var increasingBST = function (root) {
   const stack = [];
   // 迭代
+  let ans = null;
+  let pre = null;
   while (root || stack.length) {
     while (root) {
       stack.push(root);
       root = root.left;
     }
     const node = stack.pop();
-    
+    if (pre) {
+      pre.right = node;
+      pre = node;
+    } else {
+      pre = node;
+      ans = node;
+    }
+    root = node.right;
+    node.left = null;
   }
+  return ans;
 };
