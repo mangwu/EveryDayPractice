@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-06-07 17:31:45                                                  *
- * @LastModifiedDate: 2022-06-07 17:36:57                                      *
+ * @LastModifiedDate: 2022-06-07 22:26:43                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -29,10 +29,19 @@ var smallestRangeII = function (nums, k) {
   // 先变量得出nums的最大和最小值
   const n = nums.length;
   // 排序
-  nums.sort((a, b) => (a - b));
+  nums.sort((a, b) => a - b);
   let max = nums[n - 1];
   let min = nums[0];
-  for(let i = 0; i < n; i++) {
-    if(nums[])
+  let ans = max - min;
+  for (let i = 0; i < nums.length - 1; i++) {
+    let a = nums[i],
+      b = nums[i + 1];
+    let high = Math.max(max - k, a + k);
+    let low = Math.min(min + k, b - k);
+    ans = Math.min(ans, high - low);
   }
+  return ans;
 };
+
+//  min < a < max
+//      a

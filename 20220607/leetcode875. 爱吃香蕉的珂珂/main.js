@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-06-07 09:02:07                                                  *
- * @LastModifiedDate: 2022-06-07 17:23:58                                      *
+ * @LastModifiedDate: 2022-06-07 21:28:39                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -48,5 +48,51 @@ var minEatingSpeed = function (piles, h) {
   // 前面n - i个都是一个小时吃完，那么剩余时间就是 h - (n - i)
   // 在剩余时间内吃完i个属于同样的问题
   // 最终消耗时间一定是小于等于h的 1<k<max
-  
+};
+
+/**
+ * @param {number[]} piles
+ * @param {number} h
+ * @return {number}
+ */
+var minEatingSpeed = function (piles, h) {
+  const n = piles.length;
+
+  // k的最小值为1 最大值为piles中的最大值
+  let low = 1;
+  let high = 0;
+  for (const pile of piles) {
+    high = Math.max(high, pile);
+  }
+  // 如果n和h相等，每个都要1小时吃完，所以k就是high
+  if (n == h) {
+    return high;
+  }
+  // 二分查找
+  // 因为k是找到最小的值，总时间根据k是递减的
+  while (low < high) {
+    let mid = (low + high) >> 1;
+    // 当k是mid时，求所获得的时间
+    let time = getTimes(mid, piles);
+    if (time > h) {
+      // 不满足要求，mid小了
+      low = mid + 1;
+    } else {
+      high = mid;
+    }
+  }
+
+  return low;
+};
+const getTimes = (k, piles) => {
+  // 根据k值获取时间
+  let time = 0;
+  for (const pile of piles) {
+    if (pile % k == 0) {
+      time += pile / k;
+    } else {
+      time += Math.floor(pile / k) + 1;
+    }
+  }
+  return time;
 };
