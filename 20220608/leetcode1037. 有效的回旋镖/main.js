@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-06-08 08:55:48                                                  *
- * @LastModifiedDate: 2022-06-08 09:03:09                                      *
+ * @LastModifiedDate: 2022-06-08 20:24:14                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -37,4 +37,17 @@ var isBoomerang = function (points) {
     return true;
   }
   return false;
+};
+
+// 叉乘法
+/**
+ * @param {number[][]} points
+ * @return {boolean}
+ */
+var isBoomerang = function (points) {
+  // 求两点构成的向量然后求叉乘
+  let a = [points[0][0] - points[1][0], points[0][1] - points[1][1]];
+  let b = [points[2][0] - points[1][0], points[2][1] - points[1][1]];
+  // 叉乘不等于0就相当于不平行，故而满足条件
+  return a[0] * b[1] - a[1] * b[0] != 0;
 };
