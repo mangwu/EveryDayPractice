@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-06-09 09:04:32                                                  *
- * @LastModifiedDate: 2022-06-09 16:49:40                                      *
+ * @LastModifiedDate: 2022-06-09 21:46:53                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -56,28 +56,37 @@ Solution.prototype.pick = function () {
 // 每个矩阵被选择的概率和其的面积正相关，各不相同，而上述的随机选择是等同的，故而不能如此选择
 // 选择方式可以利用前缀和+二分查找的方式
 
-
 /**
  * @param {number[][]} rects
  */
- var Solution = function (rects) {
+var Solution = function (rects) {
   this.rects = rects;
   this.arr = [0];
   // 计算n个矩形的面积和
+  for (const rect of rects) {
+    const a = rect[0],
+      b = rect[1],
+      x = rect[2],
+      y = rect[3];
+    this.arr.push(this.arr[this.arr.length - 1] + (x - a + 1) * (y - b + 1));
+  }
 };
 
 /**
  * @return {number[]}
  */
 Solution.prototype.pick = function () {
-  // 随机选择其中一个矩形，然后在其上选择一个点
-  const x =
-    Math.floor(Math.random() * (this.rects[idx][2] - this.rects[idx][0] + 1)) +
-    this.rects[idx][0];
-  const y =
-    Math.floor(Math.random() * (this.rects[idx][3] - this.rects[idx][1] + 1)) +
-    this.rects[idx][1];
-  return [x, y];
+  let k = Math.floor(Math.random() * this.arr[this.arr.length - 1]);
+  const rectIndex = binarySearch(this.arr, k + 1) - 1;
+  k -= this.arr[rectIndex];
+  const rect = this.rects[rectIndex];
+  const a = rect[0],
+    b = rect[1],
+    y = rect[3];
+  const col = y - b + 1;
+  const da = Math.floor(k / col);
+  const db = k - col * da;
+  return [a + da, b + db];
 };
 
 /**
@@ -85,3 +94,25 @@ Solution.prototype.pick = function () {
  * var obj = new Solution(rects)
  * var param_1 = obj.pick()
  */
+
+const binarySearch = (arr, target) => {
+  let low = 0;
+  let high = arr.length - 1;
+  // (low, high]
+  while (low <= high) {
+    let mid = (low + high) >> 1;
+    // 找到第一个大于的面积
+    if (arr[mid] == target) {
+      // 面积相等，
+      return mid;
+    } else if (arr[mid] < target) {
+      // 面积过小
+      // (mid, high]
+      low = mid + 1;
+    } else {
+      // 面积大
+      high = mid - 1;
+    }
+  }
+  return low;
+};
