@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-06-13 14:07:22                                                  *
- * @LastModifiedDate: 2022-06-13 17:31:39                                      *
+ * @LastModifiedDate: 2022-06-14 10:19:20                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -52,9 +52,11 @@ AuthenticationManager.prototype.generate = function (tokenId, currentTime) {
  */
 AuthenticationManager.prototype.renew = function (tokenId, currentTime) {
   if (this.hash.has(tokenId)) {
-    if (this.hash.get(tokenId) + this.tTL < currentTime) {
+    if (this.hash.get(tokenId) + this.tTL > currentTime) {
       // 更新
       this.hash.set(tokenId, currentTime);
+    } else {
+      this.hash.delete(tokenId);
     }
   }
 };
@@ -65,7 +67,7 @@ AuthenticationManager.prototype.renew = function (tokenId, currentTime) {
  */
 AuthenticationManager.prototype.countUnexpiredTokens = function (currentTime) {
   let ans = 0;
-  for (const [key, val] of this.hash) {
+  for (const [_key, val] of this.hash) {
     if (val + this.tTL > currentTime) {
       ans++;
     }
