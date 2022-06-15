@@ -293,7 +293,7 @@
 //   console.log(ans);
 //   return ans;
 // };
-const { exit } = require("process");
+
 // lightsOut([
 //   [0, 1, 1, 0, 1, 0],
 //   [1, 0, 0, 1, 1, 1],
@@ -323,7 +323,6 @@ const { exit } = require("process");
 
 // 输入输出
 const readline = require("readline");
-
 // 不相下添加
 const DIRS2 = [
   [0, 1],
@@ -332,7 +331,6 @@ const DIRS2 = [
 ];
 const DIRS = [
   [0, 1],
-  [1, 0],
   [0, -1],
   [-1, 0],
 ];
@@ -343,7 +341,7 @@ const DIRS = [
 var lightsOut = function (lights) {
   const m = lights.length;
   const n = lights[0].length;
-  const buttons = new Array(m).fill(0).map((v) => new Array(n).fill(0));
+  const buttons = new Array(m).fill(0).map((_v) => new Array(n).fill(0));
   // 第一行的buttons有 64 种情况
   for (let i = 0; i < 64; i++) {
     // 获取第一行的情况
@@ -396,7 +394,6 @@ var lightsOut = function (lights) {
     }
   }
 };
-
 // 创建readline接口实例
 let r1 = readline.createInterface({
   input: process.stdin,
@@ -410,6 +407,5 @@ r1.on("line", function (line) {
     for (const out of output) {
       console.log(out.join(" "));
     }
-    exit();
   }
 });
