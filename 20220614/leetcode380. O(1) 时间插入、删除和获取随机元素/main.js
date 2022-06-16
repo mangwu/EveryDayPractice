@@ -65,3 +65,5 @@ RandomizedSet.prototype.getRandom = function () {
  * var param_2 = obj.remove(val)
  * var param_3 = obj.getRandom()
  */
+
+//   3 3
