@@ -342,8 +342,8 @@ var lightsOut = function (lights) {
   const m = lights.length;
   const n = lights[0].length;
   const buttons = new Array(m).fill(0).map((_v) => new Array(n).fill(0));
-  // 第一行的buttons有 64 种情况
-  for (let i = 0; i < 64; i++) {
+  // 第一行的buttons有 2^n 种情况
+  for (let i = 0; i < Math.pow(2, n); i++) {
     // 获取第一行的情况
     let value = i;
     for (let j = 0; j < n; j++) {
