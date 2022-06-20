@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-06-20 15:27:50                                                  *
- * @LastModifiedDate: 2022-06-20 17:46:51                                      *
+ * @LastModifiedDate: 2022-06-20 22:41:35                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -35,10 +35,7 @@ var RangeModule = function () {
  */
 RangeModule.prototype.addRange = function (left, right) {
   const res = binarySearch(left, right, this.data);
-  if (res === true) {
-    // data长度为0的情况
-    return;
-  }
+  insertNewInterval(left, right, res, this.data);
   // 分情况讨论
 };
 
@@ -47,14 +44,20 @@ RangeModule.prototype.addRange = function (left, right) {
  * @param {number} right
  * @return {boolean}
  */
-RangeModule.prototype.queryRange = function (left, right) {};
+RangeModule.prototype.queryRange = function (left, right) {
+  const res = binarySearch(left, right, this.data);
+  return queryRange(left, right, res, this.data);
+};
 
 /**
  * @param {number} left
  * @param {number} right
  * @return {void}
  */
-RangeModule.prototype.removeRange = function (left, right) {};
+RangeModule.prototype.removeRange = function (left, right) {
+  const res = binarySearch(left, right, this.data);
+  removeInterval(left, right, res, this.data);
+};
 
 /**
  * Your RangeModule object will be instantiated and called as such:
@@ -64,19 +67,12 @@ RangeModule.prototype.removeRange = function (left, right) {};
  * obj.removeRange(left,right)
  */
 
-const data1 = [[1, 5]];
-const data2 = [
-  [0, 3],
-  [4, 7],
-  [8, 10],
-  [15, 18],
-  [19, 20],
-];
+
 
 const binarySearch = (left, right, data) => {
   if (data.length == 0) {
-    data.push([left, right]);
-    return true;
+    // 空数组
+    return 0;
   }
   let l = 0;
   let r = data.length - 1;
@@ -106,12 +102,6 @@ const binarySearch = (left, right, data) => {
   let idx2 = r;
   return [idx1, idx2];
 };
-// binarySearch(0, 8, data1);
-// binarySearch(5, 8, data1);
-// binarySearch(0, 8, data2);
-// binarySearch(0, 7, data2);
-// binarySearch(5, 13, data2);
-// binarySearch(12, 13, data2);
 // 分情况讨论插入
 /**
  * @description 更新区间
@@ -121,6 +111,11 @@ const binarySearch = (left, right, data) => {
  * @param {number[][]} data 区间数组
  */
 const insertNewInterval = (left, right, res, data) => {
+  if (res == 0) {
+    // 特殊情况
+    data.push([left, right]);
+    return;
+  }
   if (res[0] == res[1]) {
     // 特殊情况 插入区间只与一个区间有关
     if (res[0] == -1) {
@@ -143,17 +138,167 @@ const insertNewInterval = (left, right, res, data) => {
       return;
     }
   } else {
-    if(res[0] == -1) {
+    if (res[0] == -1) {
+      data[0][0] = left;
       // 特殊情况，left在所有区间前
-      if(right <= data[res[1]][1]) {
+      if (right <= data[res[1]][1]) {
         // right在内
-        data[0][1] = data[res[1][1]];
-        data.splice(res[0]+ 2, res[1] - res[0])
+        data[0][1] = data[res[1]][1];
+        data.splice(1, res[1] - res[0] - 1);
+      } else {
+        // right在外
+        data[0][1] = right;
+        data.splice(1, res[1] - res[0] - 1);
       }
+      return;
     }
     // 普通情况
-    if(left <= data[res[0]][1]) {
-
+    if (left <= data[res[0]][1]) {
+      data[res[0]][1] = Math.max(right, data[res[1]][1]);
+      data.splice(res[0] + 1, res[1] - res[0]);
+      return;
+    }
+    // left在res[0]右区间之外
+    if (left > data[res[0]][1]) {
+      data[res[0] + 1][0] = left;
+      data[res[0] + 1][1] = Math.max(right, data[res[1]][1]);
+      data.splice(res[0] + 2, res[1] - res[0] - 1);
     }
   }
 };
+
+/**
+ * @description 删除区间
+ * @param {number} left 区间左值
+ * @param {number} right 区间右值
+ * @param {number[]} res 二分搜索结果
+ * @param {number[][]} data 区间数组
+ */
+const removeInterval = (left, right, res, data) => {
+  // 特殊情况
+  if (res == 0) {
+    return;
+  }
+  if (res[0] == res[1]) {
+    // 特殊情况 插入区间只与一个区间有关
+    if (res[0] == -1) {
+      // 特殊情况中的特殊情况 在每个区间前面
+      return;
+    }
+    if (left <= data[res[0]][1] && right >= data[res[0]][1]) {
+      // 删除区间一部分
+      if (left == data[res[0]][0]) {
+        data.splice(res[0], 1);
+      } else {
+        data[res[0]][1] = left;
+      }
+      return;
+    }
+    if (right < data[res[0]][1]) {
+      // 重合区间 可变为两个区间
+      if (left == data[res[0]][1]) {
+        data[res[0]][0] = right;
+      } else {
+        data.splice(res[0] + 1, 0, [right, data[res[0]][1]]);
+        data[res[0]][1] = left;
+      }
+      return;
+    }
+    if (left > data[res[0]][1]) {
+      // 新区间 不需要移除
+      return;
+    }
+  } else {
+    if (res[0] == -1) {
+      // 特殊情况，left在所有区间前
+      if (right < data[res[1]][1]) {
+        // right在内
+        data[res[1]][0] = right;
+        data.splice(0, res[1] - res[0] - 1);
+      } else {
+        // right在外
+        data.splice(0, res[1] - res[0]);
+      }
+      return;
+    }
+    // 普通情况
+    if (left < data[res[0]][1]) {
+      data[res[0]][1] = left;
+      if (right < data[res[1]][1]) {
+        data[res[1]][0] = right;
+        data.splice(res[0] + 1, res[1] - res[0] - 1);
+        return;
+      }
+      // right >= data[res[1]][1]
+      data.splice(res[0] + 1, res[1] - res[0]);
+      return;
+    }
+    // left在res[0]右区间之外
+    if (left >= data[res[0]][1]) {
+      if (right < data[res[1]][1]) {
+        // right在内
+        data[res[1]][0] = right;
+        data.splice(res[0] + 1, res[1] - res[0] - 1);
+        return;
+      }
+      // right >= data[res[1]][1]
+      data.splice(res[0] + 1, res[1] - res[0]);
+    }
+  }
+};
+
+const queryRange = (left, right, res, data) => {
+  if (res == 0) {
+    return false;
+  }
+  if (res[0] == res[1]) {
+    if (res[0] == -1) {
+      return false;
+    }
+    if (data[res[0]][0] <= left && data[res[0]][1] >= right) {
+      return true;
+    }
+  }
+  return false;
+};
+
+
+const data1 = [[1, 5]];
+const data2 = [
+  [0, 3],
+  [4, 7],
+  [8, 10],
+  [15, 18],
+  [19, 20],
+];
+// const res1 = binarySearch(-2, 1, data1);
+// insertNewInterval(-2, 1, res1, data1);
+// console.log(data1);
+// const res2 = binarySearch(8, 9, data1);
+// insertNewInterval(8, 9, res2, data1);
+// console.log(data1);
+// const res3 = binarySearch(10, 12, data1);
+// insertNewInterval(10, 12, res3, data1);
+// console.log(data1);
+// const res4 = binarySearch(13, 18, data1);
+// insertNewInterval(13, 18, res4, data1);
+// console.log(data1);
+// const res5 = binarySearch(20, 23, data1);
+// insertNewInterval(20, 23, res5, data1);
+// console.log(data1);
+
+// const res6 = binarySearch(11, 13, data1);
+// removeInterval(11, 13, res6, data1);
+// console.log(data1);
+
+// const res7 = binarySearch(21, 22, data1);
+// removeInterval(21, 22, res7, data1);
+// console.log(data1);
+
+// const res8 = binarySearch(10, 12, data1);
+// removeInterval(10, 12, res8, data1);
+// console.log(data1);
+
+// const res9 = binarySearch(15, 22, data1);
+// removeInterval(15, 22, res9, data1);
+// console.log(data1);
