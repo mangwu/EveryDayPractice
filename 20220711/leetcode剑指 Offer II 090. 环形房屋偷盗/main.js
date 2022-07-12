@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-07-11 10:13:40                                                  *
- * @LastModifiedDate: 2022-07-11 10:58:49                                      *
+ * @LastModifiedDate: 2022-07-12 17:35:44                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -47,4 +47,26 @@ var rob = function (nums) {
     }
   }
   return ans;
+};
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var rob = function (nums) {
+  const n = nums.length;
+  if (n <= 3) {
+    return Math.max.apply(null, nums);
+  }
+  return Math.max(robRange(0, n - 1, nums), robRange(1, n, nums));
+};
+
+const robRange = function (start, end, nums) {
+  const dp = new Array(end - start).fill(0);
+  dp[0] = nums[start];
+  dp[1] = Math.max(nums[start], nums[start + 1]);
+  for (let i = 2; i < end - start; i++) {
+    dp[i] = Math.max(dp[i - 1], dp[i - 2] + nums[i + start]);
+  }
+  return dp[end - start - 1];
 };
