@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-07-10 15:35:09                                                  *
- * @LastModifiedDate: 2022-07-10 22:28:02                                      *
+ * @LastModifiedDate: 2022-07-13 13:37:57                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -95,3 +95,7 @@ const getNewGrid = (start, dp) => {
   }
   return 
 };
+
+// 上述的方法不行，两次动态规划导致的结果就是第一次尽可能多的采取樱桃
+// 而第二个次只能在第一次的基础上摘取，第一次最多的方案有多种，所以第二次的最大摘取数量未知
+// 并且不一定第一次摘取更多符合总的摘取跟多的条件
