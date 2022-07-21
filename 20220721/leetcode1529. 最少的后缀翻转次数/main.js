@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-07-21 11:11:20                                                  *
- * @LastModifiedDate: 2022-07-21 11:29:11                                      *
+ * @LastModifiedDate: 2022-07-21 15:53:10                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -65,3 +65,30 @@ var minFlips = function (target) {
 // 001111111111111
 // 000000000000000
 //
+
+// 001101001011001
+// 000010110100110
+// 000001001011001
+// 000000110100110
+// 000000001011001
+// 000000000100110
+// 000000000011001
+// 000000000000110
+// 000000000000001
+// 000000000000000
+
+/**
+ * @param {string} target
+ * @return {number}
+ */
+var minFlips = function (target) {
+  let target = "0" + target;
+  const n = target.length;
+  let ans = 0;
+  for (let i = 1; i < n; i++) {
+    if (target[i - 1] !== target[i]) {
+      ans++;
+    }
+  }
+  return ans;
+};
