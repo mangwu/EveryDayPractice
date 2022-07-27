@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-07-26 15:24:37                                                  *
- * @LastModifiedDate: 2022-07-26 16:39:24                                      *
+ * @LastModifiedDate: 2022-07-27 11:02:12                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -81,3 +81,32 @@ var findNumberIn2DArray = function (matrix, target) {
   }
   return false;
 };
+
+/**
+ * @param {number[][]} matrix
+ * @param {number} target
+ * @return {boolean}
+ */
+ var findNumberIn2DArray = function (matrix, target) {
+  const m = matrix.length;
+  if (m == 0) {
+    return false;
+  }
+  const n = matrix[0].length;
+  // 从右上角开始查找
+  let rows = 0;
+  let columns = n - 1;
+  while (rows < m && columns >= 0) {
+    if (matrix[rows][columns] == target) {
+      return true;
+    } else if (matrix[rows][columns] > target) {
+      // 在左边
+      columns--;
+    } else {
+      // 比target小， 在下面
+      rows++;
+    }
+  }
+  return false;
+};
+
