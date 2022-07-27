@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-07-27 17:12:06                                                  *
- * @LastModifiedDate: 2022-07-27 17:13:30                                      *
+ * @LastModifiedDate: 2022-07-27 20:54:56                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -48,5 +48,27 @@ var isSubStructure = function (A, B) {
     return false;
   }
   const initalVal = B.val;
-  
+  let ans = false;
+  const dfs = (node) => {
+    if (!node) {
+      return;
+    }
+    if (node.val == initalVal) {
+      // 开始对比A，B
+      ans = ans || dfsb(node, B);
+    }
+    dfs(node.left);
+    dfs(node.right);
+  };
+  const dfsb = (node1, node2) => {
+    if (!node2) {
+      return true;
+    }
+    if (node1 && node2 && node1.val == node2.val) {
+      return dfsb(node1.left, node2.left) && dfsb(node1.right, node2.right);
+    }
+    return false;
+  };
+  dfs(A);
+  return ans;
 };
