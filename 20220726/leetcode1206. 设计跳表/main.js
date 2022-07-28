@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-07-26 09:07:57                                                  *
- * @LastModifiedDate: 2022-07-26 09:12:23                                      *
+ * @LastModifiedDate: 2022-07-28 15:47:28                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -61,3 +61,37 @@ Skiplist.prototype.erase = function (num) {
  * obj.add(num)
  * var param_3 = obj.erase(num)
  */
+
+const MAX_LEVEL = 25;
+class SkiplistNode {
+  constructor(val, maxLevel) {
+    this.val = val;
+    this.forwards = new Array(maxLevel).fill(0);
+  }
+}
+
+var Skiplist = function () {
+  this.head = new SkiplistNode(-1, MAX_LEVEL);
+  this.level = 0;
+};
+
+/**
+ * @param {number} target
+ * @return {boolean}
+ */
+Skiplist.prototype.search = function (target) {
+  // 从头节点的最顶层开始查找
+  let curr = this.head;
+  for (let i = this.level - 1; i >= 0; i--) {
+    // 在当前层查找，找到最接近target 的元素
+    while (curr.forwards[i] && curr.forwards[i].val < target) {
+      curr = curr.forwards[i];
+    }
+  }
+  curr = curr.forwards[0];
+  // 检查当前元素是否等于target
+  if (curr && curr.val == target) {
+    return true;
+  }
+  return false;
+};
