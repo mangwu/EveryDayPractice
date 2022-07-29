@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-07-26 09:07:57                                                  *
- * @LastModifiedDate: 2022-07-28 15:47:28                                      *
+ * @LastModifiedDate: 2022-07-29 17:43:12                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -62,7 +62,9 @@ Skiplist.prototype.erase = function (num) {
  * var param_3 = obj.erase(num)
  */
 
-const MAX_LEVEL = 25;
+const MAX_LEVEL = 32;
+const P_FACTOR = 0.5;
+
 class SkiplistNode {
   constructor(val, maxLevel) {
     this.val = val;
@@ -82,7 +84,7 @@ var Skiplist = function () {
 Skiplist.prototype.search = function (target) {
   // 从头节点的最顶层开始查找
   let curr = this.head;
-  for (let i = this.level - 1; i >= 0; i--) {
+  for (let i = this.level; i >= 0; i--) {
     // 在当前层查找，找到最接近target 的元素
     while (curr.forwards[i] && curr.forwards[i].val < target) {
       curr = curr.forwards[i];
@@ -94,4 +96,15 @@ Skiplist.prototype.search = function (target) {
     return true;
   }
   return false;
+};
+/**
+ * @description 生成随机层数
+ * @returns {number}
+ */
+const randomLevel = () => {
+  let lv = 0;
+  while (Math.random() < P_FACTOR && lv < MAX_LEVEL - 1) {
+    lv++;
+  }
+  return lv;
 };
