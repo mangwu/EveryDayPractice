@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-08-01 15:54:59                                                  *
- * @LastModifiedDate: 2022-08-01 17:34:08                                      *
+ * @LastModifiedDate: 2022-08-01 21:06:03                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -37,8 +37,6 @@ var leastInterval = function (tasks, n) {
   let ans = 0;
   // 要执行完毕
   while (count !== len) {
-    console.log(count);
-    console.log(pq.data);
     // 是否有元素已经间隔成功需要输出
     const val = queue.shift();
     if (val !== 0 && hash.has(val)) {
@@ -47,7 +45,6 @@ var leastInterval = function (tasks, n) {
     }
     // 获取最大元素
     const res = pq.getMaxAndDelete();
-    console.log(res);
     // 成功获取
     if (res !== -1) {
       count++;
@@ -65,14 +62,13 @@ var leastInterval = function (tasks, n) {
       queue.push(0);
     }
     ans++;
-    console.log(pq.data);
   }
   return ans;
 };
 // 按照数量和字母顺序比较 如[[B,5],[A, 4],[C, 4]]
 var compare = (a, b) => {
   if (a[1] - b[1] !== 0) {
-    return b[1] - a[1];
+    return a[1] - b[1];
   }
   return b[0].charCodeAt() - a[0].charCodeAt();
 };
