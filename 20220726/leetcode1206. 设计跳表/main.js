@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-07-26 09:07:57                                                  *
- * @LastModifiedDate: 2022-07-29 17:43:12                                      *
+ * @LastModifiedDate: 2022-08-03 17:28:38                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -96,6 +96,19 @@ Skiplist.prototype.search = function (target) {
     return true;
   }
   return false;
+};
+/**
+ * @param {number} num
+ * @return {void}
+ */
+Skiplist.prototype.add = function (num) {
+  // 创建更新每层链表的前后节点
+  const update = new Array(MAX_LEVEL).fill(this.head);
+  // 开始从当前最高层遍历找到每层最接近num的节点
+  let curr = this.head
+  for(let i = this.level; i >= 0; i--) {
+    
+  }
 };
 /**
  * @description 生成随机层数
