@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-08-08 11:25:30                                                  *
- * @LastModifiedDate: 2022-08-08 11:30:37                                      *
+ * @LastModifiedDate: 2022-08-08 15:24:45                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -28,11 +28,55 @@
  */
 var hammingWeight = function (n) {
   let ans = 0;
+  n = BigInt(n);
   while (n > 0) {
+    if (n & BigInt(1)) {
+      ans++;
+    }
+    n >>= BigInt(1);
+  }
+  return ans;
+};
+
+/**
+ * @param {number} n - a positive integer
+ * @return {number}
+ */
+var hammingWeight = function (n) {
+  let ans = 0;
+  while (n !== 0) {
     if (n & 1) {
       ans++;
     }
-    n >>= 1;
+    n >>>= 1;
+  }
+  return ans;
+};
+
+/**
+ * @param {number} n - a positive integer
+ * @return {number}
+ */
+var hammingWeight = function (n) {
+  // 对1进行移位后进行比较
+  let ans = 0;
+  for (let i = 0; i < 32; i++) {
+    if ((n & (1 << i)) !== 0) {
+      ans++;
+    }
+  }
+  return ans;
+};
+
+/**
+ * @param {number} n - a positive integer
+ * @return {number}
+ */
+var hammingWeight = function (n) {
+  let ans = 0;
+  while (n) {
+    n &= n - 1;
+    ans++;
   }
   return ans;
 };
