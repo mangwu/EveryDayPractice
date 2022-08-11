@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-08-11 15:02:41                                                  *
- * @LastModifiedDate: 2022-08-11 16:58:10                                      *
+ * @LastModifiedDate: 2022-08-11 20:45:34                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -35,9 +35,23 @@ var lastRemaining = function (n, m) {
   return arr[0];
 };
 
-
 // 1 3 1 3
 // idx = m - 1 % 2 == 1
 
 // 1 x 1 x
-// (0 + m) % 2 
+// (0 + m) % 2
+
+/**
+ * @param {number} n
+ * @param {number} m
+ * @return {number}
+ */
+var lastRemaining = function (n, m) {
+  // 0 - n-1
+  // 倒推
+  let idx = 0;
+  for (let i = 2; i <= n; i++) {
+    idx = (idx + m) % i;
+  }
+  return idx;
+};
