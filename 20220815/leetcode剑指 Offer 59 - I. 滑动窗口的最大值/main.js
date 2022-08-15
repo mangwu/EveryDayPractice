@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-08-15 16:51:46                                                  *
- * @LastModifiedDate: 2022-08-15 17:30:26                                      *
+ * @LastModifiedDate: 2022-08-15 18:47:00                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -82,7 +82,6 @@ class PriorityQueue2 {
     return this.data[0];
   }
 }
-
 
 // /**
 //  * @class 滑动窗口
@@ -170,3 +169,19 @@ class PriorityQueue3 {
     [this.data[a], this.data[b]] = [this.data[b], this.data[a]];
   }
 }
+
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number[]}
+ */
+var maxSlidingWindow = function (nums, k) {
+  // 使用max方法
+  let start = 0;
+  const n = nums.length;
+  let ans = [];
+  while (start + k <= n) {
+    ans.push(Math.max.apply(null, nums.slice(start, start + k)));
+  }
+  return ans;
+};
