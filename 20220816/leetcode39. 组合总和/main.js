@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-08-16 10:54:41                                                  *
- * @LastModifiedDate: 2022-08-16 11:14:42                                      *
+ * @LastModifiedDate: 2022-08-16 16:07:52                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -56,3 +56,39 @@ var combinationSum = function (candidates, target) {
 };
 // 上述解答限制已经超时
 
+/**
+ * @param {number[]} candidates
+ * @param {number} target
+ * @return {number[][]}
+ */
+var combinationSum = function (candidates, target) {
+  // dfs + 回溯 + 减枝 + 去重
+  candidates.sort((a, b) => a - b);
+  while (candidates[candidates.length - 1] > target) {
+    candidates.pop();
+  }
+  const n = candidates.length;
+  const ans = [];
+  // 递归路径
+  const path = [];
+  // idx记录当前开始节点
+  const dfs = (rest, idx) => {
+    if (rest == 0) {
+      // 复制满足条件的路径
+      ans.push(path.slice());
+      return;
+    }
+    for (let i = idx; i < n; i++) {
+      if (rest >= candidates[i]) {
+        path.push(candidates[i]);
+        dfs(rest - candidates[i], i);
+        // 回溯
+        path.pop();
+      } else {
+        // 或许的都大于rest，不用遍历了
+        break;
+      }
+    }
+  };
+  return ans;
+};
