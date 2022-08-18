@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-08-18 08:59:59                                                  *
- * @LastModifiedDate: 2022-08-18 11:20:05                                      *
+ * @LastModifiedDate: 2022-08-18 23:56:25                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -114,3 +114,45 @@ maxEqualFreq([
   80, 17, 66, 41, 51, 26, 22, 83, 4, 80, 40, 42, 23, 80, 5, 19, 79, 88, 75, 84,
   56, 89, 87, 100, 7, 87, 9, 51, 65, 37, 44, 73, 85, 38, 43, 83, 22, 25, 20, 76,
 ]);
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var maxEqualFreq = function (nums) {
+  // 最大出现次数
+  let maxEqualNum = 0;
+  // 值对数量
+  const valueToNums = new Map();
+  // 个数对数量
+  const numToNums = new Map();
+  const n = nums.length;
+  let ans = 1;
+  for (let i = 0; i < n; i++) {
+    if (valueToNums.has(nums[i])) {
+      const k = valueToNums.get(nums[i]);
+      valueToNums.set(nums[i], k + 1);
+      maxEqualNum = Math.max(maxEqualNum, k + 1);
+      // 增加数量
+      numToNums.set(k, numToNums.get(k) - 1);
+      numToNums.set(k + 1, numToNums.get(k + 1) ? numToNums.get(k + 1) + 1 : 1);
+    } else {
+      valueToNums.set(nums[i], 1);
+      maxEqualNum = Math.max(maxEqualNum, 1);
+      // 增加1的数量
+      numToNums.set(1, numToNums.get(1) ? numToNums.get(1) + 1 : 1);
+    }
+    // 判断条件
+    if (
+      valueToNums.size == 1 ||
+      valueToNums.size == i + 1 ||
+      (numToNums.get(1) == 1 &&
+        numToNums.get(maxEqualNum) * maxEqualNum == i) ||
+      ((numToNums.get(maxEqualNum - 1) + 1) * (maxEqualNum - 1) == i &&
+        numToNums.get(maxEqualNum) == 1)
+    ) {
+      ans = i + 1;
+    }
+  }
+  return ans;
+};
