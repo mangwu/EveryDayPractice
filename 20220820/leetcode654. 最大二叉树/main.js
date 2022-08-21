@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-08-20 12:35:48                                                  *
- * @LastModifiedDate: 2022-08-20 22:25:31                                      *
+ * @LastModifiedDate: 2022-08-21 16:30:46                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -195,4 +195,31 @@ var constructMaximumBinaryTree = function (nums) {
     }
   }
   return root;
+};
+
+/**
+ * @param {number[]} nums
+ * @return {TreeNode}
+ */
+var constructMaximumBinaryTree = function (nums) {
+  // 一次获得两个单调栈
+  // 下一个最大和上一个最大
+  const stack = [];
+  const n = nums.length;
+  const trees = new Array(n).fill(-1);
+  for (let i = 0; i < n; i++) {
+    trees[i] = new TreeNode(nums[i]);
+    while (stack.length > 0 && nums[stack[stack.length - 1]] < nums[i]) {
+      // 当前元素大于栈顶元素，栈顶元素的下一个更大的元素索引就是当前元素
+      // 所以当前元素的左子节点就是栈中的元素节点
+      trees[i].left = trees[stack.pop()];
+    }
+    if (stack.length > 0) {
+      // 栈顶元素是当前元素的左边界
+      trees[stack[stack.length - 1]].right = trees[i];
+    }
+    stack.push(i);
+  }
+  // 单调栈中第一个元素一定是最大值的索引
+  return trees[stack[0]];
 };
