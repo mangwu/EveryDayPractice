@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-08-24 15:34:32                                                  *
- * @LastModifiedDate: 2022-08-24 15:56:06                                      *
+ * @LastModifiedDate: 2022-08-25 23:35:35                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -55,7 +55,7 @@ var carPooling = function (trips, capacity) {
   for (let i = 0; i <= 1001; i++) {
     if (i) diff[i] += diff[i - 1];
     if (diff[i] > capacity) {
-      return false;
+      return false; 
     }
   }
   return true;
