@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-09-01 15:51:36                                                  *
- * @LastModifiedDate: 2022-09-01 17:27:33                                      *
+ * @LastModifiedDate: 2022-09-01 17:29:19                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -83,21 +83,18 @@ var minimalSteps = function (maze) {
   const end2O = MHash.get(target[0] * n + target[1]);
   MHash.delete(start[0] * n + start[1]);
   MHash.delete(target[0] * n + target[1]);
-  let cur 
   const dfs = (pre, hash) => {
     if (hash.size == 0) {
       // 全部遍历完毕
-      
     }
   };
   for (const [key, val] of start2O) {
+    let curMin = Infinity;
     // key是O点，val是距离
     dfs(val, MHash);
   }
   return -1;
 };
-
-
 
 const bfs = (start, targets, visited, m, n, maze) => {
   // 求[target, O1,O2...0n]到达[start, m1, m2 ... mn]的最小距离，到达不了就是-1
@@ -176,5 +173,3 @@ const distance = (start, target, maze, m, n) => {
 //
 
 // m1 - 0 - m2 之间的最小值 0 是可变的
-
-
