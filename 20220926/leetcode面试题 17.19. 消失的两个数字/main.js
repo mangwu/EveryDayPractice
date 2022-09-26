@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-09-26 08:51:19                                                  *
- * @LastModifiedDate: 2022-09-26 09:39:40                                      *
+ * @LastModifiedDate: 2022-09-26 10:33:02                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -114,3 +114,8 @@ var missingTwo = function (nums) {
   }
   return [type1, type2];
 };
+
+
+// n(n+1)(2n+1) - k(k+1)(2k+1)
+
+// 
