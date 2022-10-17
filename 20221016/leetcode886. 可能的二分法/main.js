@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-10-16 21:19:37                                                  *
- * @LastModifiedDate: 2022-10-16 21:28:16                                      *
+ * @LastModifiedDate: 2022-10-17 09:53:11                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -62,4 +62,84 @@ var possibleBipartition = function (n, dislikes) {
     }
   }
   return num <= 2;
+};
+
+/**
+ * @param {number} n
+ * @param {number[][]} dislikes
+ * @return {boolean}
+ */
+var possibleBipartition = function (n, dislikes) {
+  // 染色法，两种颜色，如果一个节点未被染色，染成红色，
+  // 将它不喜欢的节点染成蓝色，如果不喜欢的颜色已经被染色且也是红色就会发生冲突，返回false
+  // 使用1 2表示两种颜色
+  const grid = new Array(n + 1).fill(0).map((v, i) => []);
+  for (const dislike of dislikes) {
+    grid[dislike[0]].push(dislike[1]);
+    grid[dislike[1]].push(dislike[0]);
+  }
+  const colors = new Array(n + 1).fill(0);
+  const dfs = (i, color) => {
+    colors[i] = color;
+    for (const nextI of grid[i]) {
+      if (colors[nextI] === color) {
+        return false;
+      }
+      // 讨厌的节点nextI继续dfs
+      if (colors[nextI] === 0 && !dfs(nextI, 3 ^ color)) {
+        return false;
+      }
+    }
+    return true;
+  };
+  for (let i = 1; i <= n; i++) {
+    if (colors[i] === 0 && !dfs(i, 1)) {
+      return false;
+    }
+  }
+  return true;
+};
+
+/**
+ * @param {number} n
+ * @param {number[][]} dislikes
+ * @return {boolean}
+ */
+var possibleBipartition = function (n, dislikes) {
+  // 染色法，两种颜色，如果一个节点未被染色，染成红色，
+  // 将它不喜欢的节点染成蓝色，如果不喜欢的颜色已经被染色且也是红色就会发生冲突，返回false
+  // 使用1 2表示两种颜色
+  const grid = new Array(n + 1).fill(0).map((v, i) => []);
+  for (const dislike of dislikes) {
+    grid[dislike[0]].push(dislike[1]);
+    grid[dislike[1]].push(dislike[0]);
+  }
+  const colors = new Array(n + 1).fill(0);
+  const bfs = (i, color) => {
+    colors[i] = color;
+    let queue = [i];
+    while (queue.length > 0) {
+      const nxt = [];
+      for (const curI of queue) {
+        for (const nextI of grid[curI]) {
+          if (colors[nextI] === color) {
+            return false;
+          }
+          if (colors[nextI] === 0) {
+            nxt.push(nextI);
+            colors[nextI] = 3 ^ color;
+          }
+        }
+      }
+      queue = nxt;
+      color = 3 ^ color;
+    }
+    return true;
+  };
+  for (let i = 1; i <= n; i++) {
+    if (colors[i] === 0 && !bfs(i, 1)) {
+      return false;
+    }
+  }
+  return true;
 };
