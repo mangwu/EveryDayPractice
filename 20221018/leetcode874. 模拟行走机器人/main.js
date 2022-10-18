@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-10-18 10:32:37                                                  *
- * @LastModifiedDate: 2022-10-18 11:30:18                                      *
+ * @LastModifiedDate: 2022-10-18 13:46:22                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -118,19 +118,19 @@ var preventObstacles = function (idx, cur, hashX, hashY, command) {
   // 轴上有障碍，判断是否会被阻碍，使用二分查找
   let left = 0;
   let right = axle.length - 1;
-  let obstacle = -1;
-  // 障碍在
+  let obstacle = [];
+  // 获取最靠近起始点的障碍
   while (left <= right) {
     let mid = (left + right) >> 1;
     if (axle[mid] >= targetInterval[0] && axle[mid] <= targetInterval[1]) {
       // 找到一个障碍
       if (idx == 0 || idx == 1) {
         // 找到最接近targetInterval[0]的障碍
-        obstacle = axle[mid];
+        obstacle.push(axle[mid]);
         right = mid - 1;
       } else {
         // 找到最接近targetInterval[1]的障碍
-        obstacle = axle[mid];
+        obstacle.push(axle[mid]);
         left = mid + 1;
       }
     } else if (axle[mid] < targetInterval[0]) {
@@ -141,7 +141,12 @@ var preventObstacles = function (idx, cur, hashX, hashY, command) {
       right = mid - 1;
     }
   }
-  if (obstacle == -1) {
+  let newObstacle = obstacle.pop();
+  if (cur[0] === 0 && cur[1] === 0 && newObstacle === 0) {
+    // 找到障碍了但是就是cur本身（特殊情况）
+    newObstacle = obstacle.pop();
+  }
+  if (!newObstacle) {
     // 没有找到障碍
     cur[0] += DIRS[idx][0] * command;
     cur[1] += DIRS[idx][1] * command;
@@ -150,16 +155,16 @@ var preventObstacles = function (idx, cur, hashX, hashY, command) {
   // 找到障碍了
   if (idx == 0) {
     // 北
-    cur[1] = obstacle - 1;
+    cur[1] = newObstacle - 1;
   } else if (idx == 1) {
     // 东
-    cur[0] = obstacle - 1;
+    cur[0] = newObstacle - 1;
   } else if (idx == 2) {
     // 南
-    cur[1] = obstacle + 1;
+    cur[1] = newObstacle + 1;
   } else {
     // 西
-    cur[0] = obstacle + 1;
+    cur[0] = newObstacle + 1;
   }
 };
 
@@ -171,3 +176,5 @@ var preventObstacles = function (idx, cur, hashX, hashY, command) {
 var getDistance = function (cur) {
   return cur[0] ** 2 + cur[1] ** 2;
 };
+
+// 特殊情况是初始位置是(0, 0)的情况
