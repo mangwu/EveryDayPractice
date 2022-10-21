@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-10-20 10:38:23                                                  *
- * @LastModifiedDate: 2022-10-20 10:38:46                                      *
+ * @LastModifiedDate: 2022-10-21 10:33:01                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -27,5 +27,13 @@
  * @return {number[]}
  */
 var processQueries = function (queries, m) {
-  
+  const arr = new Array(m).fill(0).map((v, i) => i + 1);
+  const ans = [];
+  for (const querie of queries) {
+    const idx = arr.indexOf(querie);
+    ans.push(idx);
+    arr.splice(idx, 1);
+    arr.unshift(querie);
+  }
+  return ans;
 };
