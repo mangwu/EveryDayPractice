@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-10-24 10:51:34                                                  *
- * @LastModifiedDate: 2022-10-24 10:52:09                                      *
+ * @LastModifiedDate: 2022-10-24 16:58:56                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -30,5 +30,27 @@
  * @return {number}
  */
 var minOperationsMaxProfit = function (customers, boardingCost, runningCost) {
-  
+  // 4个座舱
+  // const cockpit = [0, 0, 0, 0];
+  let ans = -1;
+  let profit = 0;
+  let people = 0;
+  let restPeople = 0;
+  const n = customers.length;
+  for (let i = 1; i <= n || restPeople > 0; i++) {
+    restPeople += customers[i - 1] ? customers[i - 1] : 0;
+    if (restPeople >= 4) {
+      restPeople -= 4;
+      people += 4;
+    } else {
+      people += restPeople;
+      restPeople = 0;
+    }
+    let curProfit = boardingCost * people - runningCost * i;
+    if (curProfit > profit) {
+      ans = i;
+      profit = curProfit;
+    }
+  }
+  return ans;
 };

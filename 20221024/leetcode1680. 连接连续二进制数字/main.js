@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-10-24 10:56:08                                                  *
- * @LastModifiedDate: 2022-10-24 13:33:13                                      *
+ * @LastModifiedDate: 2022-10-24 16:17:04                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -73,6 +73,29 @@ var concatenatedBinary = function (n) {
       shift++;
     }
     ans = (ans * Math.pow(2, shift) + i) % MOD;
+  }
+  return ans;
+};
+
+// ((ans * Math.pow(2, shift) + i) % MOD) * (Math.pow(2, shift_) + i_) % MOD
+// = (ans * Math.pow(2, shift)%MOD * (Math.pow(2, shift_)+ i % MOD *  (Math.pow(2, shift_) + i_) % MOD
+
+// ((ans * Math.pow(2, shift) + i) * Math.pow(2, shift_) + i_) % MOD
+// = (ans * Math.pow(2, shift) * Math.pow(2, shift_) + i * Math.pow(2, shift_) + i_) % MOD
+
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var concatenatedBinary = function (n) {
+  let ans = 0n;
+  let shift = 0n; // 记录左移位数
+  n = BigInt(n);
+  for (let i = 1n; i <= n; i++) {
+    if (!(i & (i - 1n))) {
+      shift++;
+    }
+    ans = (ans << shift | i) % MAX;
   }
   return ans;
 };
