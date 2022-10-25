@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-10-25 14:06:26                                                  *
- * @LastModifiedDate: 2022-10-25 14:26:05                                      *
+ * @LastModifiedDate: 2022-10-25 14:45:27                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -71,3 +71,5 @@ var isEqual = function (arr, n) {
 // 0 2 4 6 1 3 5 7
 // 0   2   4   6
 //   1   3   5   7
+
+
