@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-10-27 09:00:43                                                  *
- * @LastModifiedDate: 2022-10-27 11:22:56                                      *
+ * @LastModifiedDate: 2022-10-27 20:04:55                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -28,9 +28,47 @@
  * @return {TreeNode[]}
  */
 var generateTrees = function (n) {
-  let low = Math.ceil(Math.log2(n + 1));
-  let high = n;
-  
+  if (n == 1) {
+    return [new TreeNode(1)];
+  }
+  const preRes = generateTrees(n - 1);
+  const ans = [];
+  for (let item of preRes) {
+    const copy = new TreeNode(n, copyTree(item));
+    ans.push(copy);
+    let pre = item;
+    // item作为原始副本
+    while (pre) {
+      // 构造新树
+      let res = new TreeNode(n);
+      let right = pre.right;
+      res.left = right;
+      pre.right = res;
+      const copy = copyTree(item);
+      ans.push(copy);
+      // 还原
+      pre.right = res.left;
+      res.left = null;
+      // 继续
+      pre = pre.right;
+    }
+  }
+  return ans;
+};
+
+/**
+ * @description 复制树
+ * @param {TreeNode} root 根节点
+ * @returns {TreeNode}
+ */
+var copyTree = function (root) {
+  if (!root) {
+    return null;
+  }
+  const ans = new TreeNode(root.val);
+  ans.left = copyTree(root.left);
+  ans.right = copyTree(root.right);
+  return ans;
 };
 
 // 1 2 3
@@ -40,3 +78,5 @@ var generateTrees = function (n) {
 // 3 1 2
 
 // 3   3 + 1
+
+// []
