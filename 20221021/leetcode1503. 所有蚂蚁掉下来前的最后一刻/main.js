@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-10-21 10:38:07                                                  *
- * @LastModifiedDate: 2022-10-21 10:38:30                                      *
+ * @LastModifiedDate: 2022-11-01 15:47:11                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -30,5 +30,13 @@
  * @return {number}
  */
 var getLastMoment = function (n, left, right) {
-  
+  // 初始状态一个位置只有一只蚂蚁
+  let ans = 0;
+  for (const item of left) {
+    ans = Math.max(item, ans);
+  }
+  for (const item of right) {
+    ans = Math.max(n - item, ans);
+  }
+  return ans;
 };
