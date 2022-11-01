@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-10-31 10:33:27                                                  *
- * @LastModifiedDate: 2022-10-31 10:42:37                                      *
+ * @LastModifiedDate: 2022-11-01 22:03:45                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -60,9 +60,9 @@ var sortedListToBST = function (head) {
 };
 
 
-[10,0,13,-10,5,11,15,null,-3,null,9,null,12,14,16]
+// [10,0,13,-10,5,11,15,null,-3,null,9,null,12,14,16]
 
-      10
-    0      13
- -10  5  11     15
-  -3   9   12 14 16
+//       10
+//     0      13
+//  -10  5  11     15
+//   -3   9   12 14 16

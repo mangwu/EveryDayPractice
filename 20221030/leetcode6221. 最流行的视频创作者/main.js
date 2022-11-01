@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-10-30 10:53:49                                                  *
- * @LastModifiedDate: 2022-10-30 11:06:17                                      *
+ * @LastModifiedDate: 2022-11-01 22:29:46                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -53,6 +53,44 @@ var mostPopularCreator = function (creators, ids, views) {
       max = arr[0];
     } else if (arr[0] == max) {
       ans.push([creators[i], arr[1]]);
+    }
+  }
+  return ans;
+};
+
+/**
+ * @param {string[]} creators
+ * @param {string[]} ids
+ * @param {number[]} views
+ * @return {string[][]}
+ */
+var mostPopularCreator = function (creators, ids, views) {
+  const dict = {}; // key: 创作者，value：[总播放量，最大播放量，最大播放量视频]
+  let maxViewSum = 0; // 最大的总播放量
+  const n = creators.length;
+  let ans = [];
+  for (let i = 0; i < n; i++) {
+    const [creator, id, view] = [creators[i], ids[i], views[i]];
+    if (creator in dict) {
+      // 当前创作者已存在
+      const value = dict[creator];
+      // 增加总播放量
+      value[0] += view;
+      // 比较得出最大播放量
+      if (view > value[1] || (view === value[1] && id < value[2])) {
+        [value[1], value[2]] = [view, id];
+      }
+    } else {
+      dict[creator] = [view, view, id];
+    }
+  }
+  for (const key in dict) {
+    const value = dict[key];
+    if (value[0] > maxViewSum) {
+      maxViewSum = value[0];
+      ans = [[key, value[2]]];
+    } else if (value[0] === maxViewSum) {
+      ans.push([key, value[2]]);
     }
   }
   return ans;
