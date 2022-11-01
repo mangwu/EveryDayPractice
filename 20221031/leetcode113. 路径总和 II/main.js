@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-10-31 10:44:12                                                  *
- * @LastModifiedDate: 2022-10-31 10:55:42                                      *
+ * @LastModifiedDate: 2022-11-01 17:28:43                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -61,5 +61,34 @@ var pathSum = function (root, targetSum) {
     }
   };
   dfs(root);
+  return ans;
+};
+
+/**
+ * @param {TreeNode} root
+ * @param {number} targetSum
+ * @return {number[][]}
+ */
+var pathSum = function (root, targetSum) {
+  // 将sum作为rest传递
+  const ans = [];
+  const path = [];
+  const dfs = (node, rest) => {
+    if (!node) {
+      return;
+    }
+    // 选择当前节点作为路径节点之一
+    path.push(node.val);
+    if (node.val === rest && !node.left && !node.right) {
+      // 是叶子节点，且剩余的值恰好等于节点值
+      ans.push(path.slice());
+    }
+    // 左右节点遍历
+    dfs(node.left, rest - node.val);
+    dfs(node.right, rest - node.val);
+    // 回溯
+    path.pop();
+  };
+  dfs(root, targetSum);
   return ans;
 };
