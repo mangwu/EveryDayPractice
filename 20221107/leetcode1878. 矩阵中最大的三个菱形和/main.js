@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-11-07 10:17:32                                                  *
- * @LastModifiedDate: 2022-11-07 10:21:02                                      *
+ * @LastModifiedDate: 2022-11-08 09:28:10                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -23,7 +23,20 @@
  * @return {number[]}
  */
 var getBiggestThree = function (grid) {
-  
+  // 四个角落的值单独计算
+  const m = grid.length;
+  const n = grid[0].length;
+
 };
 
 // 100  => 1 + 2 + 3 +...+
+
+// 8 => 1 + 2 + 3 + 3 + 2 + 1
+//   => 1 + 2 + 3 + 3 + 2 + 1
+//   => 1 + 2 + 2 + 2 + 2 + 1
+//   => 1 + 2 + 2 + 2 + 2 + 1
+//   => 1 + 1 + 1 + 1 + 1 + 1
+//   => 1 + 1 + 1 + 1 + 1 + 1
+
+// 9 => 1 + 2 + 3 + 4 + 3 + 2 + 1
+//   => 1 + 2 + 3 + 
