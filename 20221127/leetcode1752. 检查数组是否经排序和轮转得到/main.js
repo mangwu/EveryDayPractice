@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-11-27 10:25:02                                                  *
- * @LastModifiedDate: 2022-11-27 10:28:22                                      *
+ * @LastModifiedDate: 2022-11-27 20:30:54                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -34,4 +34,29 @@ var check = function (nums) {
     }
   }
   return true;
+};
+
+/**
+ * @param {number[]} nums
+ * @return {boolean}
+ */
+var check = function (nums) {
+  const origin = nums.slice().sort((a, b) => a - b);
+  const n = nums.length;
+  for (let i = 0; i < n; i++) {
+    let cur = true;
+    for (let j = 0; j < n; j++) {
+      if (nums[j] !== origin[(i + j) % n]) {
+        cur = false;
+        break;
+      }
+    }
+    if (cur) return cur;
+  }
+  return false;
+};
+
+var isSame = function (a, b) {
+  const n = a.length;
+  for (let i = 0; i < n; i++) {}
 };
