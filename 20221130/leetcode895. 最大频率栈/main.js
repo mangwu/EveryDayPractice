@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-11-30 22:22:17                                                  *
- * @LastModifiedDate: 2022-11-30 23:44:59                                      *
+ * @LastModifiedDate: 2022-12-03 21:46:00                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -97,6 +97,53 @@ FreqStack.prototype.pop = function () {
   // 修改num2idx
   this.val2idx.delete(ans);
   return ans;
+};
+
+/**
+ * Your FreqStack object will be instantiated and called as such:
+ * var obj = new FreqStack()
+ * obj.push(val)
+ * var param_2 = obj.pop()
+ */
+
+var FreqStack = function () {
+  // 最大频率
+  this.maxFreq = 0;
+  // 记录数的频率
+  this.val2Freq = new Map();
+  // 记录频率的数栈
+  this.freq2Val = new Map();
+};
+
+/**
+ * @param {number} val
+ * @return {void}
+ */
+FreqStack.prototype.push = function (val) {
+  // 更新数的频率
+  this.val2Freq.set(val, (this.val2Freq.get(val) || 0) + 1);
+  if (!this.freq2Val.has(this.val2Freq.get(val))) {
+    // 没有相关的栈，添加一个空栈
+    this.freq2Val.set(this.val2Freq.get(val), []);
+  }
+  // 添加到栈中
+  this.freq2Val.get(this.val2Freq.get(val)).push(val);
+  this.maxFreq = Math.max(this.maxFreq, this.val2Freq.get(val));
+};
+
+/**
+ * @return {number}
+ */
+FreqStack.prototype.pop = function () {
+  // 栈
+  const stack = this.freq2Val.get(this.maxFreq);
+  // 出栈
+  const val = stack.pop();
+  this.val2Freq.set(val, this.val2Freq.get(val) - 1);
+  if (stack.length === 0) {
+    this.maxFreq--;
+  }
+  return val;
 };
 
 /**
