@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-12-25 20:07:42                                                  *
- * @LastModifiedDate: 2022-12-25 23:53:10                                      *
+ * @LastModifiedDate: 2022-12-26 09:21:37                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -23,5 +23,22 @@
  * @return {number}
  */
 var minimumBoxes = function (n) {
-  
+  // 找第i层，第j列
+  let cur = 0;
+  let i = 0;
+  while (cur < n) {
+    i++;
+    cur += ((i + 1) * i) / 2;
+  }
+  cur -= ((i + 1) * i) / 2;
+  i--;
+  // 开始计算第i+1层，第j列
+  let ans = ((i + 1) * i) / 2;
+  let j = 1;
+  while (cur < n) {
+    cur += j;
+    j++;
+    ans++;
+  }
+  return ans;
 };

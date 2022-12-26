@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-12-25 11:14:51                                                  *
- * @LastModifiedDate: 2022-12-25 20:07:38                                      *
+ * @LastModifiedDate: 2022-12-26 15:33:55                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -11,7 +11,6 @@
  * Date   	            By 	    Comments                                       *
  * ---------------------	--------	----------------------------------------------- *
  */
-
 
 // 给你一个正整数数组 nums 和一个整数 k 。
 
@@ -26,7 +25,17 @@
  * @param {number} k
  * @return {number}
  */
-var countPartitions = function(nums, k) {
-  // 计算相同元素
-  const hash = new Map();
+var countPartitions = function (nums, k) {
+  // [1,2,3,4] k = 4
+  // 算上空分区，总共有2^4 = 16个分区
+  // 要计算好分区，可以先计算出坏分区的数量
+  // 如果第一个组或第二个组的元素和小于k，那么这个分区就是坏分区
+  // 第一个组是[] [1] [2] [3] [1,2] 5个坏分区
+  // 第二个组是[] [1] [2] [3] [1,2] 5个坏分区
+  // 所以共有16 - 10 = 6个好分区
+  // 如果两个组都小于k，这个时候坏分区会计算重复
+  // 连个组都小于k，就是nums之和小于2*k，这个时候一个好分区都没有
+  if (nums.reduce((pre, cur) => pre + cur) < 2 * k) return 0;
+  
+  // 算出一个组的坏分区的个数：0-1背包求方案数
 };

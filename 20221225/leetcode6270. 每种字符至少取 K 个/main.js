@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-12-25 10:37:10                                                  *
- * @LastModifiedDate: 2022-12-25 11:04:13                                      *
+ * @LastModifiedDate: 2022-12-26 13:54:45                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -52,4 +52,40 @@ var takeCharacters = function (s, k) {
     maxBack = Math.max(maxBack, back);
   }
   return maxBack + maxFront;
+};
+
+/**
+ * @param {string} s
+ * @param {number} k
+ * @return {number}
+ */
+var takeCharacters = function (s, k) {
+  // 枚举前缀和后缀
+  // 前缀为空：从右往左遍历，找到最短满足要求的后缀
+  // 枚举前缀长度的同时维护后缀的长度
+  const n = s.length;
+  let j = n;
+  const counts = new Array(3).fill(0);
+  while (counts[0] < k || counts[1] < k || counts[2] < k) {
+    // 全部找完都没有
+    if (j == 0) {
+      return -1;
+    }
+    j--;
+    counts[s[j].charCodeAt() - "a".charCodeAt()]++;
+  }
+  let ans = n - j; // 只有后缀时的情况
+  for (let i = 0; i < n; i++) {
+    counts[s[i].charCodeAt() - "a".charCodeAt()]++;
+    // 可以去掉s[j]
+    while (j < n && counts[s[j].charCodeAt() - "a".charCodeAt()] > k) {
+      counts[s[j].charCodeAt() - "a".charCodeAt()]--;
+      j++;
+    }
+    // 找到一个答案
+    ans = Math.min(ans, i + 1 + n - j);
+    // j等于n时可以提前退出
+    if (j === n) break;
+  }
+  return ans;
 };
