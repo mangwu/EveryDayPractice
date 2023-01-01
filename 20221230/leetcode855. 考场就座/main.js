@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2022-12-30 09:04:14                                                  *
- * @LastModifiedDate: 2022-12-30 10:25:08                                      *
+ * @LastModifiedDate: 2022-12-30 22:51:12                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2022 mangwu                                                   *
@@ -21,12 +21,12 @@
 /**
  * @param {number} n
  */
-var ExamRoom = function (n) {
-  
-};
+var ExamRoom = function (n) {};
 
 class Q {
-  
+  constructor(compare = (a, b) => a - b) {
+    
+  }
 }
 
 /**
@@ -47,8 +47,7 @@ ExamRoom.prototype.leave = function (p) {};
  * obj.leave(p)
  */
 
-
-// 0  1 2 3 4 6 8 10  
+// 0  1 2 3 4 6 8 10
 
 // 每次选择差值最大的取中间值
 
@@ -57,4 +56,4 @@ ExamRoom.prototype.leave = function (p) {};
 // 10    0  9
 //  8  -> 4
 // 3 4 -> 2
-//1 2  -> 
+//1 2  ->
