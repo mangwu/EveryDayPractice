@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2023-01-17 09:14:20                                                  *
- * @LastModifiedDate: 2023-01-17 11:09:24                                      *
+ * @LastModifiedDate: 2023-01-18 08:58:25                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2023 mangwu                                                   *
@@ -181,3 +181,24 @@ var countNicePairs = function (nums) {
 
 [42644624, 152727101, 293999243, 352171103, 413370302, 442454244];
 [42644624, 101727251, 342999392, 301171253, 203073314, 442454244];
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var countNicePairs = function (nums) {
+  const hash = new Map();
+  let res = 0;
+  for (const num of nums) {
+    let diff = num - revNum(num);
+    if (hash.has(diff)) {
+      let cur = hash.get(diff);
+      hash.set(diff, cur + 1);
+      res += cur;
+      res %= MOD;
+    } else {
+      hash.set(diff, 1);
+    }
+  }
+  return res;
+};
