@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2023-03-07 08:46:04                                                  *
- * @LastModifiedDate: 2023-03-07 17:00:57                                      *
+ * @LastModifiedDate: 2023-03-07 21:54:27                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2023 mangwu                                                   *
@@ -36,7 +36,7 @@
  * @return {string[]}
  */
 var braceExpansionII = function (expression) {
-  const set = new Set(); // 去重
+  // const set = new Set(); // 去重
   // 要考虑的情况：
   // 1. 正常组合
   // 2. 字符与{}相乘
@@ -44,7 +44,7 @@ var braceExpansionII = function (expression) {
   const dfs = (expression) => {
     let index = expression.indexOf("{");
     if (index === -1) {
-      return expression.split(",");
+      return [...new Set(expression.split(","))];
     }
     const n = expression.length;
     let brackets = 0;
@@ -63,15 +63,107 @@ var braceExpansionII = function (expression) {
       }
     }
     // 嵌套关系处理
-    if(flag) {
-      for(let i = 1; i < n-1; i++) {
-        
+    if (flag) {
+      let pre = 1;
+      let res = [];
+      let brackets = 0;
+      for (let i = 1; i < n - 1; i++) {
+        if (expression[i] == "{") brackets++;
+        if (expression[i] == "}") brackets--;
+        if (expression[i] === "," && brackets === 0) {
+          res = res.concat(dfs(expression.substring(pre, i)));
+          pre = i + 1;
+        } else if (i == n - 2) {
+          res = res.concat(dfs(expression.substring(pre, i + 1)));
+        }
       }
+      return [...new Set(res)];
+    } else {
+      const res = [];
+      for (let i = 0; i < n; i++) {
+        if (expression[i] === "{") {
+          let brackets = 1;
+          let start = i;
+          i++;
+          while (brackets !== 0) {
+            if (expression[i] === "{") {
+              brackets++;
+            } else if (expression[i] === "}") {
+              brackets--;
+            }
+            i++;
+          }
+          res.push(dfs(expression.substring(start, i)));
+          i--;
+        } else {
+          let start = i;
+          while (expression[i] !== "{" && i < n) {
+            i++;
+          }
+          res.push([expression.substring(start, i)]);
+          i--;
+        }
+      }
+      return [
+        ...new Set(
+          res.reduce((pre, cur) => {
+            const newData = [];
+            for (const item1 of pre) {
+              for (const item2 of cur) {
+                newData.push(item1 + item2);
+              }
+            }
+            return newData;
+          })
+        ),
+      ];
     }
   };
+  return dfs(expression).sort();
 };
 // {a, b} {a}
 // a
 // a{a, b} => a , {a, b}
 // a{{a,c},b{a,c}}d => a {a, c} b {a, c} d
 // "cd{{a,z},a{b,c}{d,k},{ab,z}}{c,d{e,f}}e"
+
+const a = [
+  "acdccsa",
+  "acdccsads",
+  "acdccsadspof",
+  "acdccsadssof",
+  "acdccsadsfof",
+  "acdccsas",
+  "acdccsaotysad",
+  "acdccsaotydfgso",
+  "acdccsaotydfgs",
+  "acdcccas",
+  "acdcccaotysad",
+  "acdcccaotydfgso",
+  "acdcccaotydfgs",
+  "acdccdas",
+  "acdccdaotysad",
+  "acdccdaotydfgso",
+  "acdccdaotydfgs",
+];
+a.sort();
+const b = [
+  "acdcccaotydfgs",
+  "acdcccaotydfgso",
+  "acdcccaotysad",
+  "acdcccas",
+  "acdccdaotydfgs",
+  "acdccdaotydfgso",
+  "acdccdaotysad",
+  "acdccdas",
+  "acdccsa",
+  "acdccsads",
+  "acdccsadsfof",
+  "acdccsadspof",
+  "acdccsadssof",
+  "acdccsaotydfgs",
+  "acdccsaotydfgso",
+  "acdccsaotysad",
+  "acdccsas",
+];
+b.sort();
