@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2023-03-27 08:38:03                                                  *
- * @LastModifiedDate: 2023-03-27 09:09:50                                      *
+ * @LastModifiedDate: 2023-03-27 10:49:21                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2023 mangwu                                                   *
@@ -132,6 +132,37 @@ var countSubstrings = function (s, t) {
         diff += s[i + k] === t[j + k] ? 0 : 1;
         if (diff > 1) break;
         else if (diff === 1) res++;
+      }
+    }
+  }
+  return res;
+};
+
+/**
+ * @param {string} s
+ * @param {string} t
+ * @return {number}
+ */
+var countSubstrings = function (s, t) {
+  const m = s.length;
+  const n = t.length;
+  const dpl = new Array(m + 1).fill(0).map(() => new Array(n + 1).fill(0));
+  const dpr = new Array(m + 1).fill(0).map(() => new Array(n + 1).fill(0));
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      dpl[i + 1][j + 1] = s[i] === t[j] ? dpl[i][j] + 1 : 0;
+    }
+  }
+  for (let i = m - 1; i >= 0; i--) {
+    for (let j = n - 1; j >= 0; j--) {
+      dpr[i][j] = s[i] === t[j] ? dpr[i + 1][j + 1] + 1 : 0;
+    }
+  }
+  let res = 0;
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (s[i] !== t[j]) {
+        res += (dpl[i][j] + 1) * (dpr[i + 1][j + 1] + 1);
       }
     }
   }
