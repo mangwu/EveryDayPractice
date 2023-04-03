@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2023-04-03 08:39:23                                                  *
- * @LastModifiedDate: 2023-04-03 09:52:57                                      *
+ * @LastModifiedDate: 2023-04-03 16:20:07                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2023 mangwu                                                   *
@@ -51,4 +51,18 @@ var prevPermOpt1 = function (arr) {
 // [1,7,6,4,8,2,3]
 // 1 7 6 4 3 2 8
 
-
+var prevPermOpt1 = function (arr) {
+  const n = arr.length;
+  for (let i = n - 2; i >= 0; i--) {
+    if (arr[i] > arr[i + 1]) {
+      let j = n - 1; // 找到下标最小的j
+      while (arr[j] >= arr[i] || arr[j] === arr[j - 1]) {
+        j--;
+      }
+      // 进行替换
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+      break;
+    }
+  }
+  return arr;
+};
