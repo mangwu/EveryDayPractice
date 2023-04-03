@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2023-04-03 08:39:23                                                  *
- * @LastModifiedDate: 2023-04-03 09:16:25                                      *
+ * @LastModifiedDate: 2023-04-03 09:52:57                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2023 mangwu                                                   *
@@ -50,3 +50,5 @@ var prevPermOpt1 = function (arr) {
 };
 // [1,7,6,4,8,2,3]
 // 1 7 6 4 3 2 8
+
+
