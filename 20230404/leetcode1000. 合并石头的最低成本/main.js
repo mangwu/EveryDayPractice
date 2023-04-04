@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2023-04-04 09:16:48                                                  *
- * @LastModifiedDate: 2023-04-04 17:19:22                                      *
+ * @LastModifiedDate: 2023-04-04 17:38:01                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2023 mangwu                                                   *
@@ -58,7 +58,8 @@ var mergeStones = function (stones, k) {
       if (num >= k) {
         // 可以合并
         dp[i][j][0] = 1 + ((num - k) % (k - 1));
-        if ((num - k) % (k - 1) === 0) { // 相等的情况下
+        if ((num - k) % (k - 1) === 0) {
+          // 相等的情况下
           dp[i][j][1] = cur + prefix[j + 1] - prefix[i];
         }
       }
@@ -84,3 +85,41 @@ console.log(
 
 // 8
 // 7  7 => 6
+
+/**
+ * @param {number[]} stones
+ * @param {number} k
+ * @return {number}
+ */
+var mergeStones = function (stones, k) {
+  const n = stones.length;
+  if (n == 1) return 0;
+  if (n < k || (n - k) % (k - 1) !== 0) return -1;
+  const prefix = [0];
+  for (let i = 0; i < n; i++) prefix[i + 1] = prefix[i] + stones[i];
+  const dp = new Array(n)
+    .fill(0)
+    .map((_v) => new Array(n).fill(0).map((_v) => new Array(2).fill(0)));
+  for (let j = 0; j < n; j++) {
+    for (let i = j; i >= 0; i--) {
+      if (i === j) {
+        dp[i][j][0] = 1;
+        dp[i][j][1] = 0;
+        continue;
+      }
+      let cur = Infinity;
+      for (let q = j; q > i; q--) {
+        if (dp[i][q - 1][0] + dp[q][j][0] > k) continue;
+        cur = Math.min(cur, dp[i][q - 1][1] + dp[q][j][1]);
+      }
+      dp[i][j][1] = cur;
+      dp[i][j][0] = j - i + 1;
+      if (dp[i][j][0] >= k) {
+        if ((dp[i][j][0] - k) % (k - 1) === 0)
+          dp[i][j][1] = cur + prefix[j + 1] - prefix[i];
+        dp[i][j][0] = 1 + ((dp[i][j][0] - k) % (k - 1));
+      }
+    }
+  }
+  return dp[0][n - 1][1];
+};
