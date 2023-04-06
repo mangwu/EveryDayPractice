@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2023-04-06 08:51:27                                                  *
- * @LastModifiedDate: 2023-04-06 11:28:12                                      *
+ * @LastModifiedDate: 2023-04-06 23:40:13                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2023 mangwu                                                   *
@@ -142,23 +142,112 @@ var baseNeg2 = function (n) {
   // 先确定位数
   let start = 1;
   let k = 0;
-  const arr = [1];
+  const arr = [];
   while (n > start) {
     k += 2;
     start += Math.pow(2, k);
-    arr.push(start);
+    arr.push(start / 2);
   }
+  // 2 8
   if (n === start) return "10".repeat(k / 2);
   // 两个的确定位
   const res = new Array(k + 1).fill(0);
-  
-  for (let i = 0; i <= k; i += 2) {
-    let cur = Math.pow(2, k - i - 1);
-    let m = //
+
+  for (let i = k; i >= 0; i -= 2) {
+    let cur = Math.pow(2, i);
+    let m = arr[i / 2 - 1];
+    if (n >= cur) {
+      res[k - i] = 1;
+      n -= cur;
+    } else if (n <= cur / 2) {
+      res[k - i] = 1;
+      res[k - i + 1] = 1;
+      n -= cur / 2;
+    }
   }
+  // 4 2 0
+  // 2 1 0
 };
 // 1 5 21
 // 16     17    14    15    20
 // 10000  10001 10010 10011 10100
 // 21     18    19    8     9     6     7     12    13    10    11
 // 10101  10110 10111 11000 11001 11010 11011 11100 11101 11110 11111
+//  16 8   4 2   1 0
+
+//    11010 ---  11101
+// 00       11          10
+/**
+ * @param {number} n
+ * @return {string}
+ */
+var baseNeg2 = function (n) {
+  if (n <= 1) return n.toString();
+  // 先确定位数
+  let start = 1;
+  let k = 0;
+  const arr = [0, 1];
+  while (n > start) {
+    k += 2;
+    start += Math.pow(2, k);
+    arr.push(start);
+  }
+  // 2 8 32 128
+  // 1 5 21
+  if (n === start) return "10".repeat(k / 2);
+  // 两个的确定位
+  const res = new Array(k + 1).fill(0);
+
+  for (let i = k; i >= 0; i -= 2) {
+    let cur1 = Math.pow(2, i - 1) + arr[i / 2 - 1];
+    let cur2 = Math.pow();
+    if (n > cur) {
+      res[k - i] = 1;
+      n -= Math.pow(2, i);
+    } else if (n <= cur / 2) {
+      res[k - i] = 1;
+      res[k - i + 1] = 1;
+      n -= cur / 2;
+    }
+  }
+  // 4 2 0
+  // 2 1 0
+};
+
+/**
+ * @param {number} n
+ * @return {string}
+ */
+var baseNeg2 = function (n) {
+  const arr = new Array(31).fill(0);
+  let start = Math.pow(2, Math.floor(Math.log2(n)));
+  while (n > 0) {
+    while (start > n) {
+      start /= 2;
+    }
+    n -= start;
+    let cur = Math.log2(start);
+    if (cur % 2 == 0) {
+      arr[cur]++;
+    } else {
+      arr[cur]++;
+      arr[cur + 1]++;
+    }
+  }
+  for (let i = 0; i < 31; i++) {
+    if (arr[i] > 1) {
+      if (arr[i + 1] !== 0) {
+        arr[i] -= 2;
+        arr[i + 1]--;
+      } else {
+        arr[i] -= 2;
+        arr[i + 1]++;
+        arr[i + 2]++;
+      }
+    }
+  }
+  while (arr[arr.length - 1] === 0) {
+    arr.pop();
+  }
+  return arr.length > 0 ? arr.reverse().join("") : "0";
+};
