@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2023-04-06 08:51:27                                                  *
- * @LastModifiedDate: 2023-04-06 11:28:12                                      *
+ * @LastModifiedDate: 2023-04-06 11:29:22                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2023 mangwu                                                   *
@@ -152,8 +152,8 @@ var baseNeg2 = function (n) {
   // 两个的确定位
   const res = new Array(k + 1).fill(0);
   
-  for (let i = 0; i <= k; i += 2) {
-    let cur = Math.pow(2, k - i - 1);
+  for (let i = n-1; i >= 0; i -= 2) {
+    let cur = Math.pow(2, i);
     let m = //
   }
 };
