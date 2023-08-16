@@ -1,8 +1,8 @@
 /*
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
- * @Date: 2023-08-15 16:42:33                                                  *
- * @LastModifiedDate: 2023-08-16 09:49:18                                      *
+ * @Date: 2023-08-16 09:50:23                                                  *
+ * @LastModifiedDate: 2023-08-16 10:23:06                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2023 mangwu                                                   *
@@ -11,6 +11,19 @@
  * Date   	            By 	    Comments                                       *
  * ---------------------	--------	----------------------------------------------- *
  */
+
+// 中位数是有序整数列表中的中间值。如果列表的大小是偶数，则没有中间值，中位数是两个中间值的平均值。
+
+// 例如 arr = [2,3,4] 的中位数是 3 。
+// 例如 arr = [2,3] 的中位数是 (2 + 3) / 2 = 2.5 。
+// 实现 MedianFinder 类:
+
+// MedianFinder() 初始化 MedianFinder 对象。
+
+// void addNum(int num) 将数据流中的整数 num 添加到数据结构中。
+
+// double findMedian() 返回到目前为止所有元素的中位数。与实际答案相差 10-5 以内的答案将被接受。
+
 class MinHeap {
   constructor(compareFn = (a, b) => a - b) {
     this.compareFn = compareFn;
@@ -20,7 +33,7 @@ class MinHeap {
     return this.heap.length;
   }
   isEmpty() {
-    return this.size === 0;
+    return this.size() === 0;
   }
   getParentIdx(idx) {
     if (idx === 0) return -1;
@@ -33,9 +46,7 @@ class MinHeap {
     return 2 * idx + 2;
   }
   swap(a, b) {
-    let temp = this.heap[a];
-    this.heap[a] = this.heap[b];
-    this.heap[b] = temp;
+    [this.heap[a], this.heap[b]] = [this.heap[b], this.heap[a]];
   }
   insert(value) {
     if (value == null) return false;
@@ -85,49 +96,43 @@ class MinHeap {
     }
   }
 }
+
+var MedianFinder = function () {
+  this.queMin = new MinHeap((a, b) => b - a); // 小于中位数的数，最多比queMax多一个元素
+  this.queMax = new MinHeap(); // 大于中位数的数
+};
+
 /**
- * @param {number} n
- * @return {number}
+ * @param {number} num
+ * @return {void}
  */
-var nthUglyNumber = function (n) {
-  // 多路归并
-  const set = new Set([1]);
-  const heap = new MinHeap();
-  heap.insert(1);
-  while (n) {
-    const cur = heap.poll();
-    n--;
-    if (!set.has(cur * 2)) heap.insert(cur * 2);
-    if (!set.has(cur * 3)) heap.insert(cur * 3);
-    if (!set.has(cur * 5)) heap.insert(cur * 5);
-    set.add(cur * 2);
-    set.add(cur * 3);
-    set.add(cur * 5);
-    if (n === 0) return cur;
+MedianFinder.prototype.addNum = function (num) {
+  if (this.queMin.isEmpty() || num <= this.queMin.peek()) {
+    this.queMin.insert(num);
+    while (this.queMax.size() + 1 < this.queMin.size()) {
+      this.queMax.insert(this.queMin.poll());
+    }
+  } else {
+    this.queMax.insert(num);
+    while (this.queMax.size() > this.queMin.size()) {
+      this.queMin.insert(this.queMax.poll());
+    }
   }
 };
-// 1 => 1 => 2 3 5
-// 2 3 5 => 2 => 4 6 10
-// 3 4 5 6 10 => 3 => 6 9 15
+
 /**
- * @param {number} n
  * @return {number}
  */
-var nthUglyNumber = function (n) {
-  // 多路归并
-  const ans = [0, 1];
-  let idx1 = 1;
-  let idx2 = 1;
-  let idx3 = 1;
-  for (let i = 2; i <= n; i++) {
-    let num1 = ans[idx1] * 2;
-    let num2 = ans[idx2] * 3;
-    let num3 = ans[idx3] * 5;
-    const min = Math.min(num1, num2, num3);
-    ans.push(min);
-    if (num1 === min) idx1++;
-    if (num2 === min) idx2++;
-    if (num3 === min) idx3++;
+MedianFinder.prototype.findMedian = function () {
+  if (this.queMin.size() > this.queMax.size()) {
+    return this.queMin.peek();
   }
-  return ans[n];
+  return (this.queMax.peek() + this.queMin.peek()) / 2;
 };
+
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * var obj = new MedianFinder()
+ * obj.addNum(num)
+ * var param_2 = obj.findMedian()
+ */
