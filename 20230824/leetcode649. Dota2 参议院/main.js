@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2023-08-24 16:08:00                                                  *
- * @LastModifiedDate: 2023-08-24 16:08:10                                      *
+ * @LastModifiedDate: 2023-08-25 10:05:06                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2023 mangwu                                                   *
@@ -24,8 +24,83 @@
 
 // 假设每一位参议员都足够聪明，会为自己的政党做出最好的策略，你需要预测哪一方最终会宣布胜利并在 Dota2 游戏中决定改变。输出应该是 "Radiant" 或 "Dire" 。
 
+class Q {
+  constructor() {
+    this.items = {};
+    this.count = 0;
+    this.lowestCount = 0;
+  }
+  size() {
+    return this.count;
+  }
+  isEmpty() {
+    return this.size() === 0;
+  }
+  enqueue(...eles) {
+    for (const ele of eles) {
+      this.items[this.lowestCount + this.count] = ele;
+      this.count++;
+    }
+  }
+  peek() {
+    if (this.isEmpty()) return undefined;
+    return this.items[this.lowestCount];
+  }
+  dequeue() {
+    if (this.isEmpty()) return undefined;
+    const removeValue = this.items[this.lowestCount++];
+    delete this.items[this.lowestCount - 1];
+    this.count--;
+    return removeValue;
+  }
+}
+
 /**
  * @param {string} senate
  * @return {string}
  */
-var predictPartyVictory = function (senate) {};
+var predictPartyVictory = function (senate) {
+  // 记录字符串中R和D的数量
+  let R = 0;
+  let D = 0;
+  const q = new Q();
+  for (const ch of senate) {
+    if (ch === "R") R++;
+    if (ch === "D") D++;
+    q.enqueue(ch);
+  }
+  let preR = 0;
+  let preD = 0;
+  while (R && D) {
+    const cur = q.dequeue();
+    if (cur === "R") {
+      // 判断当前R是否被禁止投票
+      if (preD) {
+        preD--;
+        R--;
+      } else {
+        q.enqueue(cur);
+        preR++;
+      }
+    } else if (cur === "D") {
+      // 判断当前D是否被禁止投票
+      if (preR) {
+        preR--;
+        D--;
+      } else {
+        q.enqueue(cur);
+        preD++;
+      }
+    }
+  }
+  return D ? "Dire" : "Radiant";
+};
+
+// RRDDRDRRDDDDD
+// RRDDD
+// RD
+// R
+
+// DRRDRRDDDRRRRRDDRDRDRRD
+
+// RRRRD
