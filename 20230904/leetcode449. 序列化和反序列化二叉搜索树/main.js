@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2023-09-04 15:01:57                                                  *
- * @LastModifiedDate: 2023-09-04 17:41:46                                      *
+ * @LastModifiedDate: 2023-09-04 20:10:25                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2023 mangwu                                                   *
@@ -68,16 +68,19 @@ var deserialize = function (data) {
     const m = queue.length;
     for (let i = 0; i < m; i++) {
       const item = queue[i];
-      if (dataArr[idx + i] !== "null") {
-        item.left = new TreeNode(parseInt(dataArr[idx + i]));
+      console.log(item);
+      if (dataArr[idx] !== "") {
+        item.left = new TreeNode(parseInt(dataArr[idx]));
+        console.log(dataArr[idx]);
         nxt.push(item.left);
       }
-      if (dataArr[idx + i + 1] !== "null") {
-        item.right = new TreeNode(parseInt(dataArr[idx + i + 1]));
+      if (dataArr[idx + 1] !== "") {
+        item.right = new TreeNode(parseInt(dataArr[idx + 1]));
+        console.log(dataArr[idx + 1]);
         nxt.push(item.right);
       }
+      idx += 2;
     }
-    idx += m * 2;
     queue = nxt;
   }
   return head;
