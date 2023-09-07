@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2023-09-07 09:24:28                                                  *
- * @LastModifiedDate: 2023-09-07 10:08:04                                      *
+ * @LastModifiedDate: 2023-09-07 11:03:10                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2023 mangwu                                                   *
@@ -110,16 +110,28 @@ var repairCars = function (ranks, cars) {
   }
 };
 
-const heap = new MinHeap();
-heap.insert(5)
-heap.insert(9)
-heap.insert(1)
-heap.insert(32)
-heap.insert(16)
-console.log(heap.poll());
-console.log(heap.poll());
-console.log(heap.poll());
-console.log(heap.poll());
-console.log(heap.poll());
-
-
+/**
+ * @param {number[]} ranks
+ * @param {number} cars
+ * @return {number}
+ */
+var repairCars = function (ranks, cars) {
+  let left = 1;
+  let right = ranks[0] * cars * cars;
+  const check = (curTime) => {
+    let sum = 0;
+    for (const rank of ranks) {
+      sum += Math.floor(Math.sqrt(curTime / rank));
+    }
+    return sum >= cars; // 符合条件
+  };
+  while (left <= right) {
+    let mid = Math.floor((left + right) / 2);
+    if (check(mid)) {
+      right = mid - 1;
+    } else {
+      left = mid + 1;
+    }
+  }
+  return left;
+};
