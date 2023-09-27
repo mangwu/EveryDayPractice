@@ -1,3 +1,17 @@
+/*
+ * @Author: mangwu                                                             *
+ * @File: main.js                                                              *
+ * @Date: 2023-09-25 19:04:02                                                  *
+ * @LastModifiedDate: 2023-09-25 19:04:58                                      *
+ * @ModifiedBy: mangwu                                                         *
+ * -----------------------                                                     *
+ * Copyright (c) 2023 mangwu                                                   *
+ * -----------------------                                                     *
+ * @HISTORY:                                                                   *
+ * Date   	            By 	    Comments                                       *
+ * ---------------------	--------	----------------------------------------------- *
+ */
+
 // 请你为 最不经常使用（LFU）缓存算法设计并实现数据结构。
 
 // 实现 LFUCache 类：
@@ -82,9 +96,9 @@ LFUCache.prototype.put = function (key, value) {
     // 添加新key
     this.hash.set(key, [value, 1]);
     if (this.counts[1]) {
-      this.counts.add(key);
+      this.counts[1].add(key);
     } else {
-      this.counts = new Set(key);
+      this.counts[1] = new Set([key]);
     }
     this.latestIdx = 1;
   }
