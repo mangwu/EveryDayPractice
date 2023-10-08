@@ -156,7 +156,6 @@ StockPrice.prototype.current = function () {
  * @return {number}
  */
 StockPrice.prototype.maximum = function () {
-  this.deleteDelay();
   return this.maxHeap.peek();
 };
 
@@ -164,7 +163,6 @@ StockPrice.prototype.maximum = function () {
  * @return {number}
  */
 StockPrice.prototype.minimum = function () {
-  this.deleteDelay();
   return this.minHeap.peek();
 };
 
