@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: random.js                                                            *
  * @Date: 2023-03-22 16:46:33                                                  *
- * @LastModifiedDate: 2023-03-22 17:11:42                                      *
+ * @LastModifiedDate: 2023-10-31 10:46:24                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2023 mangwu                                                   *
@@ -37,6 +37,29 @@ const random = {
       n--;
     }
     return res;
+  },
+  /**
+   * @description 洗牌
+   * @param {number[]} arr
+   * @returns {number[]}
+   */
+  randomShuffle(arr) {
+    const n = arr.length;
+    for (let i = 0; i < n; i++) {
+      const a = this.randomNum(0, i + 1);
+      const b = this.randomNum(0, i + 1);
+      this.swap(arr, a, b);
+    }
+    return arr;
+  },
+  /**
+   * @description 交互数组元素
+   * @param {[]} arr
+   * @param {number} a 索引a
+   * @param {number} b 索引b
+   */
+  swap(arr, a, b) {
+    [arr[a], arr[b]] = [arr[b], arr[a]];
   },
 };
 
