@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2023-11-30 16:10:24                                                  *
- * @LastModifiedDate: 2023-11-30 17:29:28                                      *
+ * @LastModifiedDate: 2023-12-01 14:40:11                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2023 mangwu                                                   *
@@ -178,6 +178,33 @@ var maxSlidingWindow = function (nums, k) {
 class Dequeue {
   constructor() {
     this.items = {};
+    this.front = -1;
+    this.back = 0;
+  }
+  size() {
+    return this.back - this.front - 1;
+  }
+  isEmpty() {
+    return this.size() === 0;
+  }
+  insertFront(value) {
+    this.items[this.front--] = value;
+  }
+  insertBack(value) {
+    this.items[this.back++] = value;
+  }
+  peekFront() {
+    if (this.isEmpty()) return undefined;
+    return this.items[this.front + 1];
+  }
+  peekBack() {
+    if (this.isEmpty()) return undefined;
+    return this.items[this.back - 1];
+  }
+  pollFront() {
     
+  }
+  pollBack() {
+
   }
 }
