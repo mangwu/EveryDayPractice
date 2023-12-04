@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2023-11-30 16:10:24                                                  *
- * @LastModifiedDate: 2023-12-01 14:40:11                                      *
+ * @LastModifiedDate: 2023-12-04 09:33:25                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2023 mangwu                                                   *
@@ -202,9 +202,45 @@ class Dequeue {
     return this.items[this.back - 1];
   }
   pollFront() {
-    
+    if (this.isEmpty()) return undefined;
+    const res = this.items[++this.front];
+    delete this.items[this.front];
+    return res;
   }
   pollBack() {
-
+    if (this.isEmpty()) return undefined;
+    const res = this.items[--this.back];
+    delete this.items[this.back];
+    return res;
   }
 }
+
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number[]}
+ */
+var maxSlidingWindow = function (nums, k) {
+  // 双端队列，单调队列
+  const ans = [];
+  const n = nums.length;
+  const dq = new Dequeue();
+  for (let i = 0; i < k; i++) {
+    while (!dq.isEmpty() && dq.peekBack()[1] <= nums[i]) {
+      dq.pollBack();
+    }
+    dq.insertBack([i, nums[i]]);
+  }
+  ans.push(dq.peekFront()[1]);
+  for (let i = k; i < n; i++) {
+    while (!dq.isEmpty() && dq.peekBack()[1] <= nums[i]) {
+      dq.pollBack();
+    }
+    dq.insertBack([i, nums[i]]);
+    while (!dq.isEmpty() && dq.peekFront()[0] <= i - k) {
+      dq.pollFront();
+    }
+    ans.push(dq.peekFront()[1]);
+  }
+  return ans;
+};
