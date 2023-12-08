@@ -8,12 +8,32 @@
 
 // 注意：你可以在一个地点放下一位乘客，并在同一个地点接上另一位乘客。
 
-
 /**
  * @param {number} n
  * @param {number[][]} rides
  * @return {number}
  */
-var maxTaxiEarnings = function(n, rides) {
-  
+var maxTaxiEarnings = function (n, rides) {
+  rides.sort((a, b) => a[1] - b[1]);
+  const m = rides.length;
+  const dp = new Array(m + 1).fill(0);
+  for (let i = 0; i < m; i++) {
+    // 二分查找不大于rides[i][0]的最大end的索引
+    let left = 0;
+    let right = i;
+    const target = rides[i][0];
+    while (left < right) {
+      let mid = Math.floor((left + right) / 2);
+      if (rides[mid][1] > target) {
+        right = mid;
+      } else {
+        left = mid + 1;
+      }
+    }
+    dp[i + 1] = Math.max(
+      dp[i],
+      dp[left] + rides[i][1] - rides[i][0] + rides[i][2]
+    );
+  }
+  return dp[m];
 };
