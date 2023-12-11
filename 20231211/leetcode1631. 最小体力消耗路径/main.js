@@ -88,3 +88,53 @@ for (let i = 0; i < 10; i++) {
   arr.push(random.randomArr(10, 1, 255));
 }
 console.log(arr);
+
+/**
+ * @param {number[][]} heights
+ * @return {number}
+ */
+var minimumEffortPath = function (heights) {
+  const m = heights.length;
+  const n = heights[0].length;
+  if (m === 1 && n === 1) return 0;
+  let left = 0;
+  let right = 999999;
+  const check = (target) => {
+    const visited = [];
+    visited[0] = true;
+    let queue = [[0, 0]];
+    while (queue.length) {
+      const nxt = [];
+      for (const [i, j] of queue) {
+        for (const dir of DIRS) {
+          const [x, y] = [i + dir[0], j + dir[1]];
+          if (
+            x >= 0 &&
+            y >= 0 &&
+            x < m &&
+            y < n &&
+            !visited[x * n + y] &&
+            Math.abs(heights[x][y] - heights[i][j]) <= target
+          ) {
+            visited[x * n + y] = true;
+            nxt.push([x, y]);
+            if (x === m - 1 && y === n - 1) return true;
+          }
+        }
+      }
+      queue = nxt;
+    }
+    return false;
+  };
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    if (check(mid)) {
+      // 符合条件
+      right = mid - 1;
+    } else {
+      // 不符合条件
+      left = mid + 1;
+    }
+  }
+  return left;
+};
