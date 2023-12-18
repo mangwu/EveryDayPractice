@@ -142,3 +142,78 @@ var shortestSubarray = function (nums, k) {
 };
 // 二分查找错误：数组长度对子数组的和不是单调变化的，因为元素中有负数
 
+class Dqueue {
+  constructor() {
+    this.items = {};
+    this.lowest = 0;
+    this.hightest = 1;
+  }
+  size() {
+    return this.hightest - this.lowest - 1;
+  }
+  isEmpty() {
+    return this.size() === 0;
+  }
+  peekFront() {
+    if (this.isEmpty()) return undefined;
+    return this.items[this.lowest + 1];
+  }
+  peekBack() {
+    if (this.isEmpty()) return undefined;
+    return this.items[this.hightest - 1];
+  }
+  enqueueFront(value) {
+    this.items[this.lowest--] = value;
+  }
+  enqueueBack(value) {
+    this.items[this.hightest++] = value;
+  }
+  dequeueFront() {
+    if (this.isEmpty()) return undefined;
+    const res = this.items[++this.lowest];
+    delete this.items[this.lowest];
+    return res;
+  }
+  dequeueBack() {
+    if (this.isEmpty()) return undefined;
+    const res = this.items[--this.hightest];
+    delete this.items[this.hightest];
+    return res;
+  }
+}
+
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number}
+ */
+var shortestSubarray = function (nums, k) {
+  // 前缀和 => prefix[j] - prefix[i] 就是区间[i,j]的和
+  //   求出以每个i为起点的最短符合要求子数组，求得prefix[j] - prefix[i] >= k
+  //   的最小j即可，一般而言，从i开始向右顺序遍历是朴素思想，但是这样会超时。
+  //   为此，能否对j只向右遍历一遍，不断更新前面任意i的最短子数组，然后比较
+  // 单调双端队列 => 决定使用这种数据结构保存前面的任意i的原因：
+  //   1. 队列单调递增，对于为了保存单调而被出队的元素而言，
+  //    在它们后面一定有一个更小的元素使得未遍历的j更可能满足条件且子数组更短
+  //   2. 在比较匹配最短子数组时，能轻松从队列前端获取可能满足条件的最小元素，且
+  //    不会出现这个最小元素不符合当前j的最短子数组的情况，因为j是顺序向右遍历的，
+  //    而且已被匹配的i的子数组一定更短
+  const dqueue = new Dqueue();
+  const n = nums.length;
+  const prefix = new Array(n + 1).fill(0);
+  for (let i = 1; i <= n; i++) prefix[i] = nums[i - 1] + prefix[i - 1];
+  let res = Infinity;
+  for (let i = 0; i <= n; i++) {
+    // 单调队列头部比较
+    let curSum = prefix[i];
+    while (!dqueue.isEmpty() && curSum - prefix[dqueue.peekFront()] >= k) {
+      res = Math.min(res, i - dqueue.dequeueFront());
+    }
+    // 将大于等于当前和的抛弃
+    while (!dqueue.isEmpty() && curSum <= prefix[dqueue.peekBack()]) {
+      dqueue.dequeueBack();
+    }
+    dqueue.enqueueBack(i);
+  }
+  return res === Infinity ? -1 : res;
+};
