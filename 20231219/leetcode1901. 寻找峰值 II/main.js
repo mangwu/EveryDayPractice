@@ -38,3 +38,39 @@ var findPeakGrid = function (mat) {
   }
   return [-1, -1];
 };
+// 上面的解法不符合时间复杂度要求
+// 二分法
+function maxElement(arr) {
+  let idx = 0;
+  let max = arr[0];
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] > max) {
+      max = arr[i];
+      idx = i;
+    }
+  }
+  return idx;
+}
+/**
+ * @param {number[][]} mat
+ * @return {number[]}
+ */
+var findPeakGrid = function (mat) {
+  const m = mat.length;
+  let left = 0;
+  let right = m - 1;
+  while (left <= right) {
+    const i = Math.floor((left + right) / 2);
+    const j = maxElement(mat[i]);
+    if (i - 1 >= 0 && mat[i][j] < mat[i - 1][j]) {
+      right = i - 1;
+      continue;
+    }
+    if (i + 1 < m && mat[i][j] < mat[i + 1][j]) {
+      left = i + 1;
+      continue;
+    }
+    return [i, j];
+  }
+  return []; // 不会执行
+};
