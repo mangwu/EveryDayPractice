@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2023-12-19 15:03:29                                                  *
- * @LastModifiedDate: 2023-12-19 15:52:27                                      *
+ * @LastModifiedDate: 2023-12-20 11:26:47                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2023 mangwu                                                   *
@@ -35,7 +35,34 @@ var movesToStamp = function (stamp, target) {
   if (stamp[0] !== target[0]) return [];
   const stampLen = stamp.length;
   const targetLen = target.length;
+  const hash = new Map();
+  for (let i = 0; i < stampLen; i++) {
+    hash.has(stamp[i]) ? hash.get(stamp[i]).push(i) : hash.set(stamp[i], [i]);
+  }
+  let min = 0;
+  let max = 0;
+  const res = [];
+  for (let i = 0; i < targetLen; i++) {
+    // 从第一个字符开始对照
+    let pre = res.length ? res[res.length - 1] : -1;
+    const js = hash.get(target[i]);
+    if (!js) return []; // 没有相关字符
+    // 从中选择合法且匹配字符最大的一个
+    for (const j of js) {
+      // stamp从j开始，target从i开始匹配字符
+      // 首先判断是否合法
+      if (j <= i) {
+        // 不能溢出
+        // 先判断是覆盖上一个还是被上个覆盖
+        
+      } else return [];
+    }
+  }
 };
-
+// abcbe
 // abcbebeaabcbabcbabcaabcbe
-// abcbebeaabcbabcbabcaabccbe
+// abcbebeaabcbcabcbabcaabcbe
+//   abcbe   abcbe     abcbe
+// abcbebeabcbecabcbe  abcbe
+// abcbebeabcabcbecbe  abcbe
+// abcbebeaabcbe
