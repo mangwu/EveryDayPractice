@@ -87,8 +87,47 @@ var maximumSumOfHeights = function (maxHeights) {
   };
   return dfs(0, n - 1, 0);
 };
-
+/**
+ * @param {number[]} maxHeights
+ * @return {number}
+ */
+var maximumSumOfHeights = function (maxHeights) {
+  // 先找到最小值，经过最小值左边或者右边的数一定是相同的最小值
+  // 同时，最小值可能有多个
+  const n = maxHeights.length;
+  // 单调栈
+  const leftPrefix = getPreffix(maxHeights);
+  const rightPrefix = getPreffix(maxHeights.slice().reverse()).reverse();
+  let res = maxHeights[0];
+  for (let i = 0; i < n; i++) {
+    res = Math.max(res, leftPrefix[i] + rightPrefix[i] - maxHeights[i]);
+  }
+  return res;
+};
+function getPreffix(maxHeights) {
+  // 同时，最小值可能有多个
+  const n = maxHeights.length;
+  // 单调栈
+  const stack = [];
+  const prefix = new Array(n).fill(0);
+  let sum = 0;
+  for (let i = 0; i < n; i++) {
+    while (
+      stack.length &&
+      maxHeights[stack[stack.length - 1]] > maxHeights[i]
+    ) {
+      const pop = stack.pop();
+      let pre = stack.length ? stack[stack.length - 1] : -1;
+      sum -= maxHeights[pop] * (pop - pre);
+    }
+    let pre = stack.length ? stack[stack.length - 1] : -1;
+    sum += maxHeights[i] * (i - pre);
+    stack.push(i);
+    prefix[i] = sum;
+  }
+  return prefix;
+}
 const random = require("../../publicFunc/random/random");
 const current = new Date().getTime();
-console.log(maximumSumOfHeights(random.randomArr(5000, 1)));
+console.log(maximumSumOfHeights(random.randomArr(50000, 1, 10 ** 9)));
 console.log(new Date().getTime() - current + "ms");
