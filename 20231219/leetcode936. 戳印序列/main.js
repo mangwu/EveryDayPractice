@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2023-12-19 15:03:29                                                  *
- * @LastModifiedDate: 2023-12-20 11:26:47                                      *
+ * @LastModifiedDate: 2023-12-25 14:34:52                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2023 mangwu                                                   *
@@ -54,7 +54,6 @@ var movesToStamp = function (stamp, target) {
       if (j <= i) {
         // 不能溢出
         // 先判断是覆盖上一个还是被上个覆盖
-        
       } else return [];
     }
   }
@@ -66,3 +65,61 @@ var movesToStamp = function (stamp, target) {
 // abcbebeabcbecabcbe  abcbe
 // abcbebeabcabcbecbe  abcbe
 // abcbebeaabcbe
+
+/**
+ * @param {string} stamp
+ * @param {string} target
+ * @return {number[]}
+ */
+var movesToStamp = function (stamp, target) {
+  // 逆序思维：将匹配stamp的字符盖成通配符，使得target全部变为通配符?，这样就不用考虑字符是什么了
+  // 暴力解法就是不断遍历target，使其对stamp进行匹配，直到target全是通配符
+  const m = stamp.length;
+  const n = target.length;
+  const targetArr = target.split("");
+  let num = 0; // 更换的通配符数量
+  const ans = [];
+  while (true) {
+    let noOne = true; // 本次匹配是否一次都没成功
+    for (let i = 0; i < n; i++) {
+      let canMatch = true; // 是否能匹配成功
+      let allWildCh = true; // 是否全是通配符
+      for (let j = 0; j < m; j++) {
+        // 判断能匹配的两种情况，并更新匹配状态
+        if (targetArr[i + j] === "?") continue;
+        else if (targetArr[i + j] === stamp[j]) allWildCh = false;
+        else {
+          canMatch = false;
+          break;
+        }
+      }
+      // 能匹配且不全是通配符
+      if (canMatch && !allWildCh) {
+        noOne = false;
+        // 更新target
+        ans.push(i);
+        for (let j = 0; j < m; j++) {
+          if (targetArr[i + j] !== "?") {
+            num++;
+            targetArr[i + j] = "?"; // 转换成通配符
+          }
+        }
+      }
+    }
+    if (noOne) return []; // 本次匹配没有一个成功说明无法进行匹配
+    if (num >= n) return ans.reverse();
+  }
+};
+
+
+
+// abcbe
+// abcbebeaabcbabcbabcaabcbe
+// [7,8,12,16,19,20,2,0]
+//        abcbe
+//        aabcbe
+//        aabcbabcbe
+//        aabcbabcbabcbe
+//        aabcbabcbabcabcbe
+//   abcbeaabcbabcbabcabcbe
+// abcbebeaabcbabcbabcabcbe
