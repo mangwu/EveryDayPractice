@@ -120,7 +120,6 @@ maxStudents(new Array(8).fill(".").map((_v) => new Array(8).fill(".")));
 
 // 使用状态压缩加记忆化动态规划可以解决此问题
 
-
 /**
  * @param {character[][]} seats
  * @return {number}
@@ -128,5 +127,67 @@ maxStudents(new Array(8).fill(".").map((_v) => new Array(8).fill(".")));
 var maxStudents = function (seats) {
   const m = seats.length;
   const n = seats[0].length;
-  // dp[row][mask] 表示第row排，落座情况为mask的情况，mask是一个压缩的
-}
+  // dp[row][mask] 表示第row排，落座情况为mask的情况，
+  // mask是一个压缩的状态值，每位表示落座情况
+  // dp[row][mask]的值表示第row排及其之前所有座位能够容纳最多的学生数
+  // 本函数的最终结果就是dp[m-1][mask]的最大值
+  // 需要注意，如果mask所表示的落座情况不能出现则值为-Inifinity
+  function isSingleValid(mask, row) {
+    // 判断单行落座情况是否合理
+    // 不能出现落座位置是#的情况，不能出现相邻位都落座的情况
+    for (let j = 0; j < n; j++) {
+      if ((mask >> j) & 1) {
+        if (seats[row][j] === "#") return false; // 落座#
+        if (j > 0 && (mask >> (j - 1)) & 1) return false; // 相邻的也落座了
+      }
+    }
+    return true;
+  }
+  function isCrossValid(mask, preMask) {
+    // 判断上下两行落座情况是否合理
+    // preMask不一定通过了单行校验，但是这不影响，
+    // 因为dp[preRow][preMask]是的值为-Infinity
+    for (let j = 0; j < n; j++) {
+      if ((mask >> j) & 1) {
+        if (j > 0 && (preMask >> (j - 1)) & 1) return false;
+        if (j < n - 1 && (preMask >> (j + 1)) & 1) return false;
+      }
+    }
+    return true;
+  }
+  function bitCount(mask) {
+    // mask中的落座数量计算
+    let count = 0;
+    for (let j = 0; j < n; j++) if ((mask >> j) & 1) count++;
+    return count;
+  }
+  const maxMask = 2 ** n;
+  const dp = new Array(m).fill(0).map(() => new Array(maxMask).fill(-1));
+  const dfs = (row, mask) => {
+    if (dp[row][mask] === -1) {
+      // 计算当前行的落座最大值
+      if (!isSingleValid(mask, row)) {
+        dp[row][mask] = -Infinity;
+      } else if (row === 0) {
+        // 第0行的情况，直接返回mask中1的数量
+        dp[row][mask] = bitCount(mask);
+      } else {
+        // 遍历上一行的各种落座情况
+        let mx = 0;
+        for (let preMask = 0; preMask < maxMask; preMask++) {
+          if (isCrossValid(mask, preMask)) {
+            mx = Math.max(mx, dfs(row - 1, preMask));
+          }
+        }
+        dp[row][mask] = mx + bitCount(mask);
+      }
+    }
+    return dp[row][mask];
+  };
+  // 遍历解决最后一行的所有落座情况
+  let res = 0;
+  for (let mask = 0; mask < maxMask; mask++) {
+    res = Math.max(res, dfs(m - 1, mask));
+  }
+  return res;
+};
