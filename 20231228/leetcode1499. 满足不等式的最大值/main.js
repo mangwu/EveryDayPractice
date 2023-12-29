@@ -81,11 +81,25 @@ var findMaxValueOfEquation = function (points, k) {
     // 入队，保证单调性 yi - xi的单调性
     while (
       !dq.isEmpty() &&
-      points[dq.peekFront()][1] - points[dq.peekFront()][0] < yi - xi
+      points[dq.peekBack()][1] - points[dq.peekBack()][0] < yi - xi
     ) {
-      dq.dequeueFront();
+      dq.dequeueBack();
     }
     dq.enqueueBack(i);
   }
   return res === -Infinity ? 0 : res;
 };
+
+
+// [[-16,15],[-7,-18],[-4,2],[1,0],[7,10],[9,-6],[14,5],[15,13],[16,-12],[20,20]]
+// 8
+// {} 0
+// {} 0
+// { '2': 1 } -13
+// { '3': 2 } 7
+// { '4': 3 } 16
+// { '5': 4 } 6
+// { '5': 4, '6': 5 } 22  [7,10] [14,5]
+// { '5': 4, '6': 5, '7': 6 } 31 [15,13] [7,10]
+// { '6': 5, '7': 6, '8': 7 } 
+// { '7': 6, '8': 7, '9': 8 }
