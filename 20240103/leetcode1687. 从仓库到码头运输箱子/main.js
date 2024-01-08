@@ -51,23 +51,23 @@ var boxDelivering = function (boxes, portsCount, maxBoxes, maxWeight) {
 };
 boxDelivering(
   [
-    [1, 1],
-    [1, 1],
+    [1, 4],
     [1, 2],
-    [1, 3],
+    [2, 1],
+    [2, 1],
+    [3, 2],
+    [3, 4],
+    [1, 5],
     [1, 2],
-    [1, 1],
-    [1, 2],
-    [1, 1],
-    [1, 2],
-    [1, 3],
-    [1, 1],
-    [1, 2],
+    [2, 3],
+    [2, 4],
+    [3, 1],
   ],
-  1,
-  4,
-  6
+  3,
+  6,
+  7
 );
+
 // 上述动态规划的解答答案是没问题的，但是会超时
 // 超时的原因在于，当maxBoxes和maxWeight很大时，不会超出限制，那么实际时间复杂度就是O(n^2)
 //
@@ -161,8 +161,8 @@ var boxDelivering = function (boxes, portsCount, maxBoxes, maxWeight) {
   let left = 0; // 最左边的
   for (let i = 1; i < n; i++) {
     boxSum++;
-    weightSum += boxes[0][1];
-    while (boxSum > maxBoxes || weightSum > maxWeight) {
+    weightSum += boxes[i][1];
+    while (left < n && (boxSum > maxBoxes || weightSum > maxWeight)) {
       boxSum--;
       weightSum -= boxes[left++][1];
     }
@@ -171,7 +171,6 @@ var boxDelivering = function (boxes, portsCount, maxBoxes, maxWeight) {
       // 可以组合的区间是[left, i]，所以dp[left-1]是可以的
       dq.dequeueFront();
     }
-    console.log(dq.items);
     // 计算得出dp[i]
     // 默认当前箱子暂时作为单个进行搬运
     dp[i] = dp[i - 1] + 2;
@@ -179,7 +178,6 @@ var boxDelivering = function (boxes, portsCount, maxBoxes, maxWeight) {
       // 可以不只单个进行搬运
       const minIdx = dq.peekFront();
       // [minIdx + 1, i]
-      console.log(minIdx);
       dp[i] = Math.min(
         dp[i],
         (minIdx >= 0 ? dp[minIdx] : 0) +
@@ -192,7 +190,7 @@ var boxDelivering = function (boxes, portsCount, maxBoxes, maxWeight) {
     while (
       !dq.isEmpty() &&
       dp[i] + tripsPreffix[i + 1][0] <=
-        dp[dq.peekFront()] + tripsPreffix[dq.peekFront() + 1][0]
+        dp[dq.peekBack()] + tripsPreffix[dq.peekBack() + 1][0]
     ) {
       dq.dequeueBack();
     }
@@ -201,25 +199,24 @@ var boxDelivering = function (boxes, portsCount, maxBoxes, maxWeight) {
   console.log(dp);
   return dp[n - 1];
 };
-
+// console.log(i, left, boxSum, weightSum, maxBoxes, maxWeight);
 boxDelivering(
   [
-    [1, 1],
-    [1, 1],
+    [1, 4],
     [1, 2],
-    [1, 3],
+    [2, 1],
+    [2, 1],
+    [3, 2],
+    [3, 4],
+    [1, 5],
     [1, 2],
-    [1, 1],
-    [1, 2],
-    [1, 1],
-    [1, 2],
-    [1, 3],
-    [1, 1],
-    [1, 2],
+    [2, 3],
+    [2, 4],
+    [3, 1],
   ],
   3,
-  4,
-  6
+  6,
+  7
 );
 
 //  1 2 1 1 1 2 2 3 3 2 2 1
