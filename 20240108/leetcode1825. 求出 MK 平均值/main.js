@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2024-01-08 14:49:45                                                  *
- * @LastModifiedDate: 2024-01-08 17:34:33                                      *
+ * @LastModifiedDate: 2024-01-09 17:41:16                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2024 mangwu                                                   *
@@ -108,11 +108,34 @@ class PQ {
  */
 var MKAverage = function (m, k) {
   this.data = [];
-  this.incrementalPQ = new PQ((a, b) => this.data[a] - this.data[b]);
-  this.decrementalPQ = new PQ((a, b) => this.data[b] - this.data[a]);
+  // 递增优先队列，队顶为最小值
+  this.middleInc = new PQ((a, b) => {
+    const res = this.data[a] - this.data[b];
+    if (res !== 0) return res;
+    return a - b; // 相等元素按照索引排序
+  });
+  // 递减优先队列，队顶为最大值
+  this.middleDec = new PQ((a, b) => {
+    const res = this.data[b] - this.data[a];
+    if (res !== 0) return res;
+    return a - b; // 相等元素按照索引排序
+  });
+  // 保存递增优先队列出队的值，大根堆
+  this.minDec = new PQ((a, b) => {
+    const res = this.data[b] - this.data[a];
+    if (res !== 0) return res;
+    return a - b; // 相等元素按照索引排序
+  });
+  // 保存递减优先队列出队的值，小根堆
+  this.maxInc = new PQ((a, b) => {
+    const res = this.data[a] - this.data[b];
+    if (res !== 0) return res;
+    return a - b; // 相等元素按照索引排序
+  });
   this.windowSize = m;
   this.deleteNum = k;
   this.totalSum = 0;
+  this.middleSum = 0;
 };
 
 /**
@@ -120,22 +143,90 @@ var MKAverage = function (m, k) {
  * @return {void}
  */
 MKAverage.prototype.addElement = function (num) {
+  this.data.push(num);
   if (this.data.length < this.windowSize) {
-    this.data.push(num);
     this.totalSum += num;
-    this.incrementalPQ.insert(this.data.length - 1);
-    this.decrementalPQ.insert(this.data.length - 1);
-  } else if (this.data.length === this.windowSize) {
-    // 相等，计算
+    this.middleInc.insert(this.data.length - 1);
+    this.middleDec.insert(this.data.length - 1);
+    if (this.data.length === this.windowSize) {
+      const indexArr = new Array(this.windowSize)
+        .fill(0)
+        .map((_v, i) => i)
+        .sort((a, b) => this.data[a] - this.data[b]);
+      // 本次进队后，数量正好相等
+      for (let i = 0; i < indexArr.length; i++) {
+        if (indexArr[i] < this.deleteNum) {
+          this.minDec.insert(indexArr[i]);
+        } else if (indexArr[i] > indexArr.length - this.deleteNum) {
+          this.maxInc.insert(indexArr[i]);
+        } else {
+          this.middleDec.insert(indexArr[i]);
+          this.middleInc.insert(indexArr[i]);
+          this.middleSum += this.data[indexArr[i]];
+        }
+      }
+    }
   } else {
-
+    // 窗口开始右移，需要移除一个，增加一个
+    // 移除值：this.data[this.data.length - this.windowSize - 1]
+    // 增加值：num this.data.length - 1
+    // 移除和增加值时，要考虑三方面问题：
+    //  1. 移除或增加的值属于哪个队列
+    //  2. 移除或增加的值需要延迟添加或延迟删除
+    //  3. 本次移除和增加对middleSum的影响
+    const removeNum = this.data[this.data.length - this.windowSize - 1];
+    const middleMax = this.data[this.maxInc.peek()];
+    const middleMin = this.data[this.minDec.peek()];
+    this.deleteOperate();
+    if (removeNum >= middleMax) {
+      // 移除的值在maxInc中
+      if (num >= middleMax) {
+        // 增加的值也在maxInc中，无需移位其它元素
+        this.maxInc.insert(this.data.length - 1);
+      } else if (num <= middleMin) {
+        // 增加的值在minDec中，需要将进行整体右移操作
+        // [minDec, middle, maxInc]
+        this.minDec.insert(this.data.length - 1);
+        const minRightShift = this.minDec.poll();
+        this.middleDec.insert(minRightShift);
+        this.middleInc.insert(minRightShift);
+        this.middleSum += this.data[minRightShift];
+        const middleRightShift = this.middleDec.poll();
+        // 这里middleInc也要移除这个middleRightShift
+        this.maxInc.insert(middleRightShift);
+        this.middleSum -= this.data[middleRightShift];
+      } else {
+        // 增加的值在middle中，需要部分右移
+        this.middleSum -= this.data[minRightShift];
+        const middleRightShift = this.middleDec.poll();
+        // 这里middleInc也要移除这个middleRightShift
+        this.maxInc.insert(middleRightShift);
+      }
+    }
+    // 移除值
+    this.deleteOperate();
+  }
+};
+/**
+ * @param {number} num
+ * @return {void}
+ */
+MKAverage.prototype.deleteOperate = function () {
+  const pqs = [this.middleInc, this.middleDec, this.minDec, this.maxInc];
+  for (const pq of pqs) {
+    while (!pq.isEmpty() && pq.peek() < this.data.length - this.windowSize) {
+      pq.poll();
+    }
   }
 };
 
 /**
  * @return {number}
  */
-MKAverage.prototype.calculateMKAverage = function () {};
+MKAverage.prototype.calculateMKAverage = function () {
+  if (this.data.length < this.windowSize) return -1;
+  return Math.floor(this.middleSum / this.windowSize - 2 * this.deleteNum);
+};
 
 /**
  * Your MKAverage object will be instantiated and called as such:
