@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2024-01-08 14:49:45                                                  *
- * @LastModifiedDate: 2024-01-09 17:41:16                                      *
+ * @LastModifiedDate: 2024-01-10 16:46:11                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2024 mangwu                                                   *
@@ -114,12 +114,14 @@ var MKAverage = function (m, k) {
     if (res !== 0) return res;
     return a - b; // 相等元素按照索引排序
   });
+  this.delayDeleteInc = new Map();
   // 递减优先队列，队顶为最大值
   this.middleDec = new PQ((a, b) => {
     const res = this.data[b] - this.data[a];
     if (res !== 0) return res;
     return a - b; // 相等元素按照索引排序
   });
+  this.delayDeleteDec = new Map();
   // 保存递增优先队列出队的值，大根堆
   this.minDec = new PQ((a, b) => {
     const res = this.data[b] - this.data[a];
@@ -134,7 +136,6 @@ var MKAverage = function (m, k) {
   });
   this.windowSize = m;
   this.deleteNum = k;
-  this.totalSum = 0;
   this.middleSum = 0;
 };
 
@@ -144,20 +145,21 @@ var MKAverage = function (m, k) {
  */
 MKAverage.prototype.addElement = function (num) {
   this.data.push(num);
-  if (this.data.length < this.windowSize) {
-    this.totalSum += num;
-    this.middleInc.insert(this.data.length - 1);
-    this.middleDec.insert(this.data.length - 1);
+  if (this.data.length <= this.windowSize) {
     if (this.data.length === this.windowSize) {
       const indexArr = new Array(this.windowSize)
         .fill(0)
         .map((_v, i) => i)
-        .sort((a, b) => this.data[a] - this.data[b]);
+        .sort((a, b) => {
+          const res = this.data[a] - this.data[b];
+          if (res !== 0) return res;
+          return a - b;
+        });
       // 本次进队后，数量正好相等
       for (let i = 0; i < indexArr.length; i++) {
-        if (indexArr[i] < this.deleteNum) {
+        if (i < this.deleteNum) {
           this.minDec.insert(indexArr[i]);
-        } else if (indexArr[i] > indexArr.length - this.deleteNum) {
+        } else if (i >= indexArr.length - this.deleteNum) {
           this.maxInc.insert(indexArr[i]);
         } else {
           this.middleDec.insert(indexArr[i]);
@@ -172,7 +174,7 @@ MKAverage.prototype.addElement = function (num) {
     // 增加值：num this.data.length - 1
     // 移除和增加值时，要考虑三方面问题：
     //  1. 移除或增加的值属于哪个队列
-    //  2. 移除或增加的值需要延迟添加或延迟删除
+    //  2. 移除或增加的值需要添加或延迟删除
     //  3. 本次移除和增加对middleSum的影响
     const removeNum = this.data[this.data.length - this.windowSize - 1];
     const middleMax = this.data[this.maxInc.peek()];
@@ -183,6 +185,7 @@ MKAverage.prototype.addElement = function (num) {
       if (num >= middleMax) {
         // 增加的值也在maxInc中，无需移位其它元素
         this.maxInc.insert(this.data.length - 1);
+        // 移除会通过deleteOperate进行操作
       } else if (num <= middleMin) {
         // 增加的值在minDec中，需要将进行整体右移操作
         // [minDec, middle, maxInc]
@@ -193,14 +196,87 @@ MKAverage.prototype.addElement = function (num) {
         this.middleSum += this.data[minRightShift];
         const middleRightShift = this.middleDec.poll();
         // 这里middleInc也要移除这个middleRightShift
+        this.delayDeleteInc.set(
+          middleRightShift,
+          (this.delayDeleteInc.get(middleRightShift) | 0) + 1
+        );
         this.maxInc.insert(middleRightShift);
         this.middleSum -= this.data[middleRightShift];
       } else {
         // 增加的值在middle中，需要部分右移
-        this.middleSum -= this.data[minRightShift];
+        this.middleDec.insert(this.data.length - 1);
+        this.middleInc.insert(this.data.length - 1);
+        this.middleSum += num;
         const middleRightShift = this.middleDec.poll();
         // 这里middleInc也要移除这个middleRightShift
+        this.delayDeleteInc.set(
+          middleRightShift,
+          (this.delayDeleteInc.get(middleRightShift) | 0) + 1
+        );
         this.maxInc.insert(middleRightShift);
+        this.middleSum -= this.data[middleRightShift];
+      }
+    } else if (removeNum <= middleMin) {
+      // 移除的值在minDec中
+      if (num <= middleMin) {
+        // 增加的值也在minDec中，无需移位其它元素
+        this.minDec.insert(this.data.length - 1);
+      } else if (num >= middleMax) {
+        // 增加的值在maxInc中，需要整体左移
+        this.maxInc.insert(this.data.length - 1);
+        const maxLeftShift = this.maxInc.poll();
+        this.middleDec.insert(maxLeftShift);
+        this.middleInc.insert(maxLeftShift);
+        this.middleSum += this.data[maxLeftShift];
+        const middleLeftShift = this.middleInc.poll();
+        // 这里middleDec也要移除这个middleLeftShift
+        this.delayDeleteDec.set(
+          middleLeftShift,
+          (this.delayDeleteDec.get(middleLeftShift) | 0) + 1
+        );
+        this.minDec.insert(middleLeftShift);
+        this.middleSum -= this.data[middleLeftShift];
+      } else {
+        // 增加的值在middle中，需要部分左移
+        this.middleDec.insert(this.data.length - 1);
+        this.middleInc.insert(this.data.length - 1);
+        this.middleSum += num;
+        const middleLeftShift = this.middleInc.poll();
+        // 这里middleDec也要移除这个middleLeftShift
+        this.delayDeleteDec.set(
+          middleLeftShift,
+          (this.delayDeleteDec.get(middleLeftShift) | 0) + 1
+        );
+        this.minDec.insert(middleLeftShift);
+        this.middleSum -= this.data[middleLeftShift];
+      }
+    } else {
+      // 移除的值在middle中
+      if (num <= middleMin) {
+        // 增加的值在minDec中，需要部分右移
+        this.middleSum -= removeNum;
+        this.minDec.insert(this.data.length - 1);
+        // 这里middleDec middleInc会通过其它函数移除removeNum
+        const minRightShift = this.minDec.poll();
+        this.middleDec.insert(minRightShift);
+        this.middleInc.insert(minRightShift);
+        this.middleSum += this.data[minRightShift];
+      } else if (num >= middleMax) {
+        // 增加的值在maxInc中，需要部分左移
+        this.middleSum -= removeNum;
+        this.maxInc.insert(this.data.length - 1);
+        // 这里middleDec middleInc会通过其它函数移除removeNum
+        const maxLeftShift = this.maxInc.poll();
+        this.middleDec.insert(maxLeftShift);
+        this.middleInc.insert(maxLeftShift);
+        this.middleSum += this.data[maxLeftShift];
+      } else {
+        // 增加的值也在middle中
+        this.middleSum -= removeNum;
+        this.middleSum += num;
+        this.middleDec.insert(this.data.length - 1);
+        this.middleInc.insert(this.data.length - 1);
+        // 这里middleDec middleInc会通过其它函数移除removeNum
       }
     }
     // 移除值
@@ -212,10 +288,28 @@ MKAverage.prototype.addElement = function (num) {
  * @return {void}
  */
 MKAverage.prototype.deleteOperate = function () {
-  const pqs = [this.middleInc, this.middleDec, this.minDec, this.maxInc];
+  const pqs = [this.minDec, this.maxInc];
   for (const pq of pqs) {
     while (!pq.isEmpty() && pq.peek() < this.data.length - this.windowSize) {
       pq.poll();
+    }
+  }
+  const pqs2 = [
+    [this.middleInc, this.delayDeleteInc],
+    [this.middleDec, this.delayDeleteDec],
+  ];
+  for (const [pq, delayDelete] of pqs2) {
+    while (
+      !pq.isEmpty() &&
+      (pq.peek() < this.data.length - this.windowSize ||
+        delayDelete.has(pq.peek()))
+    ) {
+      const idx = pq.poll();
+      if (delayDelete.get(idx) === 1) {
+        delayDelete.delete(idx);
+      } else if (delayDelete.has(idx)) {
+        delayDelete.set(idx, delayDelete.get(idx) - 1);
+      }
     }
   }
 };
@@ -225,7 +319,7 @@ MKAverage.prototype.deleteOperate = function () {
  */
 MKAverage.prototype.calculateMKAverage = function () {
   if (this.data.length < this.windowSize) return -1;
-  return Math.floor(this.middleSum / this.windowSize - 2 * this.deleteNum);
+  return Math.floor(this.middleSum / (this.windowSize - 2 * this.deleteNum));
 };
 
 /**
@@ -234,3 +328,5 @@ MKAverage.prototype.calculateMKAverage = function () {
  * obj.addElement(num)
  * var param_2 = obj.calculateMKAverage()
  */
+
+// 上述方法错误，时间复杂度符合要求，细节处有错误
