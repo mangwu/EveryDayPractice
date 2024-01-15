@@ -202,3 +202,89 @@ var maximumRobots = function (chargeTimes, runningCosts, budget) {
   }
   return right;
 };
+
+class Dqueue {
+  constructor() {
+    this.items = {};
+    this.lowest = 0;
+    this.highest = 1;
+  }
+  size() {
+    return this.highest - this.lowest - 1;
+  }
+  isEmpty() {
+    return this.size() === 0;
+  }
+  peekFront() {
+    if (this.isEmpty()) return undefined;
+    return this.items[this.lowest + 1];
+  }
+  peekBack() {
+    if (this.isEmpty()) return undefined;
+    return this.items[this.highest - 1];
+  }
+  enqueueFront(value) {
+    if (value == null) return false;
+    this.items[this.lowest--] = value;
+    return true;
+  }
+  enqueueBack(value) {
+    if (value == null) return false;
+    this.items[this.highest++] = value;
+    return true;
+  }
+  dequeueFront() {
+    if (this.isEmpty()) return undefined;
+    const res = this.items[++this.lowest];
+    delete this.items[this.lowest];
+    return res;
+  }
+  dequeueBack() {
+    if (this.isEmpty()) return undefined;
+    const res = this.items[--this.highest];
+    delete this.items[this.highest];
+    return res;
+  }
+}
+
+/**
+ * @param {number[]} chargeTimes
+ * @param {number[]} runningCosts
+ * @param {number} budget
+ * @return {number}
+ */
+var maximumRobots = function (chargeTimes, runningCosts, budget) {
+  // 滑动窗口，单调队列
+  const dq = new Dqueue();
+  let sum = 0;
+  let left = 0;
+  let ans = 0;
+  const n = chargeTimes.length;
+  for (let j = 0; j < n; j++) {
+    sum += runningCosts[j];
+    while (!dq.isEmpty() && chargeTimes[dq.peekBack()] < chargeTimes[j]) {
+      dq.dequeueBack();
+    }
+    dq.enqueueBack(j);
+    const curBudget = chargeTimes[dq.peekFront()] + (j - left + 1) * sum;
+    if (curBudget <= budget) {
+      ans = Math.max(ans, j - left + 1);
+    } else {
+      // 出队直到budget满足条件
+      while (left <= j) {
+        sum -= runningCosts[left++];
+        while (!dq.isEmpty() && dq.peekFront() < left) {
+          dq.dequeueFront();
+        }
+        const curBudget =
+          (dq.isEmpty() ? 0 : chargeTimes[dq.peekFront()]) +
+          (j - left + 1) * sum;
+        if (curBudget <= budget) {
+          ans = Math.max(ans, j - left + 1);
+          break;
+        }
+      }
+    }
+  }
+  return ans;
+};
