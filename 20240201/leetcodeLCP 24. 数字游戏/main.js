@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2024-02-01 10:08:38                                                  *
- * @LastModifiedDate: 2024-02-01 16:36:37                                      *
+ * @LastModifiedDate: 2024-02-01 16:52:31                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2024 mangwu                                                   *
@@ -162,6 +162,42 @@ var numsGame = function (nums) {
         leftPQ.insert(rightPQ.poll());
       }
       ans.push((rigthSum - leftSum) % MOD);
+    }
+  }
+  return ans;
+};
+
+/**
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+var numsGame = function (nums) {
+  const n = nums.length;
+  const newNums = nums.map((v, i) => v - i);
+  const leftPQ = new PQ((a, b) => b - a); // 左边的小值，顶部为左边最大值
+  const rightPQ = new PQ((a, b) => a - b); // 右边的大致，顶部为右边的最小值
+  const ans = [];
+  let leftSum = 0;
+  let rightSum = 0;
+  for (let i = 0; i < n; i++) {
+    let halfNum = 0;
+    if (i % 2 === 0) {
+      // 奇数个，此时leftPQ和rightPQ的size相同
+      leftSum += newNums[i];
+      leftPQ.insert(newNums[i]);
+      leftSum -= leftPQ.peek();
+      rightSum += leftPQ.peek();
+      rightPQ.insert(leftPQ.poll());
+      halfNum = rightPQ.peek();
+      ans.push((rightSum - leftSum - halfNum) % MOD);
+    } else {
+      // 偶数个，此时rightPQ比leftPQ多一个元素
+      rightSum += newNums[i];
+      rightPQ.insert(newNums[i]);
+      leftSum += rightPQ.peek();
+      rightSum -= rightPQ.peek();
+      leftPQ.insert(rightPQ.poll());
+      ans.push((rightSum - leftSum) % MOD);
     }
   }
   return ans;
