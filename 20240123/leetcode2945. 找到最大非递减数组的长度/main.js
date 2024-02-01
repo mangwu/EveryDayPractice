@@ -134,9 +134,23 @@ var findMaximumLength = function (nums) {
     dp[i][0] = resLen;
     dp[i][1] = last;
   }
+  console.log(dp);
   return dp[n - 1][0];
 };
+findMaximumLength([418, 421, 309, 442, 80, 305, 166, 884, 791, 353]);
 
+[
+  [1, 418],
+  [2, 421],
+  [2, 730],
+  [3, 751],
+  [3, 831],
+  [3, 827],
+  [3, 993],
+  [4, 1050],
+  [4, 1675],
+  [5, 1144],
+];
 // 上面的解法中需要嵌套遍历，时间复杂度为O(n^2)超时
 // 在内部遍历dp寻找最小值时，可以使用单调队列
 
@@ -172,7 +186,60 @@ class Dqueue {
     delete this.items[this.highest];
     return res;
   }
-  enqueueFront() {
-  
+  enqueueFront(value) {
+    this.items[this.lowest--] = value;
+  }
+  enqueueBack(value) {
+    this.items[this.highest++] = value;
   }
 }
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var findMaximumLength = function (nums) {
+  const n = nums.length;
+  // 动态规划
+  const dp = new Array(n).fill(-1).map((v) => new Array(2).fill(-1));
+  dp[0][0] = 1;
+  dp[0][1] = nums[0];
+  // dp[i][0]表示递增结果数组的长度
+  // dp[i][1]表示递增结果数组最后一个元素的值
+  // 通过前缀和可以快速求得nums最后几个数之和
+  const prefix = [0];
+  for (let i = 0; i < n; i++) {
+    prefix.push(prefix[prefix.length - 1] + nums[i]);
+  }
+  const dq = new Dqueue();
+  dq.enqueueBack(0);
+  for (let i = 1; i < n; i++) {
+    while (
+      dq.size() > 1 &&
+      prefix[i + 1] - prefix[dq.peekFront() + 1] < dp[dq.peekFront()][1]
+    ) {
+      dq.dequeueFront();
+    }
+    // 通过单调队列获取到的最适合dp[i]的上一个元素索引
+    const curIdx = dq.peekFront();
+    let curLen = dp[curIdx][0];
+    let curLast = dp[curIdx][1];
+    if (prefix[i + 1] - prefix[curIdx + 1] >= curLast) {
+      curLen++;
+      curLast = prefix[i + 1] - prefix[curIdx + 1];
+    } else {
+      curLast += prefix[i + 1] - prefix[curIdx + 1];
+    }
+    dp[i][0] = curLen;
+    dp[i][1] = curLast;
+    while (
+      !dq.isEmpty() &&
+      prefix[dq.peekBack() + 1] + dp[dq.peekBack()][1] >=
+        prefix[i + 1] + curLast
+    ) {
+      dq.dequeueBack();
+    }
+    dq.enqueueBack(i);
+  }
+  return dp[n - 1][0];
+};
