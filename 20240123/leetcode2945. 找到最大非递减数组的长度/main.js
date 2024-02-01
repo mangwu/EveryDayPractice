@@ -243,3 +243,56 @@ var findMaximumLength = function (nums) {
   }
   return dp[n - 1][0];
 };
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var findMaximumLength = function (nums) {
+  const n = nums.length;
+  // 动态规划
+  const dp = new Array(n).fill(0);
+  dp[0] = 1;
+  const last = new Array(n).fill(0);
+  last[0] = nums[0];
+  // dp[i]表示递增结果数组的长度
+  // last[i]表示递增结果数组最后一个元素的值
+  // 通过前缀和可以快速求得nums最后几个数之和
+  const prefix = [0];
+  for (let i = 0; i < n; i++) {
+    prefix.push(prefix[prefix.length - 1] + nums[i]);
+  }
+  const dq = new Dqueue();
+  dq.enqueueBack(0);
+  for (let i = 1; i < n; i++) {
+    // 去除不符合转移条件的元素
+    const preLen = dp[i - 1];
+    while (
+      dq.size() > 1 &&
+      (dp[dq.peekFront()] < preLen - 1 ||
+        last[dq.peekFront()] > prefix[i + 1] - prefix[dq.peekFront() + 1])
+    ) {
+      dq.dequeueFront();
+    }
+    // 通过单调队列获取到的最适合dp[i]的上一个元素索引
+    const curIdx = dq.peekFront();
+    let curLen = dp[curIdx];
+    let curLast = last[curIdx];
+    if (prefix[i + 1] - prefix[curIdx + 1] >= curLast) {
+      curLen++;
+      curLast = prefix[i + 1] - prefix[curIdx + 1];
+    } else {
+      curLast += prefix[i + 1] - prefix[curIdx + 1];
+    }
+    dp[i] = curLen;
+    last[i] = curLast;
+    while (
+      !dq.isEmpty() &&
+      last[dq.peekBack()] + prefix[dq.peekBack() + 1] >= curLast + prefix[i + 1]
+    ) {
+      dq.dequeueBack();
+    }
+    dq.enqueueBack(i);
+  }
+  return dp[n - 1];
+};
