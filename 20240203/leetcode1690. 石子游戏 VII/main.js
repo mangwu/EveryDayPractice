@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2024-02-03 22:56:44                                                  *
- * @LastModifiedDate: 2024-02-04 00:54:07                                      *
+ * @LastModifiedDate: 2024-02-04 10:29:18                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2024 mangwu                                                   *
@@ -77,4 +77,20 @@ var stoneGameVII = function (stones) {
     }
   }
   return alice - bob;
+};
+
+// 上述解答错误
+
+/**
+ * @param {number[]} stones
+ * @return {number}
+ */
+var stoneGameVII = function (stones) {
+  const n = stones.length;
+  const cache = new Array(n).fill(0).map((v) => new Array(n).fill(-1));
+  const dfs = (left, right) => {
+    if (left > right) return 0;
+    if (cache[left][right] !== -1) return cache[left][right];
+    const res = Math.max()
+  };
 };
