@@ -2,7 +2,11 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2024-02-03 22:56:44                                                  *
- * @LastModifiedDate: 2024-02-04 01:54:35                                      *
+<<<<<<< HEAD
+ * @LastModifiedDate: 2024-02-06 21:23:46                                      *
+=======
+ * @LastModifiedDate: 2024-02-06 21:23:46                                      *
+>>>>>>> 3b326a86c4b522cf2f33ea78b549a7d8abb39f01
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2024 mangwu                                                   *
@@ -78,6 +82,8 @@ var stoneGameVII = function (stones) {
   }
   return alice - bob;
 };
+
+// 上述解答错误
 
 /**
  * @param {number[]} stones
