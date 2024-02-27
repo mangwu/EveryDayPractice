@@ -20,9 +20,14 @@ var calculate = function (s) {
   // 一种解法是为所有连续的 * \运行单元添加左右括号，
   // 将三种优先级状态改为两种：先处理括号内的，然后展开
   const n = s.length;
-  const strArr = [];
-  for(let i = 0; i < n; i++) {
-    // if(strArr[i] === "*")
+  const stack = [];
+  for (let i = 0; i < n; i++) {
+    if (isNaN(parseInt(s[i]))) {
+      // 操作符或者括号
+      
+    } else {
+
+    }
   }
 };
 
