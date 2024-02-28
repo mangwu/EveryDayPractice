@@ -56,13 +56,13 @@ var removeDuplicateLetters = function (s) {
   let ans = "";
   const check = (i) => {
     const select = alpha[i].peekFront();
-    for (let j = 0; j < n; j++) {
+    for (let j = 0; j < 26; j++) {
       const cur = alpha[j];
       if (j !== i && !cur.isEmpty()) {
         if (cur.peekBack() < select) return false;
       }
     }
-    for (let j = 0; j < n; j++) {
+    for (let j = 0; j < 26; j++) {
       const cur = alpha[j];
       if (j !== i && !cur.isEmpty()) {
         while (!cur.isEmpty() && cur.peekFront() <= select) cur.dequeueFront();
@@ -76,7 +76,7 @@ var removeDuplicateLetters = function (s) {
       if (!alpha[i].isEmpty()) {
         // 可以选择String.charCodeAt(i)
         if (check(i)) {
-          console.log(i);
+          console.log(String.fromCharCode(i + aCode), alpha[i].peekFront());
           ans += String.fromCharCode(i + aCode);
           alpha[i] = new Dqueue();
           break;
