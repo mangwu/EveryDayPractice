@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2024-02-28 15:26:43                                                  *
- * @LastModifiedDate: 2024-02-28 17:47:52                                      *
+ * @LastModifiedDate: 2024-02-29 15:53:24                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2024 mangwu                                                   *
@@ -44,10 +44,10 @@ var maxNumber = function (nums1, nums2, k) {
       .sort((a, b) => a - b)
       .map((v) => nums2[v]);
     // 将二则结合到一起的最大排列
-    console.log(series1, series2);
     const curRes = maxSeriesCombine(series1, series2);
     ans = compareMaxSeries(ans, curRes);
   }
+  console.log(ans);
   return ans;
 };
 /**
@@ -59,22 +59,42 @@ var maxNumber = function (nums1, nums2, k) {
 function maxSeriesCombine(nums1, nums2) {
   // 这里未考虑相等的情况
   const curRes = [];
+  const n1 = nums1.length;
+  const n2 = nums2.length;
   let i = 0;
   let j = 0;
-  while (i < nums1.length || j < nums2.length) {
-    if (i === nums1.length) {
-      for (; j < nums2.length; j++) curRes.push(nums2[j]);
+  while (i < n1 || j < n2) {
+    if (i === n1) {
+      for (; j < n2; j++) curRes.push(nums2[j]);
       break;
     }
-    if (j === nums2.length) {
-      for (; i < nums1.length; i++) curRes.push(nums1[i]);
+    if (j === n2) {
+      for (; i < n1; i++) curRes.push(nums1[i]);
       break;
     }
     if (nums1[i] > nums2[j]) curRes.push(nums1[i++]);
-    else curRes.push(nums2[j++]);
+    else if (nums1[i] < nums2[j]) curRes.push(nums2[j++]);
+    else {
+      // 二者相等的情况
+      let copyi = i;
+      let copyj = j;
+      while (copyi < n1 && copyj < n2 && nums1[copyi] === nums2[copyj]) {
+        copyi++;
+        copyj++;
+      }
+      let flag = true;
+      if (copyi < n1 && copyj < n2) {
+        if (nums1[copyi] < nums2[copyj]) flag = false;
+      } else if (copyi === n1) flag = false;
+      if (flag) {
+        curRes.push(nums1[i++]);
+      } else curRes.push(nums2[j++]);
+    }
   }
   return curRes;
 }
+// maxSeriesCombine([2, 1, 0, 2], [1, 0, 2, 0]);
+
 /**
  * @description 一个数组在保持相对位置时，选择i个的最大序列的选择顺序
  * @param {number[]} nums
@@ -89,27 +109,35 @@ function generateMaxNumSeries(nums) {
   let select = [idx[0]];
   let visited = [];
   visited[0] = true;
-  let left = 1;
-  let right = 0;
+  let left = 0;
+  let right = 1;
+  let stack = [idx[0]];
+  let target = stack[stack.length - 1];
   while (left < n) {
-    const target = select[select.length - 1];
     // 找到下一个最大的值，且在target后
     while (right < n) {
       if (!visited[right] && idx[right] > target) {
-        // 找到一个
         visited[right] = true;
-        select.push(idx[right++]);
-        break;
+        stack.push(idx[right]);
+        select.push(idx[right]);
+        target = idx[right];
+        right = left;
       }
       right++;
     }
-    // 已经不存在下一个在target后的最大值，就舍弃当前target，重新开始选择
-    if (right === n) {
-      right = left + 1;
-      visited[left] = true;
-      select.push(idx[left++]);
-    }
     while (visited[left]) left++;
+    if (right === n) {
+      // 已经不存在下一个在target后的最大值，就舍弃当前target，重新开始选择
+      right = left;
+      stack.pop();
+      if (stack.length) {
+        target = stack[stack.length - 1];
+      } else {
+        target = idx[left];
+        stack.push(idx[left]);
+        select.push(idx[left++]);
+      }
+    }
   }
   return select;
 }
@@ -129,17 +157,29 @@ function compareMaxSeries(nums1, nums2) {
   }
   return nums1;
 }
-maxNumber([3, 4, 6, 5], [9, 1, 2, 5, 8, 3], 5);
-// [3, 4, 6, 5, 9]
-// 1 => 9
-// 2 => 6 9
-// 3 => 6 5 9
-// 4 => 4 6 5 9
-// 5 => 3 4 6 5 9
-// [9, 1, 2, 5, 8, 3]
+const random = require("../../publicFunc/random/random");
+maxNumber(random.randomArr(100, 0, 10), random.randomArr(100, 0, 10), 150);
+// [6, 7, 8, 5, 4, 1, 2, 6, 9, 0, 5, 5, 8, 4, 1, 3, 7, 5, 8])
 // 1 => 9
 // 2 => 9 8
-// 3 => 9 8 3
-// 4 => 9 5 8 3
-// 5 => 9 2 5 8 3
-// 6 => 9 1 2 5 8 3
+// 3 => 9 8 8
+// 4 => 9 8 7 8
+// 5 => 9 8 7 5 8
+// 6 => 9 8 4 7 5 8
+// 7 => 9 8 4 3 7 5 8
+// 8 => 9 8 4 1 3 7 5 8
+// 9 => 9 5 8 4 1 3 7 5 8
+// 10=> 9 5 5 8 4 1 3 7 5 8
+// 11=> 9 0 5 5 8 4 1 3 7 5 8
+// 12=> 8 9 0 5 5 8 4 1 3 7 5 8
+// 13=> 8 6 9 0 5 5 8 4 1 3 7 5 8
+
+// [2,1,0,2]
+// [1,0,2,0]
+
+// 2 1 1 0 2 0 2 0
+
+// 1 0 2 0
+// 1 0 2
+
+// 1 1 0 2 0 2
