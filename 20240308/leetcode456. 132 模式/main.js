@@ -6,6 +6,29 @@
  * @param {number[]} nums
  * @return {boolean}
  */
-var find132pattern = function(nums) {
-  
+var find132pattern = function (nums) {
+  // 单调栈
+  const stack = [];
+  const n = nums.length;
+  let min = Infinity;
+  let prePop = -Infinity;
+  for (let i = 0; i < n; i++) {
+    while (stack.length && stack[stack.length - 1] >= nums[i]) {
+      const top = stack.pop();
+      if (stack.length) {
+        min = Math.min(min, stack[0]);
+        prePop = Math.max(prePop, top);
+      }
+    }
+    if (nums[i] < prePop && nums[i] > min) return true;
+    stack.push(nums[i]);
+  }
+  return false;
 };
+// [1,2,3,4,-4,-3,-5,-1]
+// 1 2 3 4   -4
+// (-4) (-3)     -5
+// (-5) (-1)
+// 
+// [3,5,0,3]
+// [3,5,0,4]
