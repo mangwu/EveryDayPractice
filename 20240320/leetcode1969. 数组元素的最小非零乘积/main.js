@@ -34,9 +34,6 @@ var minNonZeroProduct = function (p) {
   };
   return (ans * dfs(2n ** BigInt(p) - 2n, 2n ** BigInt(p - 1) - 1n)) % MOD;
 };
-for (let i = 1; i < 20; i++) {
-  console.log(minNonZeroProduct(i));
-}
 
 // [001, 010, 011, 100, 101, 110, 111]
 //        |    |    |    |
@@ -50,3 +47,35 @@ for (let i = 1; i < 20; i++) {
 // p => 3 会有2对交换，共有2个6相乘
 // p => 5 会有14对交换，共有14个30相乘
 // p 会有2**(p-1) - 2对交换，共有2**(p-1) - 2个2 ** p - 2相乘
+
+/**
+ * @param {number} p
+ * @return {number}
+ */
+var minNonZeroProduct = function (p) {
+  // 共有 2 ^ (p-1) - 1 个2 ** p - 2相乘，最后再乘以2 ^ p - 1
+  // 递归的快速幂公式
+  const mod = 10 ** 9 + 7;
+  let res = (2 ** p - 1) % mod;
+  res = (res * fastPow(2 ** p - 2, 2 ** (p - 1) - 1, mod)) % mod;
+  return res;
+};
+
+/**
+ * @description 模意义下取幂
+ * @param {number} a 基数
+ * @param {number} b 指数
+ * @param {number} mod 取模
+ * @returns {number}
+ */
+function fastPow(a, b, mod) {
+  let res = 1;
+  a %= mod;
+  while (b > 0) {
+    if (b & 1) res = (res * a) % mod; // 奇数，
+    a = (a * a) % mod;
+    b = Math.floor(b / 2);
+  }
+  return res;
+}
+// 因为(10 * 9 + 7)**2超过Number.MAX_SAFE_INTER
