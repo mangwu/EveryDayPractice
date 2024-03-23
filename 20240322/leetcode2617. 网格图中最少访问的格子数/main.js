@@ -130,21 +130,16 @@ var minimumVisitedCells = function (grid) {
   const m = grid.length;
   const n = grid[0].length;
   const dist = new Array(m).fill(-1).map(() => new Array(n).fill(-1));
-  const row = new Array(m).fill(0).map((_v, i) => {
-    const pq = new PQ((a, b) => dist[i][a] - dist[i][b]);
-    pq.insert(0);
-    return pq;
-  });
-  const col = new Array(n).fill(0).map((_v, j) => {
-    const pq = new PQ((a, b) => dist[a][j] - dist[b][j]);
-    pq.insert(0);
-    return pq;
-  });
+  const row = new Array(m)
+    .fill(0)
+    .map((_v, i) => new PQ((a, b) => dist[i][a] - dist[i][b]));
+  const col = new Array(n)
+    .fill(0)
+    .map((_v, j) => new PQ((a, b) => dist[a][j] - dist[b][j]));
 
   dist[0][0] = 1;
   for (let i = 0; i < m; i++) {
     for (let j = 0; j < n; j++) {
-      if (i === 0 && j === 0) continue;
       // 出队左边不符合条件的
       while (!row[i].isEmpty() && grid[i][row[i].peek()] + row[i].peek() < j) {
         row[i].poll();
@@ -169,6 +164,7 @@ var minimumVisitedCells = function (grid) {
         col[j].insert(i);
       }
     }
+    console.log(dist[i]);
   }
   return dist[m - 1][n - 1];
 };
