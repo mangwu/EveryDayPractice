@@ -171,8 +171,53 @@ function autoRemove(str) {
 }
 
 // RYYRRYYR YYYYY
-const RICES = ["R", "Y", "B", "G", "W"];
-const random = require("../../publicFunc/random/random.js");
-
 // RYYRRYYR => RYYR[Y]RYYR => RR[Y]RYYR => RR[Y]RR => RR[YY]RR => ""
 // findMinStep("RYYRRYYR", "YYYYY");
+/**
+ * @param {string} board
+ * @param {string} hand
+ * @return {number}
+ */
+var findMinStep = function (board, hand) {
+  // 5种球，每种球最多有5种使用次数
+  // 完成board消除需要的最小次数
+  const cache = new Map(); // 记录当前搜索过的结果，并减枝
+  console.log(board, hand);
+  hand = hand.split("").sort().join("");
+  const dfs = (str, hand) => {
+    const m = str.length;
+    if (!m) return 0;
+    const key = str + " " + hand;
+    if (cache.has(key)) return cache.get(key);
+    let res = 6;
+    // 遍历可选
+    for (let j = 0; j < hand.length; j++) {
+      if (j > 0 && hand[j] === hand[j - 1]) {
+        // 第一个减枝条件：相同彩球可以不用再次计算
+        continue;
+      }
+      for (let i = 0; i <= m; i++) {
+        // 第二个减枝条件：连续相同颜色的球只用插入开头
+        if (i > 0 && str[i - 1] === hand[j]) continue;
+        // 第三个减枝条件：只在以下两种情况选择插入
+        let choose = false;
+        // 第1种情况：插入的球和插入位置的球颜色相同
+        if (i < m && str[i] === hand[j]) choose = true;
+        // 第2种情况：
+        if (i > 0 && i < m && str[i - 1] === str[i] && str[i] !== hand[j])
+          choose = true;
+        if (choose) {
+          const newStr = autoRemove(
+            str.substring(0, i) + hand[j] + str.substring(i)
+          );
+          const newHand = hand.substring(0, j) + hand.substring(j + 1);
+          res = Math.min(res, dfs(newStr, newHand) + 1);
+        }
+      }
+    }
+    return res;
+  };
+  const ans = dfs(board, hand);
+  return ans > 5 ? -1 : ans;
+};
+console.log(findMinStep("RYYRRYYR", "YYYYY"));
