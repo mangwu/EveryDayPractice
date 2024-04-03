@@ -41,3 +41,39 @@ var maxWidthRamp = function (nums) {
 };
 
 // 132
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var maxWidthRamp = function (nums) {
+  const n = nums.length;
+  let ans = 0;
+  // 排序
+  const candidates = []; // 单调队列，nums[i]递增，但是i递减
+  // 在候选数组进行二分查找，能够找到结果的j不用入队，
+  // 因为以j当结果的前置索引一定能在当前候选数组中找到索引值差更大的结果
+  candidates.push(n - 1);
+  for (let i = n - 2; i >= 0; i--) {
+    let left = 0;
+    let right = candidates.length;
+    while (left < right) {
+      const mid = Math.floor((left + right) / 2);
+      if (nums[candidates[mid]] >= nums[i]) {
+        // 找到一个符合条件的
+        right = mid;
+      } else {
+        // 不符合条件需要右移
+        left = mid + 1;
+      }
+    }
+    if (left < candidates.length) {
+      // 找到了
+      ans = Math.max(ans, candidates[left] - i);
+    } else {
+      // 没找到，说明这个值比后面的都大，可以入单调队列
+      candidates.push(i);
+    }
+  }
+  return ans;
+};
