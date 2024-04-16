@@ -126,3 +126,97 @@ SortedStack.prototype.isEmpty = function () {
  * var param_3 = obj.peek()
  * var param_4 = obj.isEmpty()
  */
+
+var SortedStack = function () {
+  this.pq = new PQ();
+};
+
+/**
+ * @param {number} val
+ * @return {void}
+ */
+SortedStack.prototype.push = function (val) {
+  this.pq.insert(val);
+};
+
+/**
+ * @return {void}
+ */
+SortedStack.prototype.pop = function () {
+  this.pq.poll();
+};
+
+/**
+ * @return {number}
+ */
+SortedStack.prototype.peek = function () {
+  if (this.isEmpty()) return -1;
+  return this.pq.peek();
+};
+
+/**
+ * @return {boolean}
+ */
+SortedStack.prototype.isEmpty = function () {
+  return this.pq.isEmpty();
+};
+
+/**
+ * Your SortedStack object will be instantiated and called as such:
+ * var obj = new SortedStack()
+ * obj.push(val)
+ * obj.pop()
+ * var param_3 = obj.peek()
+ * var param_4 = obj.isEmpty()
+ */
+
+var SortedStack = function () {
+  this.stack1 = [];
+  this.stack2 = [];
+};
+
+/**
+ * @param {number} val
+ * @return {void}
+ */
+SortedStack.prototype.push = function (val) {
+  // 用stack1存储递减的元素
+  while (!this.isEmpty() && this.peek() < val) {
+    this.stack2.push(this.pop());
+  }
+  this.stack1.push(val);
+  while (this.stack2.length) {
+    this.stack1.push(this.stack2.pop());
+  }
+};
+
+/**
+ * @return {void}
+ */
+SortedStack.prototype.pop = function () {
+  return this.stack1.pop();
+};
+
+/**
+ * @return {number}
+ */
+SortedStack.prototype.peek = function () {
+  if (this.isEmpty()) return -1;
+  return this.stack1[this.stack1.length - 1];
+};
+
+/**
+ * @return {boolean}
+ */
+SortedStack.prototype.isEmpty = function () {
+  return this.stack1.length === 0;
+};
+
+/**
+ * Your SortedStack object will be instantiated and called as such:
+ * var obj = new SortedStack()
+ * obj.push(val)
+ * obj.pop()
+ * var param_3 = obj.peek()
+ * var param_4 = obj.isEmpty()
+ */
