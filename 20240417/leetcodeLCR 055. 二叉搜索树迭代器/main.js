@@ -12,22 +12,24 @@ const { TreeNode } = require("../../publicFunc/TreeNode/TreeNode");
  * @returns {TreeNode}
  */
 var inorderIterate = function (root) {
+  if (!root) return null;
   const stack = [root];
   const header = new TreeNode(0);
   let pre = header;
   while (stack.length) {
-    const top = stack[stack.length - 1];
+    let top = stack[stack.length - 1];
     while (top && top.left) {
       stack.push(top.left);
       top = top.left;
     }
-    if (top.right) {
-      // 还有
-      stack.push(top.right);
-    } else {
-      pre.right = stack.pop();
-    }
+    pre.right = stack.pop();
+    pre = pre.right;
+    if (stack.length) stack[stack.length - 1].left = null;
+    if (top.right) stack.push(top.right);
   }
+  const res = header.right;
+  header.right = null;
+  return res;
 };
 
 /**
@@ -43,17 +45,28 @@ var inorderIterate = function (root) {
  */
 var BSTIterator = function (root) {
   // 中序遍历，形成链表
+  this.linkList = inorderIterate(root);
 };
 
 /**
  * @return {number}
  */
-BSTIterator.prototype.next = function () {};
+BSTIterator.prototype.next = function () {
+  if (this.hasNext()) {
+    const res = this.linkList.val;
+    this.linkList = this.linkList.right;
+    return res;
+  }
+  return -1;
+};
 
 /**
  * @return {boolean}
  */
-BSTIterator.prototype.hasNext = function () {};
+BSTIterator.prototype.hasNext = function () {
+  if (this.linkList) return true;
+  return false;
+};
 
 /**
  * Your BSTIterator object will be instantiated and called as such:
