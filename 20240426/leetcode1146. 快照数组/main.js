@@ -49,6 +49,7 @@ SnapshotArray.prototype.get = function (index, snap_id) {
   }
   // right找到的索引
   if (right === -1) return 0;
+  node && (node = 7);
   return arr[right][1];
 };
 
