@@ -18,6 +18,7 @@ var maxNumber = function (nums1, nums2, k) {
   let ans = [];
   for (let i = 0; i <= Math.min(m, k); i++) {
     // i个nums1，k-i个nums2
+    if (k - i > n) continue; // k - i个不满足nums2中元素的个数
     const s1 = series1
       .slice(0, i)
       .sort((a, b) => a - b)
@@ -61,7 +62,7 @@ function mergeSeries(series1, series2) {
         copyi++;
         copyj++;
       }
-      if (copyj === n) flag = false;
+      if (copyi === m) flag = false; // 如果series1短于series2，则选择s2
       if (copyi < m && copyj < n && series1[copyi] < series2[copyj])
         flag = false;
       if (flag) {
@@ -122,4 +123,51 @@ var getNumsSeries = function (nums) {
   return path;
 };
 
-mergeSeries([6], [9, 5, 8, 3]);
+// 使用单调栈的方式找到选择序列
+/**
+ * @description 获取前k个最大序列的顺序
+ * @param {number[]} nums
+ * @param {number} k
+ * @returns {number[]}
+ */
+var getNumsSeries = function (nums, k) {
+  // 单调栈写法
+  const stack = []; // 单调递减数组让前面（数组靠左）的小的元素优先作为遗弃的元素
+  const n = nums.length;
+  let remain = n - k; // 需要遗弃元素个数
+  for (let i = 0; i < n; i++) {
+    while (remain && stack.length && stack[stack.length - 1] < nums[i]) {
+      stack.pop();
+      remain--;
+    }
+    if (stack.length < k) {
+      // 可以继续增加元素
+      stack.push(nums[i]);
+    } else remain--; // 当前元素被遗弃
+  }
+  return stack;
+};
+/**
+ * @param {number[]} nums1
+ * @param {number[]} nums2
+ * @param {number} k
+ * @return {number[]}
+ */
+var maxNumber = function (nums1, nums2, k) {
+  const m = nums1.length;
+  const n = nums2.length;
+  let ans = [];
+  for (let i = 0; i <= Math.min(m, k); i++) {
+    // i个nums1，k-i个nums2
+    if (k - i > n) continue; // k - i个不满足nums2中元素的个数
+    const s1 = getNumsSeries(nums1, i);
+    const s2 = getNumsSeries(nums2, k - i);
+    const curRes = mergeSeries(s1, s2);
+    ans = maxSeries(curRes, ans);
+  }
+  return ans;
+};
+
+
+// "9,3,4,#,#,1,#,#,2,#,6,#,#,7,#,8,#,#,9,#,#"
+// #,#,9,#,#"
