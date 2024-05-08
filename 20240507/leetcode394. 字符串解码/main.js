@@ -23,15 +23,12 @@ var decodeString = function (s) {
       // 找到上一个[
       const pops = [];
       while (stack.length && stack[stack.length - 1] !== "[") {
-        pops.push(stack.pop());
+        const [num, str] = stack.pop();
+        pops.push(str.repeat(num));
       }
       stack.pop(); // 移出[
       const num = stack.pop(); // 需要称的数字
-      while (pops.length) {
-        const pop = pops.pop();
-        pop[0] *= num;
-        stack.push(pop);
-      }
+      stack.push([num, pops.reverse().join("")]);
     } else {
       // 是字母
       let cur = s[i++];
