@@ -102,14 +102,53 @@ function processZumaSeries(board) {
 findMinStep("WRRBBWBWRWW", "RRWBW");
 // console.log(processZumaSeries("WRRBBWWBRWWWRWW"));
 
-// WRRBBWBWRWW
-// RRWBW
-// -1
-// WRRBBWBRWRWW curBoard + R
-// WRRBBWWBRWRWW nextBoard + W
-// WRRBBWWBRWRWW curBoard
-// WRRBBWWBRWWRWW nextBoard + W
-// WRRBBWWBRWWRWW curBoard
-// WRRBBWWBRWWWRWW nextBoard + W
-// WRRBBWWBRRWW curBoard
-// WRRBBWWWBRRWW nextBoard
+// 使用bfs解答此题
+/**
+ * @param {string} board
+ * @param {string} hand
+ * @return {number}
+ */
+var findMinStep = function (board, hand) {
+  const m = board.length;
+  const n = hand.length;
+  hand = hand.split("").sort().join(""); // 将相同字符放在一起，方便剪枝
+  let queue = [[board, hand]];
+  const visited = new Set([board + "#" + hand]);
+  let step = 0;
+  while (queue.length) {
+    const nxt = [];
+    for (const [curBoard, curHand] of queue) {
+      for (let j = 0; j < curHand.length; j++) {
+        // 剪枝条件一：手中相同的彩球只用遍历一次
+        if (j > 0 && curHand[j] === curHand[j - 1]) continue;
+        const nextHand = curHand.substring(0, j) + curHand.substring(j + 1);
+        for (let i = 0; i < curBoard.length; i++) {
+          // 剪枝条件二：桌上上一个彩球和当前手上选择的彩球一样，可以不用进行本次插入（因为上次已经插入过）
+          if (i > 0 && curBoard[i - 1] === curHand[j]) continue;
+          let choose = false;
+          // 剪枝条件三：经过两次剪枝后，当前插入只有三种情况，其中两种情况是可以进行插入的
+          // 情况一：当前插入的球和右边的球颜色相同
+          if (curHand[j] === curBoard[i]) choose = true;
+          // 情况二：当前插入的球和左边右边的都不同，但是左右两边球颜色相同
+          if (curBoard[i - 1] === curBoard[i] && curHand[j] !== curBoard[i])
+            choose = true;
+          // 情况三：当前插入的球和左右两边不同，且左右两边球颜色不同，这种情况只会额外增加需要插入的球数对消解没有帮助
+          if (choose) {
+            const nextBoard = processZumaSeries(
+              curBoard.substring(0, i) + curHand[j] + curBoard.substring(i)
+            );
+            if (nextBoard === "") return step + 1;
+            const code = nextBoard + "#" + nextHand;
+            if (!visited.has(code)) {
+              visited.add(code);
+              nxt.push([nextBoard, nextHand]);
+            }
+          }
+        }
+      }
+    }
+    queue = nxt;
+    step++;
+  }
+  return -1;
+};
