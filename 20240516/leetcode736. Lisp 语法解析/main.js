@@ -15,23 +15,104 @@
  * @return {number}
  */
 var evaluate = function (expression) {
-  const stack = [];
+  const contextStack = []; // 作用域栈
+  const varStack = []; // 变量栈
+  const opStack = []; // 操作栈
+  const numStack = []; // 数值栈
   const n = expression.length;
   for (let i = 0; i < n; i++) {
     const ch = expression[i];
     if (ch === "(") {
+      // 获取表达式
+      const [op, end] = getExpName(expression, i + 1);
       // 新的作用域
-      stack.push(new Map());
-      // 获取接口
+      if (op === "let") contextStack.push(new Map());
+      opStack.push(op);
+      i = end;
+    } else if (ch === ")") {
+      // 出栈操作符
+      const op = opStack.pop();
+      if (op === "add") {
+        numStack.push(numStack.pop() + numStack.pop());
+      } else if (op === "mult") {
+        numStack.push(numStack.pop() * numStack.pop());
+      } else if (op === "let") {
+        // 出栈作用域
+        let preContext = contextStack.pop();
+        let k = 2;
+        if (varStack.length) {
+          const varName = varStack.pop();
+          while (!preContext.has(varName)) {
+            preContext = contextStack[contextStack.length - k++];
+          }
+          numStack.push(preContext.get(varName));
+        }
+      }
+    } else if (isDigit(ch)) {
+      // 数值
+      const [num, end] = getNumber(expression, i);
+      if (opStack[opStack.length - 1] === "let" && varStack.length) {
+        // 当前是赋值操作
+        const curVar = varStack.pop();
+        const curContext = contextStack[contextStack.length - 1];
+        curContext.set(curVar, num);
+      } else {
+        // 不是赋值操作
+        numStack.push(num);
+      }
+      i = end;
+    } else if (ch !== " ") {
+      // 变量
+      const [varName, end] = getExpName(expression, i + 1);
+      const curOp = opStack[opStack.length - 1];
+      let curContext = contextStack[contextStack.length - 1];
+      if (curOp === "let") {
+        varStack.push(varName);
+      } else {
+        let k = 2;
+        while (!curContext.has(varName)) {
+          curContext = contextStack[contextStack.length - k++];
+        }
+        numStack.push(curContext.get(varName));
+      }
+      i = end;
     }
   }
 };
 
 /**
  * @description 获取关键字或者
- * @param {string} str 
- * @param {number} start 
+ * @param {string} str
+ * @param {number} start
+ * @returns {[string, number]}
  */
 function getExpName(str, start) {
-  
+  const res = [];
+  const n = str.length;
+  while (start < n && (str[start] !== " " || str[start] !== ")"))
+    res.push(str[start++]);
+  return [res.join(""), start - 1];
+}
+
+/**
+ * @description 获取数字
+ * @param {string} str
+ * @param {number} start
+ * @returns {[number,number]}
+ */
+function getNumber(str, start) {
+  let cur = 0;
+  while (isDigit(str[start])) {
+    cur = cur * 10 + parseInt(str[start++]);
+  }
+  return [cur, start - 1];
+}
+
+/**
+ * @description 是否是数字
+ * @param {string} ch
+ * @returns {boolean}
+ */
+function isDigit(ch) {
+  return !isNaN(parseInt(ch));
 }
