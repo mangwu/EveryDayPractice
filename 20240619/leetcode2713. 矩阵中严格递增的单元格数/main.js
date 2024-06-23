@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2024-06-19 09:09:34                                                  *
- * @LastModifiedDate: 2024-06-19 11:07:48                                      *
+ * @LastModifiedDate: 2024-06-19 21:36:21                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2024 mangwu                                                   *
@@ -65,7 +65,7 @@ var maxIncreasingCells = function (mat) {
         hash.set(idxes[start], i + 1);
       }
     }
-    colsArr = [idxes, hash];
+    colsArr[j] = [idxes, hash];
   }
   const cache = new Array(m).fill(-1).map((v) => new Array(n).fill(-1));
   const dfs = (i, j) => {
@@ -75,8 +75,25 @@ var maxIncreasingCells = function (mat) {
     // row向的更大值
     const [idxes, hash] = rowsArr[i];
     let start = hash.get(j);
-    
+    for (let newJ = start; newJ < n; newJ++) {
+      res = Math.max(res, dfs(i, idxes[newJ]) + 1);
+    }
+    // col向更大值
+    const [colIdxes, colHash] = colsArr[j];
+    start = colHash.get(i);
+    for (let newI = start; newI < m; newI++) {
+      res = Math.max(res, dfs(colIdxes[newI], j) + 1);
+    }
+    cache[i][j] = res;
+    return cache[i][j];
   };
+  let ans = 1;
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      ans = Math.max(ans, dfs(i, j));
+    }
+  }
+  return ans;
 };
 
 // 1 2 3
