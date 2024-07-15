@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2024-07-11 09:13:32                                                  *
- * @LastModifiedDate: 2024-07-11 09:13:49                                      *
+ * @LastModifiedDate: 2024-07-11 22:20:48                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2024 mangwu                                                   *
@@ -11,7 +11,6 @@
  * Date   	            By 	    Comments                                       *
  * ---------------------	--------	----------------------------------------------- *
  */
-
 
 // 给你一个下标从 0 开始的 正 整数数组 nums 。
 
@@ -27,6 +26,26 @@
  * @param {number[]} nums
  * @return {number}
  */
-var incremovableSubarrayCount = function(nums) {
-  
+var incremovableSubarrayCount = function (nums) {
+  // 双指针
+  const n = nums.length;
+  let left = 1;
+  let ans = 0;
+  while (left < n) {
+    if (nums[left] <= nums[left - 1]) break;
+    left++;
+  }
+  if (left === n) return (n * (n + 1)) / 2;
+  left--;
+  // 包括left右边所有元素的子数组
+  ans += left + 1 + 1;
+  // 右指针
+  for (let r = n - 1; r > 0; r--) {
+    // 当前右边后面遇到一次递减的情况，就无法继续构建严格递增的情况了
+    if (r < n - 1 && nums[r] >= nums[r + 1]) break;
+    while (left >= 0 && nums[left] >= nums[r]) left--;
+    // 删除包括以nums[left+1]开头，以num[r-1]结尾的子数组
+    ans += left + 2;
+  }
+  return ans;
 };
