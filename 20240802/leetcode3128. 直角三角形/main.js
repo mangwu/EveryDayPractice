@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2024-08-02 09:11:27                                                  *
- * @LastModifiedDate: 2024-08-02 10:52:44                                      *
+ * @LastModifiedDate: 2024-08-05 09:16:27                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2024 mangwu                                                   *
@@ -69,7 +69,7 @@ var numberOfRightTriangles = function (grid) {
   return res;
 };
 
-const random = require("../publicFunc/random/random");
+const random = require("../../publicFunc/random/random");
 
 console.log(
   numberOfRightTriangles(
