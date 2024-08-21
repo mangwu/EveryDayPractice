@@ -1,8 +1,8 @@
 /*
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
- * @Date: 2024-08-20 09:00:22                                                  *
- * @LastModifiedDate: 2024-08-20 09:03:49                                      *
+ * @Date: 2024-08-20 22:53:13                                                  *
+ * @LastModifiedDate: 2024-08-21 17:37:53                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2024 mangwu                                                   *
@@ -11,7 +11,6 @@
  * Date   	            By 	    Comments                                       *
  * ---------------------	--------	----------------------------------------------- *
  */
-
 
 // 给你有一个 非负 整数 k 。有一个无限长度的台阶，最低 一层编号为 0 。
 
@@ -27,6 +26,40 @@
  * @param {number} k
  * @return {number}
  */
-var waysToReachStair = function(k) {
-  
+var waysToReachStair = function (k) {
+  // 回退n次，跳跃m次，m最多为30
+  // 2 ** m - 1 - n === k
+  let res = 0;
+  let m = 30;
+  while (m >= 0) {
+    let n = 2 ** m - k;
+    if (n < 0) break;
+    if (n > m + 1) {
+      m--;
+      continue;
+    }
+    // 增加 C(m+1, n)种可能
+    res += combination(m + 1, n);
+    m--;
+  }
+  return res;
 };
+
+var combination = function (m, n) {
+  if (m === n || n === 0) return 1;
+  if (n > m / 2) n = m - n;
+  let top = 1n;
+  const bM = BigInt(m);
+  const bN = BigInt(n);
+  let bottom = 1n;
+  for (let i = 0; i < n; i++) {
+    top = top * (bM - BigInt(i));
+    bottom = bottom * (bN - BigInt(i));
+  }
+  return Number(top / bottom);
+};
+
+// C()
+
+// 4 5
+//
