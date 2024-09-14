@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2024-09-13 10:14:50                                                  *
- * @LastModifiedDate: 2024-09-13 18:10:17                                      *
+ * @LastModifiedDate: 2024-09-14 10:04:31                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2024 mangwu                                                   *
@@ -81,7 +81,7 @@ var maximumRobots = function (chargeTimes, runningCosts, budget) {
     while (
       left < n &&
       !dq.isEmpty() &&
-      sum + (i - left + 1) * chargeTimes[dq.peekFront()] > budget
+      sum * (i - left + 1) + chargeTimes[dq.peekFront()] > budget
     ) {
       sum -= runningCosts[left++];
       while (!dq.isEmpty() && dq.peekFront() < left) dq.dequeueFront();
@@ -92,3 +92,39 @@ var maximumRobots = function (chargeTimes, runningCosts, budget) {
   }
   return res;
 };
+
+// [3,6,1,3,4,8,5,2,4,2,6,9]
+// [2,1,3,4,5,2,5,8,9,6,4,1]
+// 0 0
+// 2 Dqueue { items: { '1': 0 }, lowest: 0, highest: 2 }
+// 0 1
+// 3 Dqueue { items: { '1': 1 }, lowest: 0, highest: 2 }
+// 0 2
+// 6 Dqueue { items: { '1': 1, '2': 2 }, lowest: 0, highest: 3 }
+// 0 3
+// 10 Dqueue { items: { '1': 1, '2': 3 }, lowest: 0, highest: 3 }
+// 0 4
+// 15 Dqueue { items: { '1': 1, '2': 4 }, lowest: 0, highest: 3 }
+// peekFront 5 1
+// peekFront 5 2
+// 2 5
+// 14 Dqueue { items: { '1': 5 }, lowest: 0, highest: 2 }
+// peekFront 5 3
+// 3 6
+// 16 Dqueue { items: { '1': 5, '2': 6 }, lowest: 0, highest: 3 }
+// peekFront 5 4
+// peekFront 5 5
+// 5 7
+// 15 Dqueue { items: { '1': 5, '2': 6, '3': 7 }, lowest: 0, highest: 4 }
+// peekFront 5 6
+// 6 8
+// 22 Dqueue { items: { '2': 6, '3': 8 }, lowest: 1, highest: 4 }
+// 6 9
+// 28 Dqueue { items: { '2': 6, '3': 8, '4': 9 }, lowest: 1, highest: 5 }
+// peekFront 10 7
+// peekFront 10 8
+// 8 10
+// 19 Dqueue { items: { '2': 10 }, lowest: 1, highest: 3 }
+// peekFront 11 9
+// 9 11
+// 11 Dqueue { items: { '2': 11 }, lowest: 1, highest: 3 }
