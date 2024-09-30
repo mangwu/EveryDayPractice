@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2024-09-30 09:59:19                                                  *
- * @LastModifiedDate: 2024-09-30 11:21:04                                      *
+ * @LastModifiedDate: 2024-09-30 17:36:16                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2024 mangwu                                                   *
@@ -116,3 +116,102 @@ SeatManager.prototype.unreserve = function (seatNumber) {
 // 4 3 1
 
 // 9 7 6
+
+class PQ {
+  constructor(compareFn = (a, b) => a - b) {
+    this.items = [];
+    this.compareFn = compareFn;
+  }
+  size() {
+    return this.items.length;
+  }
+  isEmpty() {
+    return this.size() === 0;
+  }
+  swap(a, b) {
+    [this.items[a], this.items[b]] = [this.items[b], this.items[a]];
+  }
+  compare(a, b) {
+    return this.compareFn(this.items[a], this.items[b]);
+  }
+  getLeftIdx(idx) {
+    return idx * 2 + 1;
+  }
+  getRightIdx(idx) {
+    return idx * 2 + 2;
+  }
+  getParentIdx(idx) {
+    return Math.floor((idx - 1) / 2);
+  }
+  peek() {
+    if (this.isEmpty()) return;
+    return this.items[0];
+  }
+  insert(value) {
+    this.items.push(value);
+    this.shiftUp();
+  }
+  poll() {
+    const size = this.size();
+    if (size === 1) return this.items.pop();
+    this.swap(0, size - 1);
+    const res = this.items.pop();
+    this.shiftDown();
+    return res;
+  }
+  shiftUp() {
+    let idx = this.size() - 1;
+    let parentIdx = this.getParentIdx(idx);
+    while (parentIdx >= 0 && this.compare(idx, parentIdx) < 0) {
+      this.swap(idx, parentIdx);
+      idx = parentIdx;
+      parentIdx = this.getParentIdx(idx);
+    }
+  }
+  shiftDown() {
+    const size = this.size();
+    let idx = 0;
+    let temp = idx;
+    while (idx < size) {
+      const leftIdx = this.getLeftIdx(idx);
+      const rightIdx = this.getRightIdx(idx);
+      if (leftIdx < size && this.compare(idx, leftIdx) > 0) idx = leftIdx;
+      if (rightIdx < size && this.compare(idx, rightIdx) > 0) idx = rightIdx;
+      if (idx !== temp) {
+        this.swap(idx, temp);
+        temp = idx;
+      } else break;
+    }
+  }
+}
+
+/**
+ * @param {number} n
+ */
+var SeatManager = function (n) {
+  // 有序列表
+  this.pq = new PQ();
+  for (let i = 1; i <= n; i++) this.pq.insert(i);
+};
+
+/**
+ * @return {number}
+ */
+SeatManager.prototype.reserve = function () {
+  return this.pq.poll();
+};
+
+/**
+ * @param {number} seatNumber
+ * @return {void}
+ */
+SeatManager.prototype.unreserve = function (seatNumber) {
+  this.pq.insert(seatNumber);
+};
+
+/**
+ * Your SeatManager object will be instantiated and called as such:
+ * var obj = new SeatManager(n)
+ * var param_1 = obj.reserve()
+ * obj.unreserve(seatNumber)
+ */
