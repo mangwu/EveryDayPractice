@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2024-10-28 09:51:01                                                  *
- * @LastModifiedDate: 2024-10-28 10:32:54                                      *
+ * @LastModifiedDate: 2024-10-28 11:12:52                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2024 mangwu                                                   *
@@ -32,28 +32,50 @@ var findRedundantDirectedConnection = function (edges) {
   const n = edges.length;
   const indegree = new Array(n + 1).fill(0);
   const outdegree = new Array(n + 1).fill(0);
+  const hash = new Map();
   for (const [a, b] of edges) {
     indegree[b]++;
     outdegree[a]++;
+    hash.has(a) ? hash.get(a).add(b) : hash.set(a, new Set([b]));
   }
   for (let i = n - 1; i >= 0; i--) {
     const [a, b] = edges[i];
     indegree[b]--;
     outdegree[a]--;
-    if (isTree(indegree, outdegree)) return [a, b];
+    hash.get(a).delete(b);
+    if (isTree(indegree, outdegree, hash)) return [a, b];
+    hash.get(a).add(b);
     indegree[b]++;
     outdegree[a]++;
   }
   return [];
 };
 
-const isTree = (indegree, outdegree) => {
+const isTree = (indegree, outdegree, hash) => {
   let rootNum = 0;
+  let root = 0;
   const n = indegree.length;
+
   for (let i = 1; i < n; i++) {
-    if (indegree[i] === 0 && outdegree[i] >= 1) rootNum++;
-    else if (indegree[i] === 1 && outdegree[i] >= 0) continue;
+    if (indegree[i] === 0 && outdegree[i] >= 1) {
+      rootNum++;
+      root = i;
+    } else if (indegree[i] === 1 && outdegree[i] >= 0) continue;
     else return false;
   }
-  return rootNum === 1;
+  // 还需要考虑分离的问题
+  if (rootNum !== 1) return false;
+  const visited = new Set();
+  const dfs = (cur) => {
+    visited.add(cur);
+    const nexts = hash.get(cur);
+    for (const next of nexts || []) {
+      if (!visited.has(next)) dfs(next);
+    }
+  };
+  dfs(root);
+  console.log(root, visited);
+  return visited.size === n - 1;
 };
+
+// [[4,2],[1,5],[5,2],[5,3],[2,4]]
