@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2024-11-12 17:17:39                                                  *
- * @LastModifiedDate: 2024-11-12 17:46:08                                      *
+ * @LastModifiedDate: 2024-11-12 18:08:05                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2024 mangwu                                                   *
@@ -81,6 +81,42 @@ var countKConstraintSubstrings = function (s, k) {
       }
     }
     if (oneNum <= k || zeroNum <= k) res += n - i;
+  }
+  return res;
+};
+
+/**
+ * @param {string} s
+ * @param {number} k
+ * @return {number}
+ */
+var countKConstraintSubstrings = function (s, k) {
+  // 双指针解法
+  const n = s.length;
+  let zeroNum = 0;
+  let oneNum = 0;
+  let right = 0;
+  let res = 0;
+  for (let left = 0; left < n; left++) {
+    while (right < n) {
+      // 找到满足条件的后一位right值
+      if (s[right++] === "0") zeroNum++;
+      else oneNum++;
+      if (zeroNum <= k || oneNum <= k) {
+        continue;
+      } else {
+        if (s[--right] === "0") zeroNum--;
+        else oneNum--;
+        break;
+      }
+    }
+    res += right - left;
+    // 减去
+    if (s[left] === "0") {
+      zeroNum--;
+    } else {
+      oneNum--;
+    }
   }
   return res;
 };
