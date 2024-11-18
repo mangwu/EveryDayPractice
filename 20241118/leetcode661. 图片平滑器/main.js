@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2024-11-18 18:31:36                                                  *
- * @LastModifiedDate: 2024-11-18 18:39:39                                      *
+ * @LastModifiedDate: 2024-11-18 21:55:57                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2024 mangwu                                                   *
@@ -39,18 +39,17 @@ var imageSmoother = function (img) {
   const res = new Array(m).fill(0).map((v) => new Array(n).fill(0));
   for (let i = 0; i < m; i++) {
     for (let j = 0; j < n; j++) {
+      let sum = 0;
+      let num = 0;
       for (const dir of DIRS) {
         const x = i + dir[0];
         const y = j + dir[1];
-        console.log(x, y);
-        let sum = 0;
-        let num = 0;
         if (x >= 0 && x < m && y >= 0 && y < n) {
           sum += img[x][y];
           num++;
         }
-        res[i][j] = Math.floor(sum / num);
       }
+      res[i][j] = Math.floor(sum / num);
     }
   }
   return res;
