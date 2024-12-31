@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2024-12-30 17:03:21                                                  *
- * @LastModifiedDate: 2024-12-30 17:39:11                                      *
+ * @LastModifiedDate: 2024-12-31 16:12:56                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2024 mangwu                                                   *
@@ -48,11 +48,25 @@ var numberOfSubsequences = function (nums) {
       }
     }
   }
+  let res = 0;
   for (const [key, pqArr] of pqHash) {
     const srArr = srHash.get(key) || [];
-    let right = 0;
-    while(right < srArr.length) {
-      
+    for (const [p, q] of pqArr) {
+      // 找到sr中srArr[i][0] > q 的第一个元素
+      let left = 0;
+      let right = srArr.length;
+      while (left < right) {
+        const mid = Math.floor((left + right) / 2);
+        if (srArr[mid][0] > q + 1) {
+          right = mid;
+        } else {
+          left = mid + 1;
+        }
+      }
+      res += srArr.length - right;
     }
   }
+  return res;
 };
+// 超出事件限制
+// [3,4,3,4,3,4,3,4]
