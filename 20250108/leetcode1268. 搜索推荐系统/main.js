@@ -69,3 +69,46 @@ function getStrByNode(node) {
   dfs(node);
   return res;
 }
+
+// 上述的方法使用dfs搜索，实际上在插入时就可以记录每个字符串前缀包含的三个product字符串了，如下
+class Trie {
+  constructor() {
+    this.children = new Array(26).fill(null);
+    this.isEnd = false;
+    this.suggests = [];
+  }
+  insert(word) {
+    let node = this;
+    for (const ch of word) {
+      const code = ch.charCodeAt() - "a".charCodeAt();
+      if (node.children[code] === null) node.children[code] = new Trie();
+      node = node.children[code];
+      if (node.suggests.length < 3) {
+        node.suggests.push(word);
+      }
+    }
+    node.isEnd = true;
+  }
+}
+
+/**
+ * @param {string[]} products
+ * @param {string} searchWord
+ * @return {string[][]}
+ */
+var suggestedProducts = function (products, searchWord) {
+  const trie = new Trie();
+  products.sort(); // 为了保证字典树中的节点保存的建议按顺序排列
+  for (const product of products) trie.insert(product);
+  const n = searchWord.length;
+  const res = new Array(n).fill(0).map(() => new Array(0).fill(0));
+  let node = trie;
+  for (let i = 0; i < n; i++) {
+    const ch = searchWord[i];
+    const code = ch.charCodeAt() - "a".charCodeAt();
+    if (node.children[code] === null) break;
+    node = node.children[code];
+    res[i].push(...node.suggests);
+  }
+  return res;
+};
