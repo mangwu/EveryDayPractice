@@ -46,3 +46,37 @@ var sumPrefixScores = function (words) {
   }
   return res;
 };
+
+class Node {
+  constructor() {
+    this.children = {};
+  }
+  insert(word) {
+    let node = this.children;
+    for (const ch of word) {
+      if (!node[ch]) node[ch] = { val: 0 };
+      node = node[ch];
+      node.val++;
+    }
+  }
+}
+
+/**
+ * @param {string[]} words
+ * @return {number[]}
+ */
+var sumPrefixScores = function (words) {
+  const trie = new Node();
+  for (const word of words) trie.insert(word);
+  const res = [];
+  for (const word of words) {
+    let sum = 0;
+    let node = trie.children;
+    for (const ch of word) {
+      node = node[ch];
+      sum += node.val;
+    }
+    res.push(sum);
+  }
+  return res;
+};
