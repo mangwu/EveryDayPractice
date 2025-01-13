@@ -122,35 +122,65 @@ var findWords = function (board, words) {
       res.push(word);
     }
   }
-  console.log(res);
   return res;
 };
-
-findWords(
-  [
-    ["a", "b", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m"],
-    ["n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y"],
-    ["o", "b", "d", "e", "v", "s", "h", "i", "j", "d", "l", "z"],
-    ["p", "b", "d", "v", "l", "x", "h", "i", "z", "a", "l", "a"],
-    ["s", "b", "d", "v", "l", "x", "h", "i", "z", "a", "l", "a"],
-    ["c", "b", "d", "v", "l", "x", "h", "i", "z", "a", "l", "a"],
-    ["x", "b", "d", "v", "l", "x", "h", "i", "z", "a", "l", "a"],
-    ["v", "b", "d", "v", "l", "x", "h", "i", "z", "a", "l", "a"],
-    ["b", "b", "d", "v", "l", "x", "h", "i", "z", "a", "l", "a"],
-    ["n", "b", "d", "v", "l", "x", "h", "i", "z", "a", "l", "a"],
-    ["m", "b", "d", "v", "l", "x", "h", "i", "z", "a", "l", "a"],
-    ["p", "b", "d", "v", "l", "x", "h", "i", "z", "a", "l", "a"],
-  ],
-  [
-    "abcd",
-    "acd",
-    "ad",
-    "ascg",
-    "egv",
-    "asvd",
-    "lllll",
-    "ascc",
-    "lloo",
-    "xhizalaaalazih",
-  ]
-);
+class Trie {
+  constructor() {
+    this.children = {};
+  }
+  insert(word) {
+    let node = this.children;
+    for (const ch of word) {
+      if (!node[ch]) node[ch] = {};
+      node = node[ch];
+    }
+    node.word = word;
+  }
+}
+/**
+ * @param {character[][]} board
+ * @param {string[]} words
+ * @return {string[]}
+ */
+var findWords = function (board, words) {
+  const DIRS = [
+    [0, 1],
+    [0, -1],
+    [-1, 0],
+    [1, 0],
+  ];
+  const m = board.length;
+  const n = board[0].length;
+  // 将words插入到字典树中，深度优先搜索表格，如果当前路径无法在字典树中遍历到，就剪枝
+  // 如果当前路径是words中的单词（word有值），则将单词放入结果数组中
+  // 因为同一个单词可以在不同路径中出现，可以用hash表去重
+  const trie = new Trie();
+  for (const word of words) {
+    trie.insert(word);
+  }
+  const res = new Set();
+  const dfs = (node, start, board) => {
+    if (!node) return;
+    const [x, y] = start;
+    const ch = board[x][y];
+    node = node[ch];
+    if (node && node.word) {
+      res.add(node.word);
+    }
+    board[x][y] = "#";
+    for (const dir of DIRS) {
+      const nx = dir[0] + x;
+      const ny = dir[1] + y;
+      if (nx >= 0 && nx < m && ny >= 0 && ny < n && board[nx][ny] !== "#") {
+        dfs(node, [nx, ny], board);
+      }
+    }
+    board[x][y] = ch;
+  };
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      dfs(trie.children, [i, j], board);
+    }
+  }
+  return [...res];
+};
