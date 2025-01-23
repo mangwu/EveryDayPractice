@@ -26,10 +26,7 @@ var maximumPoints = function (edges, coins, k) {
     let add2 = Math.floor(coins[node] / divisor / 2);
     for (const nextNode of nextNodes) {
       if (nextNode !== pre) {
-        // 只在增加值不是负数的时候判断
-        if (add1 > 0) {
-          add1 += dfs(nextNode, node, divisor);
-        }
+        add1 += dfs(nextNode, node, divisor);
         // 只在k不为0的时候判断
         if (k !== 0) {
           add2 += dfs(nextNode, node, divisor * 2);
@@ -37,7 +34,6 @@ var maximumPoints = function (edges, coins, k) {
       }
     }
     if (k === 0) return add1;
-    if (k > Math.floor(coins[node] / divisor)) return add2;
     return Math.max(add1, add2);
   };
   return dfs(0, -1, 1);
