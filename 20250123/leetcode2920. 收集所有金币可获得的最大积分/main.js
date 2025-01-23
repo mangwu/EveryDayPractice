@@ -20,21 +20,25 @@ var maximumPoints = function (edges, coins, k) {
     hash.has(a) ? hash.get(a).push(b) : hash.set(a, [b]);
     hash.has(b) ? hash.get(b).push(a) : hash.set(b, [a]);
   }
-  const dfs = (node, pre, divisor) => {
+  // 记忆化搜索
+  const n = coins.length;
+  const memo = new Array(n).fill(0).map((v) => new Array(14).fill(-1));
+  const dfs = (node, pre, factor) => {
+    if (memo[node][factor] >= 0) return memo[node][factor];
     const nextNodes = hash.get(node);
-    let add1 = Math.floor(coins[node] / divisor) - k;
-    let add2 = Math.floor(coins[node] / divisor / 2);
+    let add1 = (coins[node] >> factor) - k;
+    let add2 = coins[node] >> (factor + 1);
     for (const nextNode of nextNodes) {
       if (nextNode !== pre) {
-        add1 += dfs(nextNode, node, divisor);
-        // 只在k不为0的时候判断
-        if (k !== 0) {
-          add2 += dfs(nextNode, node, divisor * 2);
+        add1 += dfs(nextNode, node, factor);
+        if (factor + 1 < 14) {
+          // 如果下一个factor大于等于14，则子数的所有节点值（不超过10^4）都会是0
+          add2 += dfs(nextNode, node, factor + 1);
         }
       }
     }
-    if (k === 0) return add1;
-    return Math.max(add1, add2);
+    memo[node][factor] = Math.max(add1, add2);
+    return memo[node][factor];
   };
-  return dfs(0, -1, 1);
+  return dfs(0, -1, 0);
 };
