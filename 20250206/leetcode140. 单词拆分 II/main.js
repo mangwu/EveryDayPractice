@@ -69,7 +69,7 @@ var wordBreak = function (s, wordDict) {
  * @return {string[]}
  */
 var wordBreak = function (s, wordDict) {
-  // 暴力回溯法
+  // 记忆化搜索
   const set = new Set(wordDict);
   const n = s.length;
   const memo = new Array(n).fill(-1);
@@ -98,3 +98,55 @@ var wordBreak = function (s, wordDict) {
   dfs(0);
   return memo[0];
 };
+
+/**
+ * @param {string} s
+ * @param {string[]} wordDict
+ * @return {string[]}
+ */
+var wordBreak = function (s, wordDict) {
+  // 记忆化搜索 + 字典树
+  const n = s.length;
+  const memo = new Array(n).fill(-1);
+  const trie = {};
+  for (const word of wordDict) {
+    let node = trie;
+    for (const ch of word) {
+      if (!node[ch]) node[ch] = {};
+      node = node[ch];
+    }
+    node.isEnd = true;
+  }
+  const dfs = (i) => {
+    if (i === n) return [];
+    // 返回[i, n-1]字符串能使用wordDict中能构造的所有子串
+    const res = [];
+    if (memo[i] !== -1) return memo[i];
+    let node = trie;
+    let subStr = "";
+    for (let j = i; j < n; j++) {
+      // [0, j]
+      const ch = s[j];
+      if (node[ch]) {
+        node = node[ch];
+        subStr += ch;
+      } else break;
+      if (node.isEnd) {
+        if (j < n - 1) {
+          const pre = dfs(j + 1);
+          for (const item of pre) {
+            res.push(subStr + " " + item);
+          }
+        } else {
+          res.push(subStr);
+        }
+      }
+    }
+    memo[i] = res;
+    return res;
+  };
+  dfs(0);
+  return memo[0];
+};
+
+wordBreak("catsanddog", ["cat", "cats", "and", "sand", "dog"]);
