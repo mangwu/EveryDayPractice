@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2025-02-13 16:14:02                                                  *
- * @LastModifiedDate: 2025-02-13 16:21:26                                      *
+ * @LastModifiedDate: 2025-02-13 19:19:15                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2025 mangwu                                                   *
@@ -31,5 +31,19 @@ async function solution() {
   }
   const [n, x] = inputs[0].split(" ");
   const arr = inputs[1].split(" ").map((v) => parseInt(v));
-  // 双指针，记录以right结尾的区间有多少个满足条件
+  // 双指针，记录以left开头的区间有多少个满足条件
+  let right = 0;
+  let sum = 0;
+  let res = 0;
+  for (let i = 0; i < n; i++) {
+    while (right < n && sum < x) {
+      sum += arr[right++];
+    }
+    if (sum >= x) {
+      res += n - right + 1;
+      sum -= arr[i];
+    } else break;
+  }
+  console.log(res);
 }
+solution()
