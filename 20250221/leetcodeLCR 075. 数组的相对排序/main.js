@@ -49,13 +49,26 @@ var relativeSortArray = function (arr1, arr2) {
   return arr1;
 };
 
-
 /**
  * @param {number[]} arr1
  * @param {number[]} arr2
  * @return {number[]}
  */
 var relativeSortArray = function (arr1, arr2) {
-  
-  return arr1;
+  const max = Math.max.apply(null, arr1) + 1;
+  const nums = new Array(max).fill(0);
+  for (const num of arr1) nums[num]++;
+  const ans = [];
+  for (const num of arr2) {
+    if (nums[num]) {
+      ans.push(...new Array(nums[num]).fill(num));
+      nums[num] = 0;
+    }
+  }
+  for (let i = 0; i <= max; i++) {
+    if (nums[i]) {
+      ans.push(...new Array(nums[i]).fill(i));
+    }
+  }
+  return ans;
 };
