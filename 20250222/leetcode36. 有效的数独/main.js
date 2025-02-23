@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2025-02-22 22:47:32                                                  *
- * @LastModifiedDate: 2025-02-23 00:40:40                                      *
+ * @LastModifiedDate: 2025-02-23 18:42:04                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2025 mangwu                                                   *
@@ -29,7 +29,6 @@
  * @return {boolean}
  */
 var isValidSudoku = function (board) {
-  const n = board.length;
   const isValidX = (i) => {
     const set = new Set();
     for (let j = 0; j < 9; j++) {
@@ -50,7 +49,7 @@ var isValidSudoku = function (board) {
       }
       set.add(ch);
     }
-    return false;
+    return true;
   };
   const isValid33 = (x, y) => {
     const set = new Set();
@@ -63,10 +62,22 @@ var isValidSudoku = function (board) {
         set.add(ch);
       }
     }
-    return false;
+    return true;
   };
   let res = true;
-  for(let i = 0; i < 9; i++) {
-    res = res && isValidX(i) && isValidY(i);
+  for (let i = 0; i < 9; i++) {
+    res =
+      res &&
+      isValidX(i) &&
+      isValidY(i) &&
+      isValid33(3 * Math.floor(i / 3), (i % 3) * 3);
   }
+  return res;
 };
+
+// 0 1 2
+// 3 4 5
+// 6 7 8
+
+// 0 3 6
+// 0 3 6
