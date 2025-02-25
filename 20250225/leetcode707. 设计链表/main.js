@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2025-02-25 17:31:17                                                  *
- * @LastModifiedDate: 2025-02-25 17:37:11                                      *
+ * @LastModifiedDate: 2025-02-25 19:29:00                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2025 mangwu                                                   *
@@ -26,18 +26,46 @@
 // void addAtTail(int val) 将一个值为 val 的节点追加到链表中作为链表的最后一个元素。
 // void addAtIndex(int index, int val) 将一个值为 val 的节点插入到链表中下标为 index 的节点之前。如果 index 等于链表的长度，那么该节点会被追加到链表的末尾。如果 index 比长度更大，该节点将 不会插入 到链表中。
 // void deleteAtIndex(int index) 如果下标有效，则删除链表中下标为 index 的节点。
-
+class DLinkedNode {
+  constructor(val) {
+    this.val = val;
+    this.prev = null;
+    this.next = null;
+  }
+  insertNext(node) {
+    const next = this.next;
+    this.next = node;
+    node.prev = this;
+    node.next = next;
+    next && (next.prev = node);
+    return node;
+  }
+  insertPrev(node) {
+    const prev = this.prev;
+    this.prev = node;
+    node.next = this;
+    node.prev = prev;
+    prev && (prev.next = node);
+    return node;
+  }
+  remove() {
+    const prev = this.prev;
+    const next = this.next;
+    this.prev = null;
+    this.next = null;
+    prev && (prev.next = next);
+    next && (next.prev = prev);
+  }
+}
 var MyLinkedList = function () {
-  this.items = {};
-  this.lowest = 0;
-  this.highest = 1;
+  this.header = new DLinkedNode(-1);
+  this.tail = new DLinkedNode(-1);
+  this.header.insertNext(this.tail);
+  this.size = 0;
 };
 
-MyLinkedList.prototype.size = function () {
-  return this.highest - this.lowest - 1;
-};
 MyLinkedList.prototype.isEmpty = function () {
-  return this.size() === 0;
+  return this.size === 0;
 };
 
 /**
@@ -45,34 +73,66 @@ MyLinkedList.prototype.isEmpty = function () {
  * @return {number}
  */
 MyLinkedList.prototype.get = function (index) {
-  const size = this.size();
+  const size = this.size;
   if (index < 0 || index >= size) return -1;
+  let node = this.header.next;
+  while (index) {
+    node = node.next;
+    index--;
+  }
+  return node.val;
 };
 
 /**
  * @param {number} val
  * @return {void}
  */
-MyLinkedList.prototype.addAtHead = function (val) {};
+MyLinkedList.prototype.addAtHead = function (val) {
+  this.header.insertNext(new DLinkedNode(val));
+  this.size++;
+};
 
 /**
  * @param {number} val
  * @return {void}
  */
-MyLinkedList.prototype.addAtTail = function (val) {};
+MyLinkedList.prototype.addAtTail = function (val) {
+  this.tail.insertPrev(new DLinkedNode(val));
+  this.size++;
+};
 
 /**
  * @param {number} index
  * @param {number} val
  * @return {void}
  */
-MyLinkedList.prototype.addAtIndex = function (index, val) {};
+MyLinkedList.prototype.addAtIndex = function (index, val) {
+  const size = this.size;
+  if (index < 0 || index > size) return;
+  let node = this.header.next;
+  while (index) {
+    node = node.next;
+    index--;
+  }
+  node.insertPrev(new DLinkedNode(val));
+  this.size++;
+};
 
 /**
  * @param {number} index
  * @return {void}
  */
-MyLinkedList.prototype.deleteAtIndex = function (index) {};
+MyLinkedList.prototype.deleteAtIndex = function (index) {
+  const size = this.size;
+  if (index < 0 || index >= size) return;
+  let node = this.header.next;
+  while (index) {
+    node = node.next;
+    index--;
+  }
+  node.remove();
+  this.size--;
+};
 
 /**
  * Your MyLinkedList object will be instantiated and called as such:
