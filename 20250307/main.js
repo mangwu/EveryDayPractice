@@ -50,7 +50,7 @@ function solution(candidates, target) {
     if (left < 0) return;
     // 选择当前数字
     path.push(candidates[i]);
-    dfs(i, left - candidates[i]);
+    dfs(i, left - candidates[i]);111
     path.pop();
     // 不选择当前数字
     dfs(i + 1, left);
