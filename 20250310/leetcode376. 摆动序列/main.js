@@ -2,7 +2,7 @@
  * @Author: mangwu                                                             *
  * @File: main.js                                                              *
  * @Date: 2025-03-10 16:55:58                                                  *
- * @LastModifiedDate: 2025-03-10 17:31:15                                      *
+ * @LastModifiedDate: 2025-03-11 11:25:16                                      *
  * @ModifiedBy: mangwu                                                         *
  * -----------------------                                                     *
  * Copyright (c) 2025 mangwu                                                   *
@@ -49,6 +49,80 @@ var wiggleMaxLength = function (nums) {
   return res;
 };
 
-// 
+//
 // [1,17,5,10,13,15,10,5,16,8]
 //   +  - +  +  +  -  - +  -
+
+// 上述解答理解有错，应该是摆动序列（可以不连续），而不是摆动数组
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var wiggleMaxLength = function (nums) {
+  // 动态规划
+  const n = nums.length;
+  const dp = new Array(n).fill(1).map(() => new Array(2).fill(1));
+  let res = 1;
+  for (let i = 1; i < n; i++) {
+    for (let j = i - 1; j >= 0; j--) {
+      if (nums[i] > nums[j]) {
+        dp[i][0] = Math.max(dp[i][0], dp[j][1] + 1);
+      } else if (nums[i] < nums[j]) {
+        dp[i][1] = Math.max(dp[i][1], dp[j][0] + 1);
+      }
+      res = Math.max(res, dp[i][0], dp[i][1]);
+    }
+  }
+  return res;
+};
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var wiggleMaxLength = function (nums) {
+  // 动态规划
+  const n = nums.length;
+  const dp = new Array(n).fill(1).map(() => new Array(2).fill(1));
+  let res = 1;
+  // dp[i][0]最后一个是上升摆动
+  // dp[i][1]最后一个是下降摆动
+  for (let i = 1; i < n; i++) {
+    if (nums[i] > nums[i - 1]) {
+      dp[i][0] = Math.max(dp[i][0], dp[i - 1][1] + 1, dp[i - 1][0]);
+      dp[i][1] = dp[i - 1][1];
+    } else if (nums[i] < nums[i - 1]) {
+      dp[i][1] = Math.max(dp[i][1], dp[i - 1][0] + 1, dp[i - 1][1]);
+      dp[i][0] = dp[i - 1][0];
+    } else {
+      dp[i][0] = dp[i - 1][0];
+      dp[i][1] = dp[i - 1][1];
+    }
+    res = Math.max(res, dp[i][0], dp[i][1]);
+  }
+  return res;
+};
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var wiggleMaxLength = function (nums) {
+  // 动态规划
+  const n = nums.length;
+  let res = 1;
+  let up = 1;
+  let down = 1;
+  // dp[i][0]最后一个是上升摆动
+  // dp[i][1]最后一个是下降摆动
+  for (let i = 1; i < n; i++) {
+    if (nums[i] > nums[i - 1]) {
+      up = Math.max(up, down + 1);
+    } else if (nums[i] < nums[i - 1]) {
+      down = Math.max(down, up + 1);
+    }
+    res = Math.max(res, up, down);
+  }
+  return res;
+};
