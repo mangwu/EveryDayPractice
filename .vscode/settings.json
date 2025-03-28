@@ -53,6 +53,7 @@
     "typeinfo": "cpp",
     "variant": "cpp",
     "stack": "cpp",
-    "set": "cpp"
+    "set": "cpp",
+    "unordered_set": "cpp"
   }
 }
