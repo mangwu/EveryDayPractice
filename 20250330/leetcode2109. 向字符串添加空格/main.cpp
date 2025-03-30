@@ -10,9 +10,6 @@ public:
   string addSpaces(string s, vector<int> &spaces) {
     int n = s.size();
     unordered_set<int> set = {spaces.begin(), spaces.end()};
-    // for (int space : spaces) {
-    // set.insert(space);
-    // }
     string ans;
     for (int i = 0; i < n; i++) {
       if (set.count(i)) {
